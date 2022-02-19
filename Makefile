@@ -2,6 +2,7 @@
 # Compiler flags
 #
 #CFLAGS = -Wall -Wextra
+LDFLAGS = -lpcre
 
 #
 # Prefixes
@@ -27,13 +28,13 @@ all: prep release
 # Debug build settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET=debug
-TARGET_FLAGS= -g -O0 -DDEBUG
+TARGET_FLAGS= -g -O0 -DDEBUG $(LDFLAGS)
 endif
 
 # Release build settings
 ifeq ($(filter release,$(MAKECMDGOALS)),release)
 TARGET=release
-TARGET_FLAGS= -O3 -DNDEBUG
+TARGET_FLAGS= -O3 -DNDEBUG $(LDFLAGS)
 endif
 
 BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)

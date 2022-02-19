@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <pcre.h>
 
 const char *version = "v0.1.0";
 const char *email   = "<josephm.diza@gmail.com>";
@@ -85,6 +86,42 @@ char *get_units(char* from) {
   return unit;
 }
 
+char *match(char *input) {
+
+    /* for pcre_compile */
+  pcre *re;
+  const char *error;
+  int erroffset;
+
+  /* for pcre_exec */
+  int rc;
+  int ovector[32];
+
+  /* to get substrings from regex */
+  int rc2;
+  const char *substring;
+
+  // we'll start after the first quote and chop off the end quote
+  const char *regex = "([KMGT]i?B+)";
+  const char *subject = input;
+
+  re = pcre_compile(regex, 0, &error, &erroffset, NULL);
+  rc = pcre_exec(re, NULL, subject, strlen(subject), 0, 0, ovector, 30);
+
+  if (rc == PCRE_ERROR_NOMATCH) {
+    fprintf(stderr,"no match\n");
+    exit(0);
+  } else if(rc < -1) {
+    fprintf(stderr,"error %d from regex\n",rc);
+    exit(rc);
+  }
+
+  rc2 = pcre_get_substring(subject, ovector, rc, 0, &substring);
+  pcre_free(re);
+
+  return substring;
+}
+
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
@@ -97,10 +134,11 @@ int main (int argc, char **argv) {
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
-  
-  printf ("from = %s\nto = %s\nVERBOSE = %s\n",
-          get_units(arguments.args[0]), get_units(arguments.args[1]),
-          arguments.verbose ? "yes" : "no");
 
-  exit (0);
+  char * from = get_units(match(arguments.args[0]));
+  char * to   = get_units(match(arguments.args[1]));
+  
+  printf("from = %s\nto = %s\nVERBOSE = %s\n",
+      from, to, arguments.verbose ? "yes" : "no");
+  return 0;
 }
