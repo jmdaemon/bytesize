@@ -1,7 +1,7 @@
 #
 # Compiler flags
 #
-#CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra
 LDFLAGS = -lpcre -lm
 
 #
@@ -25,16 +25,19 @@ EXE  = bytesize
 # Default build
 all: prep release
 
+# Set install
+ifeq ($(PREFIX),)
+    PREFIX := /usr/local
+endif
+
+# Release build settings
+TARGET:=release
+TARGET_FLAGS:= -O3 -DNDEBUG $(LDFLAGS)
+
 # Debug build settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET=debug
 TARGET_FLAGS= -g -O0 -DDEBUG $(LDFLAGS)
-endif
-
-# Release build settings
-ifeq ($(filter release,$(MAKECMDGOALS)),release)
-TARGET=release
-TARGET_FLAGS= -O3 -DNDEBUG $(LDFLAGS)
 endif
 
 BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
@@ -42,6 +45,14 @@ BUILD_EXEC= $(BUILD_DIR)/$(BIN_PREFIX)/$(EXE)
 BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 
 # Rules
+
+install: release $(BUILD_EXEC)
+	install $(BUILD_EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+
+#install -d $(DESTDIR)$(PREFIX)/bin/ $(BUILD_EXEC)
+
+uninstall: release $(BUILD_EXEC)
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
 debug release: prep $(BUILD_EXEC)
 
