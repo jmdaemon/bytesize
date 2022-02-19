@@ -71,14 +71,6 @@ const static char *BYTE[4] = {
   "TiB"
 };
 
-const char *parse_unit(const char *from, int size, const char *BYTE_FORMAT[]) {
-  for (int i = 0; i <= size; i++) 
-    if (strcmp(from, BYTE_FORMAT[i]) == 0)
-      /*const char *byte = BYTE_FORMAT[i];*/
-      return from;
-  return "";
-}
-
 int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   for (int i = 0; i <= size; i++) {
     int factor = pow(scale, i);
@@ -90,10 +82,6 @@ int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale
 
 const int get_factor(const char *unit) {
   return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE, 1000) : calc_factor(unit, 4, BYTE, 1024);
-}
-
-const char *get_units(const char* unit) {
-  return (strlen(unit) == 2) ? parse_unit(unit, 5, SI_BYTE) : parse_unit(unit, 4, BYTE);
 }
 
 const char *match(char *input, const char *regex) {
@@ -130,7 +118,6 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
-
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
@@ -147,18 +134,18 @@ int main (int argc, char **argv) {
   const char *unit_regex = "([KMGT]i?B+)";
   const char *num_regex = "([\\d]+)";
 
-  const char *units_from = get_units(match(arguments.args[0], unit_regex));
-  const char *units_to   = get_units(match(arguments.args[1], unit_regex));
+  const char *units_from = match(arguments.args[0], unit_regex);
+  const char *units_to   = match(arguments.args[1], unit_regex);
 
   const int amt = atoi(match(arguments.args[0], num_regex));
 
   const int from  = get_factor(units_from);
   const int to    = get_factor(units_to);
 
-  float factor = (float) from / to;
-  float conversion = amt * factor;
+  const float factor = (float) from / to;
+  const float conversion = amt * factor;
   
-  printf("%f %s\n", conversion, units_to);
+  printf("%.2f %s\n", conversion, units_to);
 
   pcre_free_substring(units_from);
   pcre_free_substring(units_to);
