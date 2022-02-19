@@ -1,7 +1,7 @@
 #
 # Compiler flags
 #
-#CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Wextra
 
 #
 # Prefixes
@@ -19,56 +19,41 @@ SRCS = bytesize.c
 OBJS = $(SRCS:.c=.o)
 EXE  = bytesize
 
-SRC_LIST = $(addprefix $(SRC_PREFIX)/, $(SRCS))
-
-#
-# Debug build settings
-#
-DBGDIR = $(BUILD_PREFIX)/debug
-DBGEXE = $(DBGDIR)/$(BIN_PREFIX)/$(EXE)
-DBGOBJS = $(addprefix $(DBGDIR)/, $(OBJS))
-DBGCFLAGS = -g -O0 -DDEBUG
-
-#
-# Release build settings
-#
-RELDIR = $(BUILD_PREFIX)/release
-RELEXE = $(RELDIR)/$(BIN_PREFIX)/$(EXE)
-RELOBJS = $(addprefix $(RELDIR)/, $(OBJS))
-RELCFLAGS = -O3 -DNDEBUG
-
 .PHONY: all clean prep debug release remake
 
 # Default build
 all: prep release
 
-#
-# Debug rules
-#
-debug: prep $(DBGEXE)
+# Debug build settings
+ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
+TARGET=debug
+TARGET_FLAGS= -g -O0 -DDEBUG
+endif
 
-$(DBGEXE): $(DBGOBJS)
-	$(CC) $(CFLAGS) $(DBGCFLAGS) -o $(DBGEXE) $^
+# Release build settings
+ifeq ($(filter release,$(MAKECMDGOALS)),release)
+TARGET=release
+TARGET_FLAGS= -O3 -DNDEBUG
+endif
 
-$(DBGDIR)/%.o: $(SRC_PREFIX)/%.c
-	$(CC) -c $(CFLAGS) $(DBGCFLAGS) -o $@ $<
+BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
+BUILD_EXEC= $(BUILD_DIR)/$(BIN_PREFIX)/$(EXE)
+BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 
-#
-# Release rules
-#
-release: prep $(RELEXE)
+# Rules
 
-$(RELEXE): $(RELOBJS)
-	$(CC) $(CFLAGS) $(RELCFLAGS) -o $(RELEXE) $^
+debug release: prep $(BUILD_EXEC)
 
-$(RELDIR)/%.o: $(SRC_PREFIX)/%.c
-	$(CC) -c $(CFLAGS) $(RELCFLAGS) -o $@ $<
+$(BUILD_EXEC): $(BUILD_OBJS)
+	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
 
+$(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
+	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
 #
 # Other rules
 #
 prep:
-	@mkdir -p $(DBGDIR)/$(BIN_PREFIX) $(RELDIR)/$(BIN_PREFIX)
+	@mkdir -p $(BUILD_DIR)/$(BIN_PREFIX)
 
 remake: clean all
 
