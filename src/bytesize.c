@@ -79,10 +79,9 @@ const char *parse_unit(const char *from, int size, const char *BYTE_FORMAT[]) {
   return "";
 }
 
-int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[]) {
+int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   for (int i = 0; i <= size; i++) {
-    /*int factor = 1000 ^ i;*/
-    int factor = pow(1000, i);
+    int factor = pow(scale, i);
     if (strcmp(unit, BYTE_FORMAT[i]) == 0)
       return factor;
   }
@@ -90,13 +89,11 @@ int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[]) {
 }
 
 const int get_factor(const char *unit) {
-  return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE) : calc_factor(unit, 4, BYTE);
+  return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE, 1000) : calc_factor(unit, 4, BYTE, 1024);
 }
 
 const char *get_units(const char* unit) {
   return (strlen(unit) == 2) ? parse_unit(unit, 5, SI_BYTE) : parse_unit(unit, 4, BYTE);
-  /*const char * unit = (strlen(from) == 2) ? parse_unit(from, 5, SI_BYTE) : parse_unit(from, 4, BYTE);*/
-  /*return unit;*/
 }
 
 const char *match(char *input, const char *regex) {
@@ -153,20 +150,14 @@ int main (int argc, char **argv) {
   const char *units_from = get_units(match(arguments.args[0], unit_regex));
   const char *units_to   = get_units(match(arguments.args[1], unit_regex));
 
-  const int val_from = atoi(match(arguments.args[0], num_regex));
-  /*const int val_to   = atoi(match(arguments.args[1], num_regex));*/
+  const int amt = atoi(match(arguments.args[0], num_regex));
 
-  /*const int from  = get_factor(match(arguments.args[0], num_regex));*/
-  /*const int to    = get_factor(match(arguments.args[1], num_regex));*/
   const int from  = get_factor(units_from);
   const int to    = get_factor(units_to);
-  /*printf("from = %d\nto = %d\n", from, to);*/
 
   float factor = (float) from / to;
-  float conversion = val_from * factor;
+  float conversion = amt * factor;
   
-  /*printf("from = %s\nto = %s\nVERBOSE = %s\n",*/
-      /*units_from, units_to, arguments.verbose ? "yes" : "no");*/
   printf("%f %s\n", conversion, units_to);
 
   pcre_free_substring(units_from);
