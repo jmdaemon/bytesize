@@ -2,7 +2,7 @@
 # Compiler flags
 #
 #CFLAGS = -Wall -Wextra
-LDFLAGS = -lpcre
+LDFLAGS = -lpcre -lm
 
 #
 # Prefixes

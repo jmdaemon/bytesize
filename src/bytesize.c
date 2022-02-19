@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <pcre.h>
+#include <math.h>
 
 const char *version = "v0.1.0";
 const char *email   = "<josephm.diza@gmail.com>";
@@ -55,7 +56,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   return 0;
 }
 
-static char *SI_BYTE[5] = {
+const static char *SI_BYTE[5] = {
   "B",
   "KB",
   "MB",
@@ -63,32 +64,43 @@ static char *SI_BYTE[5] = {
   "TB"
 };
 
-static char *BYTE[4] = {
+const static char *BYTE[4] = {
   "KiB",
   "MiB",
   "GiB",
   "TiB"
 };
 
-char *parse_unit(char *from, int size, char *BYTE_FORMAT[]) {
-  for (int i = 0; i <= size; i++) {
-    if (strcmp(from, BYTE_FORMAT[i]) == 0) {
-      char *byte = BYTE_FORMAT[i];
-      return byte;
-    }
-  }
+const char *parse_unit(const char *from, int size, const char *BYTE_FORMAT[]) {
+  for (int i = 0; i <= size; i++) 
+    if (strcmp(from, BYTE_FORMAT[i]) == 0)
+      /*const char *byte = BYTE_FORMAT[i];*/
+      return from;
   return "";
 }
 
-
-char *get_units(char* from) {
-  char * unit = (strlen(from) == 2) ? parse_unit(from, 5, SI_BYTE) : parse_unit(from, 4, BYTE);
-  return unit;
+int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[]) {
+  for (int i = 0; i <= size; i++) {
+    /*int factor = 1000 ^ i;*/
+    int factor = pow(1000, i);
+    if (strcmp(unit, BYTE_FORMAT[i]) == 0)
+      return factor;
+  }
+  return 0;
 }
 
-char *match(char *input) {
+const int get_factor(const char *unit) {
+  return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE) : calc_factor(unit, 4, BYTE);
+}
 
-    /* for pcre_compile */
+const char *get_units(const char* unit) {
+  return (strlen(unit) == 2) ? parse_unit(unit, 5, SI_BYTE) : parse_unit(unit, 4, BYTE);
+  /*const char * unit = (strlen(from) == 2) ? parse_unit(from, 5, SI_BYTE) : parse_unit(from, 4, BYTE);*/
+  /*return unit;*/
+}
+
+const char *match(char *input, const char *regex) {
+  /* for pcre_compile */
   pcre *re;
   const char *error;
   int erroffset;
@@ -102,7 +114,6 @@ char *match(char *input) {
   const char *substring;
 
   // we'll start after the first quote and chop off the end quote
-  const char *regex = "([KMGT]i?B+)";
   const char *subject = input;
 
   re = pcre_compile(regex, 0, &error, &erroffset, NULL);
@@ -122,6 +133,7 @@ char *match(char *input) {
   return substring;
 }
 
+
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
@@ -135,10 +147,29 @@ int main (int argc, char **argv) {
      be reflected in arguments. */
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
 
-  char * from = get_units(match(arguments.args[0]));
-  char * to   = get_units(match(arguments.args[1]));
+  const char *unit_regex = "([KMGT]i?B+)";
+  const char *num_regex = "([\\d]+)";
+
+  const char *units_from = get_units(match(arguments.args[0], unit_regex));
+  const char *units_to   = get_units(match(arguments.args[1], unit_regex));
+
+  const int val_from = atoi(match(arguments.args[0], num_regex));
+  /*const int val_to   = atoi(match(arguments.args[1], num_regex));*/
+
+  /*const int from  = get_factor(match(arguments.args[0], num_regex));*/
+  /*const int to    = get_factor(match(arguments.args[1], num_regex));*/
+  const int from  = get_factor(units_from);
+  const int to    = get_factor(units_to);
+  /*printf("from = %d\nto = %d\n", from, to);*/
+
+  float factor = (float) from / to;
+  float conversion = val_from * factor;
   
-  printf("from = %s\nto = %s\nVERBOSE = %s\n",
-      from, to, arguments.verbose ? "yes" : "no");
+  /*printf("from = %s\nto = %s\nVERBOSE = %s\n",*/
+      /*units_from, units_to, arguments.verbose ? "yes" : "no");*/
+  printf("%f %s\n", conversion, units_to);
+
+  pcre_free_substring(units_from);
+  pcre_free_substring(units_to);
   return 0;
 }
