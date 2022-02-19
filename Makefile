@@ -22,7 +22,7 @@ SRC_LIST = $(addprefix $(SRC_PREFIX)/, $(SRCS))
 # Debug build settings
 #
 DBGDIR = $(BUILD_PREFIX)/debug
-DBGEXE = $(DBGDIR)/$(EXE)
+DBGEXE = $(DBGDIR)/bin/$(EXE)
 DBGOBJS = $(addprefix $(DBGDIR)/, $(OBJS))
 DBGCFLAGS = -g -O0 -DDEBUG
 
@@ -30,7 +30,7 @@ DBGCFLAGS = -g -O0 -DDEBUG
 # Release build settings
 #
 RELDIR = $(BUILD_PREFIX)/release
-RELEXE = $(RELDIR)/$(EXE)
+RELEXE = $(RELDIR)/bin/$(EXE)
 RELOBJS = $(addprefix $(RELDIR)/, $(OBJS))
 RELCFLAGS = -O3 -DNDEBUG
 
@@ -42,7 +42,7 @@ all: prep release
 #
 # Debug rules
 #
-debug: $(DBGEXE)
+debug: prep $(DBGEXE)
 
 $(DBGEXE): $(DBGOBJS)
 	$(CC) $(CFLAGS) $(DBGCFLAGS) -o $(DBGEXE) $^
@@ -54,7 +54,7 @@ $(DBGDIR)/%.o: $(SRC_PREFIX)/%.c
 #
 # Release rules
 #
-release: $(RELEXE)
+release: prep $(RELEXE)
 
 $(RELEXE): $(RELOBJS)
 	$(CC) $(CFLAGS) $(RELCFLAGS) -o $(RELEXE) $^
@@ -67,7 +67,7 @@ $(RELDIR)/%.o: $(SRC_PREFIX)/%.c
 # Other rules
 #
 prep:
-	@mkdir -p $(DBGDIR) $(RELDIR)
+	@mkdir -p $(DBGDIR)/bin $(RELDIR)/bin
 
 remake: clean all
 
