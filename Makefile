@@ -4,10 +4,13 @@
 #CFLAGS = -Wall -Werror -Wextra
 
 #
-# Directories
+# Prefixes
 #
 BUILD_PREFIX = build
 SRC_PREFIX = src
+BIN_PREFIX = bin
+# These are used to generate the build structure
+# build/{debug,release}/$(BIN_PREFIX)/
 
 #
 # Project files
@@ -22,7 +25,7 @@ SRC_LIST = $(addprefix $(SRC_PREFIX)/, $(SRCS))
 # Debug build settings
 #
 DBGDIR = $(BUILD_PREFIX)/debug
-DBGEXE = $(DBGDIR)/bin/$(EXE)
+DBGEXE = $(DBGDIR)/$(BIN_PREFIX)/$(EXE)
 DBGOBJS = $(addprefix $(DBGDIR)/, $(OBJS))
 DBGCFLAGS = -g -O0 -DDEBUG
 
@@ -30,7 +33,7 @@ DBGCFLAGS = -g -O0 -DDEBUG
 # Release build settings
 #
 RELDIR = $(BUILD_PREFIX)/release
-RELEXE = $(RELDIR)/bin/$(EXE)
+RELEXE = $(RELDIR)/$(BIN_PREFIX)/$(EXE)
 RELOBJS = $(addprefix $(RELDIR)/, $(OBJS))
 RELCFLAGS = -O3 -DNDEBUG
 
@@ -47,7 +50,6 @@ debug: prep $(DBGEXE)
 $(DBGEXE): $(DBGOBJS)
 	$(CC) $(CFLAGS) $(DBGCFLAGS) -o $(DBGEXE) $^
 
-#$(DBGDIR)/%.o: $(SRC_LIST)
 $(DBGDIR)/%.o: $(SRC_PREFIX)/%.c
 	$(CC) -c $(CFLAGS) $(DBGCFLAGS) -o $@ $<
 
@@ -59,7 +61,6 @@ release: prep $(RELEXE)
 $(RELEXE): $(RELOBJS)
 	$(CC) $(CFLAGS) $(RELCFLAGS) -o $(RELEXE) $^
 
-#$(RELDIR)/%.o: $(SRC_LIST)
 $(RELDIR)/%.o: $(SRC_PREFIX)/%.c
 	$(CC) -c $(CFLAGS) $(RELCFLAGS) -o $@ $<
 
@@ -67,7 +68,7 @@ $(RELDIR)/%.o: $(SRC_PREFIX)/%.c
 # Other rules
 #
 prep:
-	@mkdir -p $(DBGDIR)/bin $(RELDIR)/bin
+	@mkdir -p $(DBGDIR)/$(BIN_PREFIX) $(RELDIR)/$(BIN_PREFIX)
 
 remake: clean all
 
