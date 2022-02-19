@@ -1,5 +1,8 @@
-#include <stdlib.h>
 #include <argp.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 const char *version = "v0.1.0";
 const char *email   = "<josephm.diza@gmail.com>";
@@ -51,6 +54,37 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   return 0;
 }
 
+static char *SI_BYTE[5] = {
+  "B",
+  "KB",
+  "MB",
+  "GB",
+  "TB"
+};
+
+static char *BYTE[4] = {
+  "KiB",
+  "MiB",
+  "GiB",
+  "TiB"
+};
+
+char *parse_unit(char *from, int size, char *BYTE_FORMAT[]) {
+  for (int i = 0; i <= size; i++) {
+    if (strcmp(from, BYTE_FORMAT[i]) == 0) {
+      char *byte = BYTE_FORMAT[i];
+      return byte;
+    }
+  }
+  return "";
+}
+
+
+char *get_units(char* from) {
+  char * unit = (strlen(from) == 2) ? parse_unit(from, 5, SI_BYTE) : parse_unit(from, 4, BYTE);
+  return unit;
+}
+
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
@@ -63,12 +97,9 @@ int main (int argc, char **argv) {
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
-
-  /*int from  = arguments.args[0];*/
-  /*int to    = arguments.args[0];*/
   
   printf ("from = %s\nto = %s\nVERBOSE = %s\n",
-          arguments.args[0], arguments.args[1],
+          get_units(arguments.args[0]), get_units(arguments.args[1]),
           arguments.verbose ? "yes" : "no");
 
   exit (0);
