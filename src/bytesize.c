@@ -107,7 +107,7 @@ const char *match(char *input, const char *regex) {
   if (rc == PCRE_ERROR_NOMATCH) {
     fprintf(stderr,"no match\n");
     exit(0);
-  } else if(rc < -1) {
+  } else if (rc < -1) {
     fprintf(stderr,"error %d from regex\n",rc);
     exit(rc);
   }
@@ -144,8 +144,11 @@ int main (int argc, char **argv) {
 
   const float factor = (float) from / to;
   const float conversion = amt * factor;
-  
-  printf("%.2f %s\n", conversion, units_to);
+
+  if (ceilf(conversion) == (int) conversion)
+    printf("%d %s\n", (int) conversion, units_to);
+  else
+    printf("%.2f %s\n", conversion, units_to);
 
   pcre_free_substring(units_from);
   pcre_free_substring(units_to);
