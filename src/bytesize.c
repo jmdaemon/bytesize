@@ -18,12 +18,14 @@ static char args_doc[] = "[from] [to]";
 /* The options we understand. */
 static struct argp_option options[] = {
   {"verbose",  'v', 0,      0,  "Produce verbose output" },
+  {"units",  'u', 0,      0,  "Do not display byte units" },
   { 0 }
 };
 
 /* Used by main to communicate with parse_opt. */
 struct arguments {
   char *args[2]; /* from & to */
+  bool display_units;
   int verbose;
 };
 
@@ -35,6 +37,10 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   switch (key) {
     case 'v':
       arguments->verbose = 1;
+      break;
+
+    case 'u':
+      arguments->display_units = false;
       break;
 
     case ARGP_KEY_ARG:
@@ -126,6 +132,7 @@ int main (int argc, char **argv) {
 
   /* Default values. */
   arguments.verbose = 0;
+  arguments.display_units = true;
 
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
@@ -145,10 +152,17 @@ int main (int argc, char **argv) {
   const float factor = (float) from / to;
   const float conversion = amt * factor;
 
-  if (ceilf(conversion) == (int) conversion)
-    printf("%d %s\n", (int) conversion, units_to);
-  else
-    printf("%.2f %s\n", conversion, units_to);
+  if (ceilf(conversion) == (int) conversion) {
+    if (arguments.display_units)
+      printf("%d %s\n", (int) conversion, units_to);
+    else
+      printf("%d\n", (int) conversion);
+  } else {
+    if (arguments.display_units)
+      printf("%.2f %s\n", conversion, units_to);
+    else
+      printf("%.2f\n", conversion);
+  }
 
   pcre_free_substring(units_from);
   pcre_free_substring(units_to);
