@@ -6,7 +6,7 @@
 #include <pcre.h>
 #include <math.h>
 
-const char *version = "v0.1.0";
+const char *version = "v0.1.1";
 const char *email   = "<josephm.diza@gmail.com>";
 
 /* Program documentation. */
@@ -77,6 +77,9 @@ const static char *BYTE[4] = {
   "TiB"
 };
 
+// Calculates the conversion factor between a unit to another unit
+// given that they are both in either SI_BYTE or the BYTE  arrays.
+// Note that this also means that this does not convert between SI_BYTE to BYTE
 int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   for (int i = 0; i <= size; i++) {
     int factor = pow(scale, i);
@@ -86,6 +89,7 @@ int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale
   return 0;
 }
 
+// Gets the conversion factor for either SI_BYTE or BYTE and not either or
 const int get_factor(const char *unit) {
   return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE, 1000) : calc_factor(unit, 4, BYTE, 1024);
 }
