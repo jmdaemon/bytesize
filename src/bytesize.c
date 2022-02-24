@@ -152,17 +152,10 @@ int main (int argc, char **argv) {
   const float factor = (float) from / to;
   const float conversion = amt * factor;
 
-  if (ceilf(conversion) == (int) conversion) {
-    if (arguments.display_units)
-      printf("%d %s\n", (int) conversion, units_to);
-    else
-      printf("%d\n", (int) conversion);
-  } else {
-    if (arguments.display_units)
-      printf("%.2f %s\n", conversion, units_to);
-    else
-      printf("%.2f\n", conversion);
-  }
+  if (ceilf(conversion) == (int) conversion) 
+    (arguments.display_units) ? printf("%d %s\n", (int) conversion, units_to) : printf("%d\n", (int) conversion);
+  else
+    (arguments.display_units) ? printf("%.2f %s\n", conversion, units_to) : printf("%.2f\n", conversion);
 
   pcre_free_substring(units_from);
   pcre_free_substring(units_to);
