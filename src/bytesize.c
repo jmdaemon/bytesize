@@ -62,8 +62,9 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   return 0;
 }
 
-const static char *SI_BYTE[5] = {
-  "B",
+/*const static char *SI_BYTE[5] = {*/
+const static char *SI_BYTE[4] = {
+  /*"B",*/
   "KB",
   "MB",
   "GB",
@@ -80,18 +81,25 @@ const static char *BYTE[4] = {
 // Calculates the conversion factor between a unit to another unit
 // given that they are both in either SI_BYTE or the BYTE  arrays.
 // Note that this also means that this does not convert between SI_BYTE to BYTE
-int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
-  for (int i = 0; i <= size; i++) {
-    int factor = pow(scale, i);
+long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
+  for (int i = 0; i < size; i++) {
+    long int factor = pow(scale, i + 1);
     if (strcmp(unit, BYTE_FORMAT[i]) == 0)
       return factor;
   }
   return 0;
 }
 
-// Gets the conversion factor for either SI_BYTE or BYTE and not either or
-const int get_factor(const char *unit) {
-  return (strlen(unit) == 2) ? calc_factor(unit, 5, SI_BYTE, 1000) : calc_factor(unit, 4, BYTE, 1024);
+bool found_in(const char *elem, const char *array[], int array_size) {
+  for (int i = 0; i < array_size; i++) {
+    if (strcmp(elem, array[i]) == 0)
+      return true;
+  }
+  return false;
+}
+
+const long int get_factor(const char *unit, const int scale) {
+  return (strlen(unit) == 2) ? calc_factor(unit, 4, SI_BYTE, scale) : calc_factor(unit, 4, BYTE, scale);
 }
 
 const char *match(char *input, const char *regex) {
@@ -148,13 +156,29 @@ int main (int argc, char **argv) {
   const char *units_from = match(arguments.args[0], unit_regex);
   const char *units_to   = match(arguments.args[1], unit_regex);
 
+  long int scale_from  = (found_in(units_from, SI_BYTE, 4)) ? (int) pow(10, 3) : (int) pow(2, 10);
+  long int scale_to    = (found_in(units_to, SI_BYTE, 4)) ? (int) pow(10, 3) : (int) pow(2, 10);
+
   const int amt = atoi(match(arguments.args[0], num_regex));
 
-  const int from  = get_factor(units_from);
-  const int to    = get_factor(units_to);
+  const long int from  = get_factor(units_from, scale_from);
+  const long int to    = get_factor(units_to, scale_to);
 
-  const float factor = (float) from / to;
+  double factor = 0;
+
+  if (found_in(units_from, SI_BYTE, 4) && found_in(units_to, BYTE, 4)) {
+    // SI_BYTE -> BYTE
+    factor = (double) scale_from / scale_to;
+
+  } else if (found_in(units_from, BYTE, 4) && found_in(units_to, SI_BYTE, 4)) {
+    // BYTE -> SI_BYTE
+    factor = (double) scale_to * scale_from;
+  } else {
+    // BYTE -> BYTE or SI_BYTE -> SI_BYTE
+    factor = (double) scale_from / scale_to;
+  }
   const float conversion = amt * factor;
+  /*printf("%.2f %s\n", conversion, units_to);*/
 
   if (ceilf(conversion) == (int) conversion) 
     (arguments.display_units) ? printf("%d %s\n", (int) conversion, units_to) : printf("%d\n", (int) conversion);
