@@ -78,9 +78,11 @@ static const char *BYTE[SIZE] = {
   "TiB"
 };
 
-// Calculates the conversion factor between a unit to another unit
-// given that they are both in either SI_BYTE or the BYTE  arrays.
-// Note that this also means that this does not convert between SI_BYTE to BYTE
+/* 
+ * Calculates the conversion factor between a unit to another unit
+ * given that they are both in either SI_BYTE or the BYTE  arrays.
+ * Note that this also means that this does not convert between SI_BYTE to BYTE
+ */
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale, i + 1);
@@ -112,10 +114,9 @@ const char *match(char *input, const char *regex) {
   int ovector[32];
 
   /* to get substrings from regex */
-  int rc2;
   const char *substring;
 
-  // we'll start after the first quote and chop off the end quote
+  /* we'll start after the first quote and chop off the end quote */
   const char *subject = input;
 
   re = pcre_compile(regex, 0, &error, &erroffset, NULL);
@@ -129,7 +130,7 @@ const char *match(char *input, const char *regex) {
     exit(rc);
   }
 
-  rc2 = pcre_get_substring(subject, ovector, rc, 0, &substring);
+  pcre_get_substring(subject, ovector, rc, 0, &substring);
   pcre_free(re);
 
   return substring;
