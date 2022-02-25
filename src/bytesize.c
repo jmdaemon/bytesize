@@ -159,25 +159,16 @@ int main (int argc, char **argv) {
   long int scale_to    = (found_in(units_to, SI_BYTE, 4)) ? (int) pow(10, 3) : (int) pow(2, 10);
 
   const int amt = atoi(match(arguments.args[0], num_regex));
+  printf("%d\n", amt);
 
-  const long int from  = get_factor(units_from, scale_from);
-  const long int to    = get_factor(units_to, scale_to);
+  long int from  = get_factor(units_from, scale_from);
+  long int to    = get_factor(units_to, scale_to);
 
-  double factor = 0;
+  printf("%ld\n", from);
+  printf("%ld\n", to);
 
-  if (found_in(units_from, SI_BYTE, 4) && found_in(units_to, BYTE, 4)) {
-    // SI_BYTE -> BYTE
-    factor = (double) scale_from / scale_to;
-
-  } else if (found_in(units_from, BYTE, 4) && found_in(units_to, SI_BYTE, 4)) {
-    // BYTE -> SI_BYTE
-    factor = (double) scale_to * scale_from;
-  } else {
-    // BYTE -> BYTE or SI_BYTE -> SI_BYTE
-    factor = (double) scale_from / scale_to;
-  }
-  const float conversion = amt * factor;
-  /*printf("%.2f %s\n", conversion, units_to);*/
+  float factor = (float) to / from;
+  double conversion = amt * factor;
 
   if (ceilf(conversion) == (int) conversion) 
     (arguments.display_units) ? printf("%d %s\n", (int) conversion, units_to) : printf("%d\n", (int) conversion);
