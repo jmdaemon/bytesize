@@ -8,7 +8,7 @@
 
 #define SIZE 4
 
-const char *version = "v0.1.1";
+const char *version = "v0.2.0";
 const char *email   = "<josephm.diza@gmail.com>";
 
 /* Program documentation. */
