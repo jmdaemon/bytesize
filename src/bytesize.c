@@ -83,7 +83,7 @@ static const char *BYTE[SIZE] = {
 // Note that this also means that this does not convert between SI_BYTE to BYTE
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   for (int i = 0; i < size; i++) {
-    long int factor = pow(scale, i + 1);
+    const long int factor = pow(scale, i + 1);
     if (strcmp(unit, BYTE_FORMAT[i]) == 0)
       return factor;
   }
@@ -91,14 +91,13 @@ long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int 
 }
 
 bool found_in(const char *elem, const char *array[], int array_size) {
-  for (int i = 0; i < array_size; i++) {
+  for (int i = 0; i < array_size; i++)
     if (strcmp(elem, array[i]) == 0)
       return true;
-  }
   return false;
 }
 
-const long int get_factor(const char *unit, const int scale) {
+long int get_factor(const char *unit, const int scale) {
   return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
 }
 
