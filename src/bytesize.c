@@ -99,7 +99,8 @@ bool found_in(const char *elem, const char *array[], int array_size) {
   return false;
 }
 
-long int get_factor(const char *unit, const int scale) {
+long int get_factor(const char *unit) {
+  int scale = (found_in(unit, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
   return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
 }
 
@@ -158,15 +159,12 @@ int main (int argc, char **argv) {
   const char *units_from = match(arguments.args[0], unit_regex);
   const char *units_to   = match(arguments.args[1], unit_regex);
 
-  long int scale_from  = (found_in(units_from, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
-  long int scale_to    = (found_in(units_to, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
+  long int from  = get_factor(units_from);
+  long int to    = get_factor(units_to);
 
   const int amt = atoi(match(arguments.args[0], num_regex));
   if (verbose == 1) 
     printf("Amount To Convert: %d\n", amt);
-
-  long int from  = get_factor(units_from, scale_from);
-  long int to    = get_factor(units_to, scale_to);
 
   if (verbose == 1) {
     printf("Conversion Factor From: %ld\n", from);
