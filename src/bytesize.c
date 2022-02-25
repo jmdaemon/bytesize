@@ -62,8 +62,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   return 0;
 }
 
-/*const static char *SI_BYTE[5] = {*/
-const static char *SI_BYTE[4] = {
+static const char *SI_BYTE[4] = {
   /*"B",*/
   "KB",
   "MB",
@@ -71,7 +70,7 @@ const static char *SI_BYTE[4] = {
   "TB"
 };
 
-const static char *BYTE[4] = {
+static const char *BYTE[4] = {
   "KiB",
   "MiB",
   "GiB",
