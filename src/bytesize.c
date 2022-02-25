@@ -150,6 +150,8 @@ int main (int argc, char **argv) {
      be reflected in arguments. */
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
 
+  int verbose = arguments.verbose;
+
   const char *unit_regex = "([KMGT]i?B+)";
   const char *num_regex = "([\\d]+)";
 
@@ -160,13 +162,16 @@ int main (int argc, char **argv) {
   long int scale_to    = (found_in(units_to, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
 
   const int amt = atoi(match(arguments.args[0], num_regex));
-  printf("%d\n", amt);
+  if (verbose == 1) 
+    printf("Amount To Convert: %d\n", amt);
 
   long int from  = get_factor(units_from, scale_from);
   long int to    = get_factor(units_to, scale_to);
 
-  printf("%ld\n", from);
-  printf("%ld\n", to);
+  if (verbose == 1) {
+    printf("Conversion Factor From: %ld\n", from);
+    printf("Conversion Factor To: %ld\n", to);
+  }
 
   float factor = (float) to / from;
   double conversion = amt * factor;
