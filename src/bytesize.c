@@ -6,6 +6,8 @@
 #include <pcre.h>
 #include <math.h>
 
+#define SIZE 4
+
 const char *version = "v0.1.1";
 const char *email   = "<josephm.diza@gmail.com>";
 
@@ -62,15 +64,14 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state) {
   return 0;
 }
 
-static const char *SI_BYTE[4] = {
-  /*"B",*/
+static const char *SI_BYTE[SIZE] = {
   "KB",
   "MB",
   "GB",
   "TB"
 };
 
-static const char *BYTE[4] = {
+static const char *BYTE[SIZE] = {
   "KiB",
   "MiB",
   "GiB",
@@ -98,7 +99,7 @@ bool found_in(const char *elem, const char *array[], int array_size) {
 }
 
 const long int get_factor(const char *unit, const int scale) {
-  return (strlen(unit) == 2) ? calc_factor(unit, 4, SI_BYTE, scale) : calc_factor(unit, 4, BYTE, scale);
+  return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
 }
 
 const char *match(char *input, const char *regex) {
@@ -155,8 +156,8 @@ int main (int argc, char **argv) {
   const char *units_from = match(arguments.args[0], unit_regex);
   const char *units_to   = match(arguments.args[1], unit_regex);
 
-  long int scale_from  = (found_in(units_from, SI_BYTE, 4)) ? (int) pow(10, 3) : (int) pow(2, 10);
-  long int scale_to    = (found_in(units_to, SI_BYTE, 4)) ? (int) pow(10, 3) : (int) pow(2, 10);
+  long int scale_from  = (found_in(units_from, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
+  long int scale_to    = (found_in(units_to, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
 
   const int amt = atoi(match(arguments.args[0], num_regex));
   printf("%d\n", amt);
