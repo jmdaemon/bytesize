@@ -171,10 +171,10 @@ int main (int argc, char **argv) {
     printf("Conversion Factor To: %ld\n", to);
   }
 
-  float factor = (float) to / from;
+  float factor = (float) from / to;
   double conversion = amt * factor;
 
-  if (ceilf(conversion) == (int) conversion) 
+  if (ceil(conversion) == (int) conversion) 
     (arguments.display_units) ? printf("%d %s\n", (int) conversion, units_to) : printf("%d\n", (int) conversion);
   else
     (arguments.display_units) ? printf("%.2f %s\n", conversion, units_to) : printf("%.2f\n", conversion);
