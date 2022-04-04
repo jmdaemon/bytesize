@@ -16,7 +16,7 @@ BIN_PREFIX = bin
 #
 # Project files
 #
-SRCS = bytesize.c
+SRCS = cli.c bytesize.c
 OBJS = $(SRCS:.c=.o)
 EXE  = bytesize
 
