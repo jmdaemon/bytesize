@@ -36,4 +36,7 @@ struct arguments {
 /* Parse a single option. */
 error_t parse_opt (int key, char *arg, struct argp_state *state);
 
+/* Our argp parser. */
+static struct argp argp = { options, parse_opt, args_doc, doc };
+
 #endif // BYTESIZE_CLI_H

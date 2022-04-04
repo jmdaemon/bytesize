@@ -60,9 +60,6 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc };
-
 int main (int argc, char **argv) {
   struct arguments arguments;
 
