@@ -36,4 +36,8 @@ long int get_factor(const char *unit);
 
 const char *match(char *input, const char *regex);
 
+void display_units(const double conversion, const char* units, bool show_with_units);
+
+struct arguments set_default_args();
+
 #endif // BYTESIZE_H

@@ -69,6 +69,13 @@ struct arguments set_default_args() {
   return arguments;
 }
 
+void display_units(const double conversion, const char* units, bool show_with_units) {
+  if (ceil(conversion) == (int) conversion) 
+    (show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);
+  else
+    (show_with_units) ? printf("%.2f %s\n", conversion, units) : printf("%.2f\n", conversion);
+}
+
 int main (int argc, char **argv) {
   struct arguments arguments = set_default_args();
   /* Parse our arguments; every option seen by parse_opt will
@@ -95,11 +102,7 @@ int main (int argc, char **argv) {
   float factor = (float) from / to;
   double conversion = amt * factor;
 
-  if (ceil(conversion) == (int) conversion) 
-    (arguments.display_units) ? printf("%d %s\n", (int) conversion, units_to) : printf("%d\n", (int) conversion);
-  else
-    (arguments.display_units) ? printf("%.2f %s\n", conversion, units_to) : printf("%.2f\n", conversion);
-
+  display_units(conversion, units_to, arguments.display_units);
   pcre_free_substring(units_from);
   pcre_free_substring(units_to);
   return 0;
