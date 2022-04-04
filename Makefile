@@ -7,16 +7,16 @@ LDFLAGS = -lpcre -lm
 #
 # Prefixes
 #
+# These are used to generate the build structure:
+# build/{debug,release}/{bin, lib, subprojects}
 BUILD_PREFIX = build
 SRC_PREFIX = src
 BIN_PREFIX = bin
-# These are used to generate the build structure
-# build/{debug,release}
 
 #
 # Project files
 #
-# Builds bytesize as an executable binary
+# Build the project as an executable binary
 #
 # Note: $(SRCS:.c=.o) replaces all *.c sources with *.o extensions
 SRCS = cli.c bytesize.c
@@ -26,7 +26,7 @@ EXE  = bytesize
 #
 # Library
 #
-# Builds bytesize as a library
+# Builds the project as a library
 #
 # Note: that we cannot reuse the same sources as the 
 # binary target, since GNU Argp cannot be compiled
@@ -110,7 +110,7 @@ debug release: prep $(BUILD_EXEC)
 $(BUILD_EXEC): $(BUILD_OBJS)
 	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
 
-# Compile all object targets
+# Compile all object targets in $(BUILD_DIR)
 $(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
 	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
 
