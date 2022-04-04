@@ -1,7 +1,7 @@
 #
 # Compiler flags
 #
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Iinclude
 LDFLAGS = -lpcre -lm
 
 #
