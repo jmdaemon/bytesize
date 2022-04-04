@@ -26,6 +26,8 @@ EXE  = bytesize
 #CFLAGS_LIB = -fPIC -g
 CFLAGS_LIB = -fPIC
 LDFLAGS_LIB = -shared
+LIB_SRCS = bytesize.c
+LIB_OBJS = $(SRCS:.c=.o)
 LIB = libbytesize.so
 LIB_PREFIX = lib
 
@@ -53,6 +55,7 @@ endif
 ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
 TARGET_FLAGS = $(LDFLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
 BUILD_LIB = $(BUILD_DIR)/$(LIB_PREFIX)/$(LIB)
+BUILD_LIB_OBJS = $(addprefix $(BUILD_DIR)/, $(LIB_OBJS))
 endif
 
 BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
@@ -69,9 +72,10 @@ uninstall: release $(BUILD_EXEC)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
 # Library
+#lib: prep-library $(BUILD_LIB_OBJS)
 lib: prep-library $(BUILD_LIB)
 
-$(BUILD_LIB): $(BUILD_OBJS) 
+$(BUILD_LIB): $(BUILD_LIB_OBJS)
 	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $@ $^
 
 # Debug/Release builds
