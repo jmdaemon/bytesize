@@ -80,6 +80,24 @@ const char* get_unit(char *input) {
   return units;
 }
 
+double convert_units(char* input, const char* units_from, const char* units_to, int verbose) {
+  long int from  = get_factor(units_from);
+  long int to    = get_factor(units_to);
+
+  const int amt = atoi(match(input, num_regex));
+  if (verbose == 1) 
+    printf("Amount To Convert: %d\n", amt);
+
+  if (verbose == 1) {
+    printf("Conversion Factor From: %ld\n", from);
+    printf("Conversion Factor To: %ld\n", to);
+  }
+
+  const float factor = (float) from / to;
+  const double conversion = amt * factor;
+  return conversion;
+}
+
 int main (int argc, char **argv) {
   struct arguments arguments = set_default_args();
   /* Parse our arguments; every option seen by parse_opt will
@@ -90,21 +108,7 @@ int main (int argc, char **argv) {
 
   const char *units_from = get_unit(arguments.args[0]);
   const char *units_to   = get_unit(arguments.args[1]);
-
-  long int from  = get_factor(units_from);
-  long int to    = get_factor(units_to);
-
-  const int amt = atoi(match(arguments.args[0], num_regex));
-  if (verbose == 1) 
-    printf("Amount To Convert: %d\n", amt);
-
-  if (verbose == 1) {
-    printf("Conversion Factor From: %ld\n", from);
-    printf("Conversion Factor To: %ld\n", to);
-  }
-
-  float factor = (float) from / to;
-  double conversion = amt * factor;
+  const double conversion = convert_units(arguments.args[0], units_from, units_to, verbose);
 
   display_units(conversion, units_to, arguments.display_units);
   pcre_free_substring(units_from);
