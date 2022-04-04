@@ -75,6 +75,10 @@ void display_units(const double conversion, const char* units, bool show_with_un
   else
     (show_with_units) ? printf("%.2f %s\n", conversion, units) : printf("%.2f\n", conversion);
 }
+const char* get_unit(char *input) {
+  const char *units = match(input, unit_regex);
+  return units;
+}
 
 int main (int argc, char **argv) {
   struct arguments arguments = set_default_args();
@@ -84,8 +88,8 @@ int main (int argc, char **argv) {
 
   int verbose = arguments.verbose;
 
-  const char *units_from = match(arguments.args[0], unit_regex);
-  const char *units_to   = match(arguments.args[1], unit_regex);
+  const char *units_from = get_unit(arguments.args[0]);
+  const char *units_to   = get_unit(arguments.args[1]);
 
   long int from  = get_factor(units_from);
   long int to    = get_factor(units_to);

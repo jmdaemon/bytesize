@@ -38,6 +38,8 @@ const char *match(char *input, const char *regex);
 
 void display_units(const double conversion, const char* units, bool show_with_units);
 
+const char* get_unit(char *input);
+
 struct arguments set_default_args();
 
 #endif // BYTESIZE_H
