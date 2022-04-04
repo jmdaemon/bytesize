@@ -12,16 +12,12 @@
 
 static const char *version = "v0.2.1";
 static const char *email   = "<josephm.diza@gmail.com>";
-//static const char *version;
-//static const char *email;
 
 /* Program documentation. */
 static char doc[] = "Bytesize - Convert between byte representations";
-//static char doc[];
 
 /* A description of the arguments we accept. */
 static char args_doc[] = "[from] [to]";
-//static char args_doc[];
 
 /* The options we understand. */
 static struct argp_option options[] = {
