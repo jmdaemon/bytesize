@@ -9,9 +9,10 @@
 #include <pcre.h>
 #include <math.h>
 
-//#include "cli.h"
-
 #define SIZE 4
+
+static const char *unit_regex = "([KMGT]i?B+)";
+static const char *num_regex = "([\\d]+)";
 
 static const char *SI_BYTE[SIZE] = {
   "KB",

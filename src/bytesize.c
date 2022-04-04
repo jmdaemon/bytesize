@@ -73,9 +73,6 @@ int main (int argc, char **argv) {
 
   int verbose = arguments.verbose;
 
-  const char *unit_regex = "([KMGT]i?B+)";
-  const char *num_regex = "([\\d]+)";
-
   const char *units_from = match(arguments.args[0], unit_regex);
   const char *units_to   = match(arguments.args[1], unit_regex);
 
