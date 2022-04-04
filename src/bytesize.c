@@ -60,13 +60,17 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
-int main (int argc, char **argv) {
+struct arguments set_default_args() {
   struct arguments arguments;
 
   /* Default values. */
   arguments.verbose = 0;
   arguments.display_units = true;
+  return arguments;
+}
 
+int main (int argc, char **argv) {
+  struct arguments arguments = set_default_args();
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
