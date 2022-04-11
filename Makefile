@@ -31,6 +31,7 @@ GLOBAL_LDFLAGS = -lpcre -lm
 
 # Library compiler flags
 LIB_CFLAGS = -fPIC
+#LIB_CFLAGS = 
 LIB_LDFLAGS = -shared
 
 #
@@ -209,11 +210,16 @@ TARGET_DIR = $(PATHB)/$(TARGET)
 # Set includes 
 INCLUDES = $(addprefix -I,$(PATHI))
 
+#CC = gcc
+
 # Library settings
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
-LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES)
+LIB_DEPS 		= $(TARGET_DIR)/_$(PREFIX_LIB)_deps
+#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES)
+#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_LDFLAGS) $(INCLUDES)
+LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
-LIB_OBJS 		= $(addprefix $(TARGET_DIR)/, $(LIBRARY_OBJS))
+LIB_OBJS 		= $(addprefix $(LIB_DEPS)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 
 # Executable settings
@@ -266,19 +272,26 @@ build: lib bin
 # Library builds
 #
 
-lib: $(LIBRARY_DIR) $(LIB)
+lib: $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 
 # Compile the shared library target
-$(LIB): $(LIB_OBJS)
-	$(CC) $(LIB_FLAGS) -o $@ $^
+$(LIB): $(LIB_DEPS)/%.o
+	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
 
 # Compile all $(LIB_OBJS) object files
-$(LIB_OBJS): $(LIB_SRCS)
-	$(CC) -c $(LIB_FLAGS) -o $@ $<
+$(LIB_DEPS)/%.o: $(LIB_SRCS)
+	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -o $@ $<
+
+#$(LIB): $(LIB_OBJS)
+	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
+	#$(CC) $(LIB_CFLAGS) $(LIB_FLAGS) $(LIB_LDFLAGS) -o $@ $^
 
 # Create $(LIBRARY_DIR)
 $(LIBRARY_DIR):
 	$(MKDIR) $(LIBRARY_DIR)
+
+$(LIB_DEPS):
+	$(MKDIR) $(LIB_DEPS)
 
 #
 # Binary builds
