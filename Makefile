@@ -25,8 +25,9 @@ GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
 
 #
-# Project Prefixes
+# Project Structure
 #
+
 # These are used to generate the build structure:
 # - build
 # - build/{debug, release}
@@ -34,9 +35,12 @@ GLOBAL_LDFLAGS = -lpcre -lm
 # - build/{debug, release}/bin/
 # - build/{debug, release}/subprojects/
 
-BUILD_PREFIX = build
-SRC_PREFIX = src
-BIN_PREFIX = bin
+PATHS = src
+PATHT = test
+PATHB = build
+
+PREFIX_BIN = bin
+PREFIX_LIB = lib
 
 #
 # Unit Testing
@@ -44,12 +48,9 @@ BIN_PREFIX = bin
 
 # Unit Testing Directories
 PATHU = subprojects/unity/src
-PATHS = src
-PATHT = test
-PATHB = build
-PATHD = build/depends
-PATHO = build/objs
-PATHR = build/results
+PATHD = $(PATHB)/depends
+PATHO = $(PATHB)/objs
+PATHR = $(PATHB)/results
 
 INCLUDES = include/
 
@@ -145,16 +146,14 @@ clean-test:
 .PRECIOUS: $(PATHO)%.o
 .PRECIOUS: $(PATHR)%.txt
 
-
-
 #
 # Binary
 #
 # Build the project as an executable binary
-#
 # Note: $(SRCS:.c=.o) replaces all *.c sources with *.o extensions
-SRCS = cli.c bytesize.c main.c
-OBJS = $(SRCS:.c=.o)
+
+BINARY_SRCS = cli.c bytesize.c main.c
+BINARY_OBJS = $(SRCS:.c=.o)
 EXE  = bytesize
 
 #
@@ -211,8 +210,8 @@ endif
 # BUILD_EXEC: The output directory of the binary target
 # BUILD_OBJS: The object files of the binary target
 
-BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
-BUILD_EXEC= $(BUILD_DIR)/$(BIN_PREFIX)/$(EXE)
+BUILD_DIR = $(PATHB)/$(TARGET)
+BUILD_EXEC= $(BUILD_DIR)/$(PREFIX_BIN)/$(EXE)
 BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 
 #
@@ -243,7 +242,7 @@ uninstall-bin: release $(BUILD_EXEC)
 install-lib: $(BUILD_LIB)
 	install $(BUILD_LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
-uninstall-lib: release $(BUILD_EXEC)
+uninstall-lib: release $(BUILD_LIB)
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 #
@@ -258,6 +257,7 @@ $(BUILD_LIB): $(BUILD_LIB_OBJS)
 #
 # Debug/Release builds
 #
+
 debug release: prep $(BUILD_EXEC)
 
 # Compile the executable binary target and its object files
@@ -265,7 +265,7 @@ $(BUILD_EXEC): $(BUILD_OBJS)
 	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
 
 # Compile all object targets in $(BUILD_DIR)
-$(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
+$(BUILD_DIR)/%.o: $(PATHS)/%.c
 	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
 
 #
@@ -276,13 +276,13 @@ $(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
 
 # prep, prep-library: Creates the directories for the bin and lib targets
 
-# Creates build/$(BIN_PREFIX)/lib
+# Creates build/$(PREFIX_LIB)
 prep-library:
-	@mkdir -p $(BUILD_DIR)/$(LIB_PREFIX)
+	@mkdir -p $(BUILD_DIR)/$(PREFIX_LIB)
 
-# Creates build/$(BIN_PREFIX)
+# Creates build/$(PREFIX_BIN)
 prep:
-	@mkdir -p $(BUILD_DIR)/$(BIN_PREFIX)
+	@mkdir -p $(BUILD_DIR)/$(PREFIX_BIN)
 
 remake: clean all
 
