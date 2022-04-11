@@ -181,15 +181,74 @@ endif
 #
 # Toggle between release and debug configurations
 
+
 # Release build settings
+# Build release by default
+
+#TARGET:=release
+#TARGET_FLAGS:= -O3 -DNDEBUG
+#TARGET = release
+#TARGET_FLAGS := 
+
+#release:
+	#TARGET = release
+#release:
+	#TARGET_FLAGS = -O3 -DNDEBUG
+
+#release:
+	#TARGET = release
+	#TARGET_FLAGS = -O3 -DNDEBUG
+#TARGET = 
+#TARGET_FLAGS =
+
+#release:
+	#TARGET += release
+	#TARGET_FLAGS += -O3 -DNDEBUG
+	#make build
+
+#debug:
+	#TARGET = debug
+	#TARGET_FLAGS = -g -O0 -DDEBUG
+
+#debug:
+	#TARGET += debug
+	#TARGET_FLAGS += -g -O0 -DDEBUG
+
+#debug:
+	#TARGET = debug
+#debug:
+	#$(TARGET_FLAGS) = -g -O0 -DDEBUG
+	#TARGET_FLAGS = -g -O0 -DDEBUG
+
+#all: release build debug build
+#all: release build debug build
+
+#all:
+	#make release build
+	#debug build
+
+# Build in release mode by default
 TARGET:=release
 TARGET_FLAGS:= -O3 -DNDEBUG
 
-# Debug build settings
+# Release settings
+ifeq ($(filter release,$(MAKECMDGOALS)),release)
+TARGET = release
+TARGET_FLAGS = -O3 -DNDEBUG
+endif
+
+# Debug settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET = debug
 TARGET_FLAGS = -g -O0 -DDEBUG
 endif
+
+# Debug build settings
+
+#ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
+#TARGET = debug
+#TARGET_FLAGS = -g -O0 -DDEBUG
+#endif
 
 # Debug or Release target directory
 TARGET_DIR = $(PATHB)/$(TARGET)
@@ -222,16 +281,40 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 # Rules
 #
 
-.PHONY: all clean clean-bin clean-test test debug release lib remake
+#.PHONY: all clean clean-bin clean-test test debug release lib remake
+#.PHONY: all set-debug set-release test lib bin clean clean-bin clean-test remake
+#.PHONY: test lib bin clean clean-bin clean-test remake
+#.PHONY: test debug release lib bin clean clean-bin clean-test remake
+.PHONY: all test debug release lib bin clean clean-bin clean-test remake
 
-## Default build
-all: prep release
+#debug:
+#release:
+
+# Change target to release or debug
+#set-release:
+	#TARGET=release
+
+#set-debug:
+	#TARGET=debug
+
+#all: all-debug all-release
+#all: set-debug lib bin set-release lib bin
+
+#all-debug:  
+	#TARGET=debug lib bin
+
+#all-release: 
+	#TARGET=release lib bin
 
 #
 # Install / Uninstall
 #
 
-install: install-bin
+# Install both targets
+install: install-bin install-lib
+
+# Uninstall both targets
+uninstall:  uninstall-bin uninstall-lib
 
 # Install the binary
 install-bin: release $(BUILD_EXEC)
@@ -247,17 +330,14 @@ install-lib: $(BUILD_LIB)
 uninstall-lib: release $(BUILD_LIB)
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
-#
-# Debug/Release builds
-#
-
-debug release: $(EXE)
+# Build both targets
+build: lib bin
 
 #
 # Library builds
 #
 
-lib: $(LIB)
+lib: $(LIBRARY_DIR) $(LIB)
 
 # Compile the shared library target
 $(LIB): $(LIB_OBJS)
@@ -275,7 +355,7 @@ $(LIBRARY_DIR):
 # Binary builds
 #
 
-bin: $(EXE)
+bin: $(BINARY_DIR) $(EXE)
 
 # Compile the executable binary target
 $(EXE): $(EXE_OBJS)
