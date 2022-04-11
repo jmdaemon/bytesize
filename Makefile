@@ -18,11 +18,15 @@ else
 endif
 
 #
-# Compiler flags
+# Global Compiler flags
 #
 # Common compiler flags to every target go here
 GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
+
+#
+# Unit Testing
+#
 
 # Unit Testing Directories
 PATHU = subprojects/unity/src/
@@ -54,10 +58,78 @@ CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 # Due to these substitutions they must be named like this
 # in order for the tests to work and compile
 RESULTS = $(patsubst $(PATHT)test_%.c,$(PATHR)test_%.txt,$(SRCT) )
-
 PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
+
+# Unit Test Rules
+
+test: $(BUILD_PATHS) $(RESULTS)
+	@echo "-----------------------\nIGNORES:\n-----------------------"
+	@echo "$(IGNORE)"
+	@echo "-----------------------\nFAILURES:\n-----------------------"
+	@echo "$(FAIL)"
+	@echo "-----------------------\nPASSED:\n-----------------------"
+	@echo "$(PASSED)"
+	@echo "\nDONE"
+
+# Rules for finding source files in sub directories
+
+# Create test results
+$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
+	-./$< > $@ 2>&1
+
+# Link unit tests with the unity test framework and our sources
+$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o
+	$(LINK) $(CFLAGS) -o $@ $^
+
+# Compile unity sources
+$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
+	$(COMPILE) $(CFLAGS) $< -o $@
+
+# Compile files in src directory
+$(PATHO)%.o:: $(PATHS)%.c
+	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
+
+# Compile files in test directory
+$(PATHO)%.o:: $(PATHT)%.c
+	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
+
+# Create a depends directory
+$(PATHD)%.d:: $(PATHT)%.c
+	$(DEPEND) $@ $<
+
+#
+# Unit test build paths
+#
+
+# Create build/
+$(PATHB):
+	$(MKDIR) $(PATHB)
+
+# Create build/depends
+$(PATHD):
+	$(MKDIR) $(PATHD)
+
+# Create build/objs
+$(PATHO):
+	$(MKDIR) $(PATHO)
+
+# Create build/results
+$(PATHR):
+	$(MKDIR) $(PATHR)
+
+# Remove output files for tests
+clean-test:
+	$(CLEANUP) $(PATHO)*.o
+	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
+	$(CLEANUP) $(PATHR)*.txt
+
+# Keep test results & output
+.PRECIOUS: $(PATHB)test_%.$(TARGET_EXTENSION)
+.PRECIOUS: $(PATHD)%.d
+.PRECIOUS: $(PATHO)%.o
+.PRECIOUS: $(PATHR)%.txt
 
 #
 # Prefixes
@@ -145,45 +217,6 @@ BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 ## Default build
 all: prep release
 
-#
-# Unit Tests
-#
-
-test: $(BUILD_PATHS) $(RESULTS)
-	@echo "-----------------------\nIGNORES:\n-----------------------"
-	@echo "$(IGNORE)"
-	@echo "-----------------------\nFAILURES:\n-----------------------"
-	@echo "$(FAIL)"
-	@echo "-----------------------\nPASSED:\n-----------------------"
-	@echo "$(PASSED)"
-	@echo "\nDONE"
-
-
-# Rules for finding source files in sub directories
-
-# Create test results
-$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
-	-./$< > $@ 2>&1
-
-# Link unit tests with the unity test framework and our sources
-$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o
-	$(LINK) $(CFLAGS) -o $@ $^
-
-# Compile unity sources
-$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
-	$(COMPILE) $(CFLAGS) $< -o $@
-
-# Compile files in src directory
-$(PATHO)%.o:: $(PATHS)%.c
-	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
-
-# Compile files in test directory
-$(PATHO)%.o:: $(PATHT)%.c
-	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
-
-# Create a depends directory
-$(PATHD)%.d:: $(PATHT)%.c
-	$(DEPEND) $@ $<
 
 
 #
@@ -232,23 +265,7 @@ $(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
 # Other rules
 #
 
-# Unit test build paths
 
-# Create build/
-$(PATHB):
-	$(MKDIR) $(PATHB)
-
-# Create build/depends
-$(PATHD):
-	$(MKDIR) $(PATHD)
-
-# Create build/objs
-$(PATHO):
-	$(MKDIR) $(PATHO)
-
-# Create build/results
-$(PATHR):
-	$(MKDIR) $(PATHR)
 
 # prep, prep-library: Creates the directories for the bin and lib targets
 
@@ -267,15 +284,3 @@ clean: clean-test clean-bin
 # Remove output files for executables
 clean-bin:
 	$(CLEANUP) $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
-
-# Remove output files for tests
-clean-test:
-	$(CLEANUP) $(PATHO)*.o
-	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
-	$(CLEANUP) $(PATHR)*.txt
-
-# Keep test results & output
-.PRECIOUS: $(PATHB)test_%.$(TARGET_EXTENSION)
-.PRECIOUS: $(PATHD)%.d
-.PRECIOUS: $(PATHO)%.o
-.PRECIOUS: $(PATHR)%.txt
