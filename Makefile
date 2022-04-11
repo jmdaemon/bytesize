@@ -215,11 +215,8 @@ INCLUDES = $(addprefix -I,$(PATHI))
 # Library settings
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
 LIB_DEPS 		= $(TARGET_DIR)/_$(PREFIX_LIB)_deps
-#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES)
-#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_LDFLAGS) $(INCLUDES)
 LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
-LIB_OBJS 		= $(addprefix $(LIB_DEPS)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 
 # Executable settings
@@ -253,17 +250,17 @@ uninstall:  uninstall-bin uninstall-lib
 
 # Install the binary
 install-bin: release $(EXE)
-	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
 
 uninstall-bin: release $(EXE)
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
 
 # Install the library
 install-lib: $(LIB)
-	install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
+	install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
 
 uninstall-lib: release $(LIB)
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIB)
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
 
 # Build both targets
 build: lib bin
@@ -278,13 +275,9 @@ lib: $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 $(LIB): $(LIB_DEPS)/%.o
 	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
 
-# Compile all $(LIB_OBJS) object files
+# Compile all library object files
 $(LIB_DEPS)/%.o: $(LIB_SRCS)
 	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -o $@ $<
-
-#$(LIB): $(LIB_OBJS)
-	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
-	#$(CC) $(LIB_CFLAGS) $(LIB_FLAGS) $(LIB_LDFLAGS) -o $@ $^
 
 # Create $(LIBRARY_DIR)
 $(LIBRARY_DIR):
