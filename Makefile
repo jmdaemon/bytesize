@@ -22,22 +22,6 @@ else
 endif
 
 #
-# Compiler flags
-
-#
-# Common compiler flags to every target go here
-GLOBAL_CFLAGS = -Wall -Wextra
-GLOBAL_LDFLAGS = -lpcre -lm
-
-# Library compiler flags
-LIB_CFLAGS = -fPIC
-LIB_LDFLAGS = -shared
-
-# Release / Debug compiler flags
-REL_CFLAGS = -O3 -DNDEBUG
-DBG_CFLAGS = -g -O0 -DDEBUG 
-
-#
 # Project Structure
 #
 
@@ -55,6 +39,27 @@ PATHI = include
 
 PREFIX_BIN = bin
 PREFIX_LIB = lib
+
+
+#
+# Compiler flags
+
+#
+# Common compiler flags to every target go here
+GLOBAL_CFLAGS = -Wall -Wextra
+GLOBAL_LDFLAGS = -lpcre -lm
+
+# Library compiler flags
+LIB_CFLAGS = -fPIC
+LIB_LDFLAGS = -shared
+
+# Release / Debug compiler flags
+REL_CFLAGS = -O3 -DNDEBUG
+DBG_CFLAGS = -g -O0 -DDEBUG 
+
+# Include headers
+INCLUDE_DIRS = -I. -I$(PATHI)
+INCLUDES = $(INCLUDE_DIRS)
 
 #
 # Unit Testing
@@ -77,7 +82,7 @@ SRCT = $(wildcard $(PATHT)/*.c)
 TEST_COMPILE=gcc -c
 TEST_LINK=gcc
 TEST_DEPEND=gcc -MM -MG -MF
-TEST_CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
+TEST_CFLAGS= $(GLOBAL_CFLAGS) $(INCLUDES) -I$(PATHU) -I$(PATHS) -DTEST
 
 # Unit Tests Results
 # Note: Our files will be named:
@@ -204,9 +209,6 @@ endif
 
 # Debug or Release target directory
 TARGET_DIR = $(PATHB)/$(TARGET)
-
-# Set includes 
-INCLUDES = $(addprefix -I,$(PATHI))
 
 # Library settings
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
