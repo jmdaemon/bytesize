@@ -181,52 +181,6 @@ endif
 #
 # Toggle between release and debug configurations
 
-
-# Release build settings
-# Build release by default
-
-#TARGET:=release
-#TARGET_FLAGS:= -O3 -DNDEBUG
-#TARGET = release
-#TARGET_FLAGS := 
-
-#release:
-	#TARGET = release
-#release:
-	#TARGET_FLAGS = -O3 -DNDEBUG
-
-#release:
-	#TARGET = release
-	#TARGET_FLAGS = -O3 -DNDEBUG
-#TARGET = 
-#TARGET_FLAGS =
-
-#release:
-	#TARGET += release
-	#TARGET_FLAGS += -O3 -DNDEBUG
-	#make build
-
-#debug:
-	#TARGET = debug
-	#TARGET_FLAGS = -g -O0 -DDEBUG
-
-#debug:
-	#TARGET += debug
-	#TARGET_FLAGS += -g -O0 -DDEBUG
-
-#debug:
-	#TARGET = debug
-#debug:
-	#$(TARGET_FLAGS) = -g -O0 -DDEBUG
-	#TARGET_FLAGS = -g -O0 -DDEBUG
-
-#all: release build debug build
-#all: release build debug build
-
-#all:
-	#make release build
-	#debug build
-
 # Build in release mode by default
 TARGET:=release
 TARGET_FLAGS:= -O3 -DNDEBUG
@@ -237,18 +191,11 @@ TARGET = release
 TARGET_FLAGS = -O3 -DNDEBUG
 endif
 
-# Debug settings
+# Debug build settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET = debug
 TARGET_FLAGS = -g -O0 -DDEBUG
 endif
-
-# Debug build settings
-
-#ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
-#TARGET = debug
-#TARGET_FLAGS = -g -O0 -DDEBUG
-#endif
 
 # Debug or Release target directory
 TARGET_DIR = $(PATHB)/$(TARGET)
@@ -281,30 +228,11 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 # Rules
 #
 
-#.PHONY: all clean clean-bin clean-test test debug release lib remake
-#.PHONY: all set-debug set-release test lib bin clean clean-bin clean-test remake
-#.PHONY: test lib bin clean clean-bin clean-test remake
-#.PHONY: test debug release lib bin clean clean-bin clean-test remake
-.PHONY: all test debug release lib bin clean clean-bin clean-test remake
+.PHONY: all debug release test lib bin clean clean-bin clean-test remake
 
-#debug:
-#release:
+debug:
 
-# Change target to release or debug
-#set-release:
-	#TARGET=release
-
-#set-debug:
-	#TARGET=debug
-
-#all: all-debug all-release
-#all: set-debug lib bin set-release lib bin
-
-#all-debug:  
-	#TARGET=debug lib bin
-
-#all-release: 
-	#TARGET=release lib bin
+release:
 
 #
 # Install / Uninstall
