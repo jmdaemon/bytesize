@@ -195,7 +195,7 @@ endif
 # Debug or Release target directory
 TARGET_DIR = $(PATHB)/$(TARGET)
 
-# Library build settings
+# Library settings
 # TARGET_FLAGS: 	The library flags to build the library
 # BUILD_LIB: 			The directory of the target library
 # BUILD_LIB_OBJS: The object files of the library target
@@ -208,20 +208,16 @@ BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
 
 
 # Executable settings
-# BUILD_DIR: 	The directory of the target.
-# BUILD_EXEC: The output directory of the binary target
-# BUILD_OBJS: The object files of the binary target
-
-#BUILD_DIR = $(PATHB)/$(TARGET)
-#BUILD_EXEC= $(BUILD_DIR)/$(PREFIX_BIN)/$(EXE)
-#BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
-
-BINARY_DIR = $(TARGET_DIR)/$(PREFIX_BIN)
-#EXE_OBJS = $(addprefix $(BINARY_DIR)/, $(OBJS))
-EXE_FLAGS = $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS)
-EXE_SRCS = $(addprefix $(PATHS)/, $(BINARY_SRCS))
-EXE_OBJS = $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
-EXE = $(BINARY_DIR)/$(BINARY_NAME)
+# BINARY_DIR: Target directory
+# EXE_FLAGS : Target flags
+# EXE_SRCS 	: Target sources
+# EXE_OBJS 	: Target object files
+# EXE 			: Target
+BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
+EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS)
+EXE_SRCS 		= $(addprefix $(PATHS)/, $(BINARY_SRCS))
+EXE_OBJS 		= $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
+EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 
 #
 # Rules
@@ -265,35 +261,19 @@ $(BUILD_LIB): $(BUILD_LIB_OBJS)
 # Debug/Release builds
 #
 
-#debug release: prep $(BUILD_EXEC)
-#debug release: prep $(EXE_OBJS) $(EXE)
 debug release: prep $(EXE)
 
-# Compile the executable binary target and its object files
-#$(BUILD_EXEC): $(BUILD_OBJS)
-	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
+# Compile the executable binary target
 $(EXE): $(EXE_OBJS)
 	$(CC) $(EXE_FLAGS) -o $(EXE) $^
-	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(EXE) $^
-	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(EXE) $^
 
-# Compile all object targets in $(BUILD_DIR)
-#$(BUILD_DIR)/%.o: $(PATHS)/%.c
-	#$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
-#$(EXE_OBJS): $(PATHS)/%.c
-#$(BINARY_DIR)/%.o: $(PATHS)/%.c
-#$(TARGET_DIR)/%.o: $(PATHS)/%.c
-#$(EXE_OBJS): $(PATHS)/%.c
+# Compile all $(EXE_OBJS) object files
 $(EXE_OBJS): 
 	$(CC) -c $(EXE_FLAGS) -o $@ $<
-	#$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
-
 
 #
 # Other rules
 #
-
-
 
 # prep, prep-library: Creates the directories for the bin and lib targets
 
@@ -301,13 +281,7 @@ $(EXE_OBJS):
 prep-library:
 	@mkdir -p $(BUILD_DIR)/$(PREFIX_LIB)
 
-# Creates build/$(PREFIX_BIN)
-#prep:
-	#@mkdir -p $(BUILD_DIR)/$(PREFIX_BIN)
-
-#prep:
-	#$(MKDIR) $(BUILD_DIR)/$(PREFIX_BIN)
-
+# Create $(BINARY_DIR)
 $(BINARY_DIR):
 	$(MKDIR) $(BINARY_DIR)
 
