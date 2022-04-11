@@ -218,9 +218,10 @@ LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 
 # Executable settings
 BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
+EXE_DEPS 		= $(TARGET_DIR)/_$(PREFIX_BIN)_deps
 EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 EXE_SRCS 		= $(addprefix $(PATHS)/, $(BINARY_SRCS))
-EXE_OBJS 		= $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
+EXE_OBJS 		= $(addprefix $(EXE_DEPS)/, $(BINARY_OBJS))
 EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 
 #
@@ -283,19 +284,22 @@ $(LIBRARY_DIR):
 # Binary builds
 #
 
-bin: $(BINARY_DIR) $(EXE)
+bin: $(BINARY_DIR) $(EXE_DEPS) $(EXE)
 
 # Compile the executable binary target
 $(EXE): $(EXE_OBJS)
 	$(CC) $(EXE_FLAGS) -o $@ $^
 
 # Compile all $(EXE_OBJS) object files
-$(TARGET_DIR)/%.o: $(PATHS)/%.c
+$(EXE_DEPS)/%.o: $(PATHS)/%.c
 	$(CC) -c $(EXE_FLAGS) -o $@ $<
 
 # Create $(BINARY_DIR)
 $(BINARY_DIR):
 	$(MKDIR) $(BINARY_DIR)
+
+$(EXE_DEPS):
+	$(MKDIR) $(EXE_DEPS)
 
 #
 # Other rules
