@@ -1,6 +1,7 @@
 #
 # Operating Systems
 #
+
 ifeq ($(OS),Windows_NT)
   ifeq ($(shell uname -s),) # not in a bash-like shell
 	CLEANUP = del /F /Q
@@ -149,4 +150,4 @@ prep:
 remake: clean all
 
 clean:
-	rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+	$(CLEANUP) $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
