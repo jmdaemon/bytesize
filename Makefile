@@ -25,6 +25,20 @@ GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
 
 #
+# Project Prefixes
+#
+# These are used to generate the build structure:
+# - build
+# - build/{debug, release}
+# - build/{debug, release}/lib/
+# - build/{debug, release}/bin/
+# - build/{debug, release}/subprojects/
+
+BUILD_PREFIX = build
+SRC_PREFIX = src
+BIN_PREFIX = bin
+
+#
 # Unit Testing
 #
 
@@ -131,17 +145,10 @@ clean-test:
 .PRECIOUS: $(PATHO)%.o
 .PRECIOUS: $(PATHR)%.txt
 
-#
-# Prefixes
-#
-# These are used to generate the build structure:
-# build/{debug,release}/{bin, lib, subprojects}
-BUILD_PREFIX = build
-SRC_PREFIX = src
-BIN_PREFIX = bin
+
 
 #
-# Project files
+# Binary
 #
 # Build the project as an executable binary
 #
