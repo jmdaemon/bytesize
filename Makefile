@@ -243,7 +243,7 @@ uninstall-bin: release $(BUILD_EXEC)
 install-lib: $(BUILD_LIB)
 	install $(BUILD_LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
-uninstall-bin: release $(BUILD_EXEC)
+uninstall-lib: release $(BUILD_EXEC)
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 #
