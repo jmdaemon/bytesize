@@ -140,15 +140,15 @@ $(PATHR):
 
 # Remove output files for tests
 clean-test:
-	$(CLEANUP) $(PATHO)*.o
-	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
-	$(CLEANUP) $(PATHR)*.txt
+	$(CLEANUP) $(PATHO)/*.o
+	$(CLEANUP) $(PATHB)/*.$(TARGET_EXTENSION)
+	$(CLEANUP) $(PATHR)/*.txt
 
 # Keep test results & output
-.PRECIOUS: $(PATHB)test_%.$(TARGET_EXTENSION)
-.PRECIOUS: $(PATHD)%.d
-.PRECIOUS: $(PATHO)%.o
-.PRECIOUS: $(PATHR)%.txt
+.PRECIOUS: $(PATHB)/test_%.$(TARGET_EXTENSION)
+.PRECIOUS: $(PATHD)/%.d
+.PRECIOUS: $(PATHO)/%.o
+.PRECIOUS: $(PATHR)/%.txt
 
 #
 # Binary
