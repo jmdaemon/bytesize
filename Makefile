@@ -10,11 +10,15 @@ ifeq ($(OS),Windows_NT)
 	CLEANUP = rm -f
 	MKDIR = mkdir -p
   endif
-	TARGET_EXTENSION=.exe
+	TARGET_EXTENSION=exe
+	SHARED_LIBRARY_EXT=dll
+	SHARED_LIBRARY_EXT=lib
 else
 	CLEANUP = rm -f
 	MKDIR = mkdir -p
 	TARGET_EXTENSION=out
+	SHARED_LIBRARY_EXT=so
+	STATIC_LIBRARY_EXT=a
 endif
 
 #
@@ -165,7 +169,7 @@ BINARY_NAME = bytesize
 
 LIBRARY_SRCS = bytesize.c
 LIBRARY_OBJS = $(SRCS:.c=.o)
-LIBRARY_NAME = libbytesize.so
+LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
 
 # Note: We can't reuse the same sources as the 
 # binary target, since GNU Argp cannot be compiled
@@ -230,6 +234,7 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 
 .PHONY: all debug release test lib bin clean clean-bin clean-test remake
 
+# Dummy rules
 debug:
 
 release:
@@ -249,14 +254,14 @@ install-bin: release $(EXE)
 	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
 uninstall-bin: release $(EXE)
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
 # Install the library
 install-lib: $(LIB)
 	install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 uninstall-lib: release $(LIB)
-	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 # Build both targets
 build: lib bin
