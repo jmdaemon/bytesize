@@ -23,6 +23,7 @@ endif
 
 #
 # Global Compiler flags
+
 #
 # Common compiler flags to every target go here
 GLOBAL_CFLAGS = -Wall -Wextra
@@ -46,7 +47,7 @@ LIB_LDFLAGS = -shared
 PATHS = src
 PATHT = test
 PATHB = build
-INCLUDES = include
+PATHI = include
 
 PREFIX_BIN = bin
 PREFIX_LIB = lib
@@ -168,7 +169,8 @@ BINARY_NAME = bytesize
 # Build the project as a library
 
 LIBRARY_SRCS = bytesize.c
-LIBRARY_OBJS = $(SRCS:.c=.o)
+#LIBRARY_OBJS = $(SRCS:.c=.o)
+LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
 LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
 
 # Note: We can't reuse the same sources as the 
@@ -204,6 +206,13 @@ endif
 # Debug or Release target directory
 TARGET_DIR = $(PATHB)/$(TARGET)
 
+# Set includes 
+#INCLUDES_DIRS = $(addprefix -I$(PATHI), $(INCLUDES))
+INCLUDES = $(addprefix -I,$(PATHI))
+
+# Set compiler
+CC = gcc
+
 # Library settings
 # LIBRARY_DIR : Target directory
 # LIB_FLAGS 	: Target specific flags
@@ -211,7 +220,8 @@ TARGET_DIR = $(PATHB)/$(TARGET)
 # LIB_OBJS 		: Target object files
 # LIB 				: Target
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
-LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES_DIRS)
+LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
 LIB_OBJS 		= $(addprefix $(TARGET_DIR)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
@@ -223,10 +233,14 @@ LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 # EXE_OBJS 	: Target object files
 # EXE 			: Target
 BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
-EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS)
+#EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES_DIRS)
+EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 EXE_SRCS 		= $(addprefix $(PATHS)/, $(BINARY_SRCS))
 EXE_OBJS 		= $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
 EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
+
+#EXE_DEPS = $(EXE_OBJS:.o=.d) # one dependency file for each source
+#EXE_INCLUDES = -I$(PATHI) -I$(EXE_DEPS)
 
 #
 # Rules
@@ -274,10 +288,13 @@ lib: $(LIBRARY_DIR) $(LIB)
 
 # Compile the shared library target
 $(LIB): $(LIB_OBJS)
-	$(CC) $(LIB_FLAGS) -o $(LIB) $^
+	$(CC) $(LIB_FLAGS) -o $@ $^
+	#$(CC) $(LIB_FLAGS) -o $(LIB) $@ $^
 
 # Compile all $(LIB_OBJS) object files
-$(LIB_OBJS):
+#$(LIB_OBJS): $(LIB_SRCS)
+#$(LIB_OBJS): $(PATHS)/%*.c
+$(LIB_OBJS): $(LIB_SRCS)
 	$(CC) -c $(LIB_FLAGS) -o $@ $<
 
 # Create $(LIBRARY_DIR)
@@ -288,15 +305,48 @@ $(LIBRARY_DIR):
 # Binary builds
 #
 
+#bin: $(BINARY_DIR) $(EXE_OBJS) $(EXE)
 bin: $(BINARY_DIR) $(EXE)
 
 # Compile the executable binary target
+#$(EXE): $(TARGET_DIR)/*.o
+	#$(CC) $(EXE_FLAGS) -o $(EXE) $@ $^
+#$(EXE): $(TARGET_DIR)/*.o
+
 $(EXE): $(EXE_OBJS)
-	$(CC) $(EXE_FLAGS) -o $(EXE) $^
+	$(CC) $(EXE_FLAGS) -o $@ $^
+
+	#$(CC) $(EXE_FLAGS) -o $(EXE_OBJS)
+	#$(CC) $(EXE_FLAGS) -o $@ $^
+	#$(CC) $(EXE_FLAGS) -o $@ $^
 
 # Compile all $(EXE_OBJS) object files
-$(EXE_OBJS): 
+#$(EXE_OBJS): $(EXE_SRCS)
+#$(EXE_OBJS): src/bytesize.c src/cli.c src/main.c
+#$(EXE_OBJS): $(EXE_SRCS)
+
+#$(TARGET_DIR)/%.o: $(EXE_SRCS)
+	#$(CC) -c $(EXE_FLAGS) -o $@ $<
+
+#$(TARGET_DIR)/%.o:
+	#$(CC) -c $(EXE_FLAGS) -o $@ $<
+
+#$(TARGET_DIR)/.c.o:
+#$(EXE_OBJS): $(PATHS)/%.c
+
+#$(TARGET_DIR)/%.d: $(PATHS)/%.c
+		#$(CC) $(CFLAGS) $< -MM -MT $(@:.d=.o) >$@
+
+#$(EXE_OBJS): $(EXE_SRCS)
+	#$(CC) $(EXE_INCLUDES) -c $(EXE_FLAGS) -o $(EXE_OBJS) $< -MMD
+$(TARGET_DIR)/%.o: $(PATHS)/%.c
 	$(CC) -c $(EXE_FLAGS) -o $@ $<
+	#$(CC) $(EXE_INCLUDES) -c $(EXE_FLAGS) -o $(EXE_OBJS) $< -MMD
+
+
+#$(CC) -c $(EXE_FLAGS) -o $@ $(@:.o=.c)
+
+#$(CC) -c $(EXE_FLAGS) -o $@ $(@:.o=.c)
 
 # Create $(BINARY_DIR)
 $(BINARY_DIR):
