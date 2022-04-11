@@ -308,8 +308,16 @@ $(BINARY_DIR):
 
 remake: clean all
 
-clean: clean-test clean-bin
+clean: clean-test clean-objs clean-bin clean-lib
+	
+clean-objs:
+	$(CLEANUP) $(PATHB)/debug/*.o $(PATHB)/release/*.o
 
 # Remove output files for executables
-clean-bin:
-	$(CLEANUP) $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+clean-lib: clean-objs
+	$(CLEANUP) $(PATHB)/debug/lib/$(LIBRARY_NAME) $(PATHB)/release/lib/$(LIBRARY_NAME)
+
+# Remove output files for executables
+	#$(CLEANUP) $(EXE_OBJS) $(EXE)
+clean-bin: clean-objs
+	$(CLEANUP) $(PATHB)/debug/bin/$(BINARY_NAME) $(PATHB)/release/bin/$(BINARY_NAME)
