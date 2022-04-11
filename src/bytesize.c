@@ -46,10 +46,10 @@ const char *match(char *input, const char *regex) {
   rc = pcre_exec(re, NULL, subject, strlen(subject), 0, 0, ovector, 30);
 
   if (rc == PCRE_ERROR_NOMATCH) {
-    fprintf(stderr,"no match\n");
+    fprintf(stderr, "no match\n");
     exit(0);
   } else if (rc < -1) {
-    fprintf(stderr,"error %d from regex\n",rc);
+    fprintf(stderr, "error %d from regex\n",rc);
     exit(rc);
   }
 
