@@ -37,7 +37,7 @@ BIN_PREFIX = bin
 # Build the project as an executable binary
 #
 # Note: $(SRCS:.c=.o) replaces all *.c sources with *.o extensions
-SRCS = cli.c bytesize.c
+SRCS = cli.c bytesize.c main.c
 OBJS = $(SRCS:.c=.o)
 EXE  = bytesize
 
