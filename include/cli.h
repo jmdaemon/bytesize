@@ -2,6 +2,11 @@
 #ifndef BYTESIZE_CLI_H
 #define BYTESIZE_CLI_H
 
+/* Support header include for C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <argp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,5 +49,9 @@ static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0};
 
 /* Set default values for arguments */
 struct arguments set_default_args();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BYTESIZE_CLI_H

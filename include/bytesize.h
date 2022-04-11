@@ -2,6 +2,11 @@
 #ifndef BYTESIZE_H
 #define BYTESIZE_H
 
+/* Support header include for C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,5 +40,9 @@ const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to, int verbose);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BYTESIZE_H
