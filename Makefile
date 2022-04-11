@@ -25,7 +25,7 @@ GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
 
 # Library compiler flags
-LIB_CFLAGS = -fPIC -g
+LIB_CFLAGS = -fPIC
 LIB_LDFLAGS = -shared
 
 #
@@ -166,7 +166,7 @@ BINARY_NAME = bytesize
 
 LIBRARY_SRCS = bytesize.c
 LIBRARY_OBJS = $(SRCS:.c=.o)
-LIB = libbytesize.so
+LIBRARY_NAME = libbytesize.so
 
 # Note: We can't reuse the same sources as the 
 # binary target, since GNU Argp cannot be compiled
@@ -201,10 +201,22 @@ TARGET_DIR = $(PATHB)/$(TARGET)
 # BUILD_LIB_OBJS: The object files of the library target
 
 #TARGET_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
-BUILD_LIB_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+#BUILD_LIB_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+##BUILD_LIB = $(PATHB)/$(PREFIX_LIB)/$(LIB)
+#BUILD_LIB = $(TARGET_DIR)/$(PREFIX_LIB)/$(LIB)
+#BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
+
+#LIBRARY_FLAGS = $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
 #BUILD_LIB = $(PATHB)/$(PREFIX_LIB)/$(LIB)
-BUILD_LIB = $(TARGET_DIR)/$(PREFIX_LIB)/$(LIB)
-BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
+#BUILD_LIB = $(TARGET_DIR)/$(PREFIX_LIB)/$(LIB)
+#BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
+
+LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
+LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
+LIB_OBJS 		= $(addprefix $(TARGET_DIR)/, $(LIBRARY_OBJS))
+LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
+
 
 
 # Executable settings
@@ -251,17 +263,28 @@ uninstall-lib: release $(BUILD_LIB)
 #
 # Library builds
 #
-lib: prep-library $(BUILD_LIB)
+#lib: prep-library $(BUILD_LIB)
+#lib: $(BUILD_LIB)
+lib: $(LIB)
 
 # Compiles the shared library target and its object files
-$(BUILD_LIB): $(BUILD_LIB_OBJS)
-	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $@ $^
+#$(BUILD_LIB): $(BUILD_LIB_OBJS)
+	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $@ $^
+
+# Compile the shared library target
+$(LIB): $(LIB_OBJS)
+	$(CC) $(LIB_FLAGS) -o $(LIB) $^
+
+# Compile all $(LIB_OBJS) object files
+$(LIB_OBJS):
+	$(CC) -c $(LIB_FLAGS) -o $@ $<
 
 #
 # Debug/Release builds
 #
 
-debug release: prep $(EXE)
+#debug release: prep $(EXE)
+debug release: $(EXE)
 
 # Compile the executable binary target
 $(EXE): $(EXE_OBJS)
@@ -278,8 +301,12 @@ $(EXE_OBJS):
 # prep, prep-library: Creates the directories for the bin and lib targets
 
 # Creates build/$(PREFIX_LIB)
-prep-library:
-	@mkdir -p $(BUILD_DIR)/$(PREFIX_LIB)
+#prep-library:
+	#@mkdir -p $(BUILD_DIR)/$(PREFIX_LIB)
+
+# Create $(LIBRARY_DIR)
+$(LIBRARY_DIR):
+	$(MKDIR) $(LIBRARY_DIR)
 
 # Create $(BINARY_DIR)
 $(BINARY_DIR):
