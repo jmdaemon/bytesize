@@ -42,6 +42,7 @@ LIB_LDFLAGS = -shared
 PATHS = src
 PATHT = test
 PATHB = build
+INCLUDES = include
 
 PREFIX_BIN = bin
 PREFIX_LIB = lib
@@ -56,8 +57,6 @@ PATHD = $(PATHB)/depends
 PATHO = $(PATHB)/objs
 PATHR = $(PATHB)/results
 
-INCLUDES = include/
-
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
 SRCT = $(wildcard $(PATHT)/*.c)
@@ -66,10 +65,10 @@ SRCT = $(wildcard $(PATHT)/*.c)
 # -MM : Output single header dependencies for the compile files
 # -MG : Run without being able to run into headers gcc can't find
 # -MF : Write header dependencies to a file
-COMPILE=gcc -c
-LINK=gcc
-DEPEND=gcc -MM -MG -MF
-CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
+TEST_COMPILE=gcc -c
+TEST_LINK=gcc
+TEST_DEPEND=gcc -MM -MG -MF
+TEST_CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 
 # Unit Tests Results
 # Note: Our files will be named:
@@ -100,23 +99,23 @@ $(PATHR)/%.txt: $(PATHB)/%.$(TARGET_EXTENSION)
 
 # Link unit tests with the unity test framework and our sources
 $(PATHB)/test_%.$(TARGET_EXTENSION): $(PATHO)/test_%.o $(PATHO)/%.o $(PATHU)/unity.o
-	$(LINK) $(CFLAGS) -o $@ $^
+	$(TEST_LINK) $(TEST_CFLAGS) -o $@ $^
 
 # Compile unity sources
 $(PATHO)/%.o:: $(PATHU)/%.c $(PATHU)/%.h
-	$(COMPILE) $(CFLAGS) $< -o $@
+	$(TEST_COMPILE) $(TEST_CFLAGS) $< -o $@
 
 # Compile files in src directory
 $(PATHO)/%.o:: $(PATHS)/%.c
-	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
+	$(TEST_COMPILE) $(TEST_CFLAGS) $(GLOBAL_LDFLAGS) $< -o $@
 
 # Compile files in test directory
 $(PATHO)/%.o:: $(PATHT)/%.c
-	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
+	$(TEST_COMPILE) $(TEST_CFLAGS) $(GLOBAL_LDFLAGS) $< -o $@
 
 # Create a depends directory
 $(PATHD)/%.d:: $(PATHT)/%.c
-	$(DEPEND) $@ $<
+	$(TEST_DEPEND) $@ $<
 
 #
 # Unit test build paths
@@ -151,38 +150,29 @@ clean-test:
 .PRECIOUS: $(PATHR)/%.txt
 
 #
-# Binary
+# Binary Sources
 #
 # Build the project as an executable binary
 
 BINARY_SRCS = cli.c bytesize.c main.c
-BINARY_OBJS = $(SRCS:.c=.o)
-EXE  				= bytesize
+BINARY_OBJS = $(BINARY_SRCS:.c=.o)
+#EXE  				= bytesize
+BINARY_NAME = bytesize
 
 #
-# Library
+# Library Sources
 #
 # Build the project as a library
 
-#CFLAGS_LIB = -fPIC -g
 LIBRARY_SRCS = bytesize.c
 LIBRARY_OBJS = $(SRCS:.c=.o)
 LIB = libbytesize.so
 
-
-#LIB_SRCS = bytesize.c
-#LIB_OBJS = $(SRCS:.c=.o)
-#LIB_PREFIX = lib
-
-# Note: that we cannot reuse the same sources as the 
+# Note: We can't reuse the same sources as the 
 # binary target, since GNU Argp cannot be compiled
 # as a shared library.
 
-
-# Default build
-all: prep release
-
-# Set install
+# Set installation directory
 ifeq ($(PREFIX),)
     PREFIX := /usr/local
 endif
@@ -190,6 +180,7 @@ endif
 #
 # Build settings
 #
+# Toggle between release and debug configurations
 
 # Release build settings
 TARGET:=release
@@ -201,16 +192,19 @@ TARGET = debug
 TARGET_FLAGS = -g -O0 -DDEBUG $(LDFLAGS)
 endif
 
+# Debug or Release target directory
+TARGET_DIR = $(PATHB)/$(TARGET)
+
 # Library build settings
 # TARGET_FLAGS: 	The library flags to build the library
 # BUILD_LIB: 			The directory of the target library
 # BUILD_LIB_OBJS: The object files of the library target
-ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
-#TARGET_FLAGS = $(LDFLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
-TARGET_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
-BUILD_LIB = $(PATHB)/$(PREFIX_LIB)/$(LIB)
+
+#TARGET_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+BUILD_LIB_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+#BUILD_LIB = $(PATHB)/$(PREFIX_LIB)/$(LIB)
+BUILD_LIB = $(TARGET_DIR)/$(PREFIX_LIB)/$(LIB)
 BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
-endif
 
 
 # Executable settings
@@ -218,9 +212,16 @@ endif
 # BUILD_EXEC: The output directory of the binary target
 # BUILD_OBJS: The object files of the binary target
 
-BUILD_DIR = $(PATHB)/$(TARGET)
-BUILD_EXEC= $(BUILD_DIR)/$(PREFIX_BIN)/$(EXE)
-BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
+#BUILD_DIR = $(PATHB)/$(TARGET)
+#BUILD_EXEC= $(BUILD_DIR)/$(PREFIX_BIN)/$(EXE)
+#BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
+
+BINARY_DIR = $(TARGET_DIR)/$(PREFIX_BIN)
+#EXE_OBJS = $(addprefix $(BINARY_DIR)/, $(OBJS))
+EXE_FLAGS = $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS)
+EXE_SRCS = $(addprefix $(PATHS)/, $(BINARY_SRCS))
+EXE_OBJS = $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
+EXE = $(BINARY_DIR)/$(BINARY_NAME)
 
 #
 # Rules
@@ -230,8 +231,6 @@ BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 
 ## Default build
 all: prep release
-
-
 
 #
 # Install / Uninstall
@@ -266,15 +265,29 @@ $(BUILD_LIB): $(BUILD_LIB_OBJS)
 # Debug/Release builds
 #
 
-debug release: prep $(BUILD_EXEC)
+#debug release: prep $(BUILD_EXEC)
+#debug release: prep $(EXE_OBJS) $(EXE)
+debug release: prep $(EXE)
 
 # Compile the executable binary target and its object files
-$(BUILD_EXEC): $(BUILD_OBJS)
-	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
+#$(BUILD_EXEC): $(BUILD_OBJS)
+	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
+$(EXE): $(EXE_OBJS)
+	$(CC) $(EXE_FLAGS) -o $(EXE) $^
+	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(EXE) $^
+	#$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(EXE) $^
 
 # Compile all object targets in $(BUILD_DIR)
-$(BUILD_DIR)/%.o: $(PATHS)/%.c
-	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
+#$(BUILD_DIR)/%.o: $(PATHS)/%.c
+	#$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
+#$(EXE_OBJS): $(PATHS)/%.c
+#$(BINARY_DIR)/%.o: $(PATHS)/%.c
+#$(TARGET_DIR)/%.o: $(PATHS)/%.c
+#$(EXE_OBJS): $(PATHS)/%.c
+$(EXE_OBJS): 
+	$(CC) -c $(EXE_FLAGS) -o $@ $<
+	#$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
+
 
 #
 # Other rules
@@ -289,8 +302,14 @@ prep-library:
 	@mkdir -p $(BUILD_DIR)/$(PREFIX_LIB)
 
 # Creates build/$(PREFIX_BIN)
-prep:
-	@mkdir -p $(BUILD_DIR)/$(PREFIX_BIN)
+#prep:
+	#@mkdir -p $(BUILD_DIR)/$(PREFIX_BIN)
+
+#prep:
+	#$(MKDIR) $(BUILD_DIR)/$(PREFIX_BIN)
+
+$(BINARY_DIR):
+	$(MKDIR) $(BINARY_DIR)
 
 remake: clean all
 
