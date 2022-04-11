@@ -43,19 +43,19 @@ BIN_PREFIX = bin
 #
 
 # Unit Testing Directories
-PATHU = subprojects/unity/src/
-PATHS = src/
-PATHT = test/
-PATHB = build/
-PATHD = build/depends/
-PATHO = build/objs/
-PATHR = build/results/
+PATHU = subprojects/unity/src
+PATHS = src
+PATHT = test
+PATHB = build
+PATHD = build/depends
+PATHO = build/objs
+PATHR = build/results
 
 INCLUDES = include/
 
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
-SRCT = $(wildcard $(PATHT)*.c)
+SRCT = $(wildcard $(PATHT)/*.c)
 
 # Unit Test Compiler Flags:
 # -MM : Output single header dependencies for the compile files
@@ -71,7 +71,7 @@ CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 # [source].c, test_[source].c
 # Due to these substitutions they must be named like this
 # in order for the tests to work and compile
-RESULTS = $(patsubst $(PATHT)test_%.c,$(PATHR)test_%.txt,$(SRCT) )
+RESULTS = $(patsubst $(PATHT)/test_%.c,$(PATHR)/test_%.txt,$(SRCT) )
 PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
@@ -90,27 +90,27 @@ test: $(BUILD_PATHS) $(RESULTS)
 # Rules for finding source files in sub directories
 
 # Create test results
-$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
+$(PATHR)/%.txt: $(PATHB)/%.$(TARGET_EXTENSION)
 	-./$< > $@ 2>&1
 
 # Link unit tests with the unity test framework and our sources
-$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o
+$(PATHB)/test_%.$(TARGET_EXTENSION): $(PATHO)/test_%.o $(PATHO)/%.o $(PATHU)/unity.o
 	$(LINK) $(CFLAGS) -o $@ $^
 
 # Compile unity sources
-$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
+$(PATHO)/%.o:: $(PATHU)/%.c $(PATHU)/%.h
 	$(COMPILE) $(CFLAGS) $< -o $@
 
 # Compile files in src directory
-$(PATHO)%.o:: $(PATHS)%.c
+$(PATHO)/%.o:: $(PATHS)/%.c
 	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 # Compile files in test directory
-$(PATHO)%.o:: $(PATHT)%.c
+$(PATHO)/%.o:: $(PATHT)/%.c
 	$(COMPILE) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 # Create a depends directory
-$(PATHD)%.d:: $(PATHT)%.c
+$(PATHD)/%.d:: $(PATHT)/%.c
 	$(DEPEND) $@ $<
 
 #
