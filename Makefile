@@ -22,7 +22,7 @@ else
 endif
 
 #
-# Global Compiler flags
+# Compiler flags
 
 #
 # Common compiler flags to every target go here
@@ -32,6 +32,10 @@ GLOBAL_LDFLAGS = -lpcre -lm
 # Library compiler flags
 LIB_CFLAGS = -fPIC
 LIB_LDFLAGS = -shared
+
+# Release / Debug compiler flags
+REL_CFLAGS = -O3 -DNDEBUG
+DBG_CFLAGS = -g -O0 -DDEBUG 
 
 #
 # Project Structure
@@ -183,19 +187,19 @@ endif
 # Toggle between release and debug configurations
 
 # Build in release mode by default
-TARGET:=release
-TARGET_FLAGS:= -O3 -DNDEBUG
+TARGET := release
+TARGET_FLAGS := $(REL_CFLAGS)
 
 # Release settings
 ifeq ($(filter release,$(MAKECMDGOALS)),release)
 TARGET = release
-TARGET_FLAGS = -O3 -DNDEBUG
+TARGET_FLAGS = $(REL_CFLAGS)
 endif
 
 # Debug build settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET = debug
-TARGET_FLAGS = -g -O0 -DDEBUG
+TARGET_FLAGS = $(DBG_CFLAGS)
 endif
 
 # Debug or Release target directory
