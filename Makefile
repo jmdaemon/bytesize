@@ -184,12 +184,12 @@ endif
 
 # Release build settings
 TARGET:=release
-TARGET_FLAGS:= -O3 -DNDEBUG $(LDFLAGS)
+TARGET_FLAGS:= -O3 -DNDEBUG
 
 # Debug build settings
 ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
 TARGET = debug
-TARGET_FLAGS = -g -O0 -DDEBUG $(LDFLAGS)
+TARGET_FLAGS = -g -O0 -DDEBUG
 endif
 
 # Debug or Release target directory
