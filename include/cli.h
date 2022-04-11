@@ -39,4 +39,7 @@ error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
+/* Set default values for arguments */
+struct arguments set_default_args();
+
 #endif // BYTESIZE_CLI_H

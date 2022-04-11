@@ -60,15 +60,6 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
-struct arguments set_default_args() {
-  struct arguments arguments;
-
-  /* Default values. */
-  arguments.verbose = 0;
-  arguments.display_units = true;
-  return arguments;
-}
-
 void display_units(const double conversion, const char* units, bool show_with_units) {
   if (ceil(conversion) == (int) conversion) 
     (show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);
