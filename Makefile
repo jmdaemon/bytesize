@@ -48,10 +48,7 @@ LINK=gcc
 DEPEND=gcc -MM -MG -MF
 CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 
-#
-# Unit Tests
-#
-
+# Unit Tests Results
 # Note: Our files will be named:
 # [source].c, test_[source].c
 # Due to these substitutions they must be named like this
@@ -139,16 +136,19 @@ BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
 BUILD_EXEC= $(BUILD_DIR)/$(BIN_PREFIX)/$(EXE)
 BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
 
+#
 # Rules
+#
 
 .PHONY: all clean clean-bin clean-test prep test debug release lib remake
 
-# Default build
+## Default build
 all: prep release
 
 #
 # Unit Tests
 #
+
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"
 	@echo "$(IGNORE)"
@@ -186,12 +186,25 @@ $(PATHD)%.d:: $(PATHT)%.c
 	$(DEPEND) $@ $<
 
 
-## Install/Uninstall
-install: release $(BUILD_EXEC)
+#
+# Install / Uninstall
+#
+
+install: install-bin
+
+# Install the binary
+install-bin: release $(BUILD_EXEC)
 	install $(BUILD_EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
-uninstall: release $(BUILD_EXEC)
+uninstall-bin: release $(BUILD_EXEC)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
+
+# Install the library
+install-lib: $(BUILD_LIB)
+	install $(BUILD_LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
+
+uninstall-bin: release $(BUILD_EXEC)
+	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 #
 # Library builds
