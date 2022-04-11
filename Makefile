@@ -207,40 +207,21 @@ endif
 TARGET_DIR = $(PATHB)/$(TARGET)
 
 # Set includes 
-#INCLUDES_DIRS = $(addprefix -I$(PATHI), $(INCLUDES))
 INCLUDES = $(addprefix -I,$(PATHI))
 
-# Set compiler
-CC = gcc
-
 # Library settings
-# LIBRARY_DIR : Target directory
-# LIB_FLAGS 	: Target specific flags
-# LIB_SRCS 		: Target sources
-# LIB_OBJS 		: Target object files
-# LIB 				: Target
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
-#LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES_DIRS)
 LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
 LIB_OBJS 		= $(addprefix $(TARGET_DIR)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 
 # Executable settings
-# BINARY_DIR: Target directory
-# EXE_FLAGS : Target flags
-# EXE_SRCS 	: Target sources
-# EXE_OBJS 	: Target object files
-# EXE 			: Target
 BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
-#EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES_DIRS)
 EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 EXE_SRCS 		= $(addprefix $(PATHS)/, $(BINARY_SRCS))
 EXE_OBJS 		= $(addprefix $(TARGET_DIR)/, $(BINARY_OBJS))
 EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
-
-#EXE_DEPS = $(EXE_OBJS:.o=.d) # one dependency file for each source
-#EXE_INCLUDES = -I$(PATHI) -I$(EXE_DEPS)
 
 #
 # Rules
@@ -289,11 +270,8 @@ lib: $(LIBRARY_DIR) $(LIB)
 # Compile the shared library target
 $(LIB): $(LIB_OBJS)
 	$(CC) $(LIB_FLAGS) -o $@ $^
-	#$(CC) $(LIB_FLAGS) -o $(LIB) $@ $^
 
 # Compile all $(LIB_OBJS) object files
-#$(LIB_OBJS): $(LIB_SRCS)
-#$(LIB_OBJS): $(PATHS)/%*.c
 $(LIB_OBJS): $(LIB_SRCS)
 	$(CC) -c $(LIB_FLAGS) -o $@ $<
 
@@ -305,48 +283,15 @@ $(LIBRARY_DIR):
 # Binary builds
 #
 
-#bin: $(BINARY_DIR) $(EXE_OBJS) $(EXE)
 bin: $(BINARY_DIR) $(EXE)
 
 # Compile the executable binary target
-#$(EXE): $(TARGET_DIR)/*.o
-	#$(CC) $(EXE_FLAGS) -o $(EXE) $@ $^
-#$(EXE): $(TARGET_DIR)/*.o
-
 $(EXE): $(EXE_OBJS)
 	$(CC) $(EXE_FLAGS) -o $@ $^
 
-	#$(CC) $(EXE_FLAGS) -o $(EXE_OBJS)
-	#$(CC) $(EXE_FLAGS) -o $@ $^
-	#$(CC) $(EXE_FLAGS) -o $@ $^
-
 # Compile all $(EXE_OBJS) object files
-#$(EXE_OBJS): $(EXE_SRCS)
-#$(EXE_OBJS): src/bytesize.c src/cli.c src/main.c
-#$(EXE_OBJS): $(EXE_SRCS)
-
-#$(TARGET_DIR)/%.o: $(EXE_SRCS)
-	#$(CC) -c $(EXE_FLAGS) -o $@ $<
-
-#$(TARGET_DIR)/%.o:
-	#$(CC) -c $(EXE_FLAGS) -o $@ $<
-
-#$(TARGET_DIR)/.c.o:
-#$(EXE_OBJS): $(PATHS)/%.c
-
-#$(TARGET_DIR)/%.d: $(PATHS)/%.c
-		#$(CC) $(CFLAGS) $< -MM -MT $(@:.d=.o) >$@
-
-#$(EXE_OBJS): $(EXE_SRCS)
-	#$(CC) $(EXE_INCLUDES) -c $(EXE_FLAGS) -o $(EXE_OBJS) $< -MMD
 $(TARGET_DIR)/%.o: $(PATHS)/%.c
 	$(CC) -c $(EXE_FLAGS) -o $@ $<
-	#$(CC) $(EXE_INCLUDES) -c $(EXE_FLAGS) -o $(EXE_OBJS) $< -MMD
-
-
-#$(CC) -c $(EXE_FLAGS) -o $@ $(@:.o=.c)
-
-#$(CC) -c $(EXE_FLAGS) -o $@ $(@:.o=.c)
 
 # Create $(BINARY_DIR)
 $(BINARY_DIR):
@@ -368,6 +313,5 @@ clean-lib: clean-objs
 	$(CLEANUP) $(PATHB)/debug/lib/$(LIBRARY_NAME) $(PATHB)/release/lib/$(LIBRARY_NAME)
 
 # Remove output files for executables
-	#$(CLEANUP) $(EXE_OBJS) $(EXE)
 clean-bin: clean-objs
 	$(CLEANUP) $(PATHB)/debug/bin/$(BINARY_NAME) $(PATHB)/release/bin/$(BINARY_NAME)
