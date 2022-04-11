@@ -245,17 +245,17 @@ install: install-bin install-lib
 uninstall:  uninstall-bin uninstall-lib
 
 # Install the binary
-install-bin: release $(BUILD_EXEC)
-	install $(BUILD_EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+install-bin: release $(EXE)
+	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
-uninstall-bin: release $(BUILD_EXEC)
+uninstall-bin: release $(EXE)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
 
 # Install the library
-install-lib: $(BUILD_LIB)
-	install $(BUILD_LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
+install-lib: $(LIB)
+	install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
-uninstall-lib: release $(BUILD_LIB)
+uninstall-lib: release $(LIB)
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIB)
 
 # Build both targets
