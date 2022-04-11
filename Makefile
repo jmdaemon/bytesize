@@ -24,6 +24,10 @@ endif
 GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
 
+# Library compiler flags
+LIB_CFLAGS = -fPIC -g
+LIB_LDFLAGS = -shared
+
 #
 # Project Structure
 #
@@ -150,27 +154,30 @@ clean-test:
 # Binary
 #
 # Build the project as an executable binary
-# Note: $(SRCS:.c=.o) replaces all *.c sources with *.o extensions
 
 BINARY_SRCS = cli.c bytesize.c main.c
 BINARY_OBJS = $(SRCS:.c=.o)
-EXE  = bytesize
+EXE  				= bytesize
 
 #
 # Library
 #
-# Builds the project as a library
-#
+# Build the project as a library
+
+#CFLAGS_LIB = -fPIC -g
+LIBRARY_SRCS = bytesize.c
+LIBRARY_OBJS = $(SRCS:.c=.o)
+LIB = libbytesize.so
+
+
+#LIB_SRCS = bytesize.c
+#LIB_OBJS = $(SRCS:.c=.o)
+#LIB_PREFIX = lib
+
 # Note: that we cannot reuse the same sources as the 
 # binary target, since GNU Argp cannot be compiled
 # as a shared library.
-#CFLAGS_LIB = -fPIC -g
-CFLAGS_LIB = -fPIC
-LDFLAGS_LIB = -shared
-LIB_SRCS = bytesize.c
-LIB_OBJS = $(SRCS:.c=.o)
-LIB = libbytesize.so
-LIB_PREFIX = lib
+
 
 # Default build
 all: prep release
@@ -199,9 +206,10 @@ endif
 # BUILD_LIB: 			The directory of the target library
 # BUILD_LIB_OBJS: The object files of the library target
 ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
-TARGET_FLAGS = $(LDFLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
-BUILD_LIB = $(BUILD_DIR)/$(LIB_PREFIX)/$(LIB)
-BUILD_LIB_OBJS = $(addprefix $(BUILD_DIR)/, $(LIB_OBJS))
+#TARGET_FLAGS = $(LDFLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
+TARGET_FLAGS = $(GLOBAL_LDFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) 
+BUILD_LIB = $(PATHB)/$(PREFIX_LIB)/$(LIB)
+BUILD_LIB_OBJS = $(addprefix $(PATHB)/, $(LIBRARY_OBJS))
 endif
 
 
