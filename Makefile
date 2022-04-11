@@ -18,10 +18,13 @@ else
 endif
 
 #
-# Directories
+# Compiler flags
 #
-# build/depends, build/objs, build/results are all used for building the unit tests
+# Common compiler flags to every target go here
+GLOBAL_CFLAGS = -Wall -Wextra
+GLOBAL_LDFLAGS = -lpcre -lm
 
+# Unit Testing Directories
 PATHU = subprojects/unity/src/
 PATHS = src/
 PATHT = test/
@@ -36,12 +39,6 @@ BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
 SRCT = $(wildcard $(PATHT)*.c)
 
-#
-# Compiler flags
-#
-CFLAGS_BIN = -Wall -Wextra -Iinclude
-LDFLAGS = -lpcre -lm
-
 # Unit Test Compiler Flags:
 # -MM : Output single header dependencies for the compile files
 # -MG : Run without being able to run into headers gcc can't find
@@ -49,7 +46,7 @@ LDFLAGS = -lpcre -lm
 COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF
-CFLAGS= $(CFLAGS_BIN) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST $(LDFLAGS)
+CFLAGS= $(GLOBAL_CFLAGS) -I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 
 #
 # Unit Tests
