@@ -31,7 +31,6 @@ GLOBAL_LDFLAGS = -lpcre -lm
 
 # Library compiler flags
 LIB_CFLAGS = -fPIC
-#LIB_CFLAGS = 
 LIB_LDFLAGS = -shared
 
 #
@@ -169,14 +168,9 @@ BINARY_NAME = bytesize
 #
 # Build the project as a library
 
-LIBRARY_SRCS = bytesize.c
-#LIBRARY_OBJS = $(SRCS:.c=.o)
+LIBRARY_SRCS = $(BINARY_SRCS)
 LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
 LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
-
-# Note: We can't reuse the same sources as the 
-# binary target, since GNU Argp cannot be compiled
-# as a shared library.
 
 # Set installation directory
 ifeq ($(PREFIX),)
@@ -209,8 +203,6 @@ TARGET_DIR = $(PATHB)/$(TARGET)
 
 # Set includes 
 INCLUDES = $(addprefix -I,$(PATHI))
-
-#CC = gcc
 
 # Library settings
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
