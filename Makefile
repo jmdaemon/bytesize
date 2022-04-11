@@ -274,7 +274,8 @@ $(LIB): $(LIB_DEPS)/%.o
 	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
 
 # Compile all library object files
-$(LIB_DEPS)/%.o: $(LIB_SRCS)
+# This target depends on the source files and the headers
+$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h
 	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -o $@ $<
 
 # Create $(LIBRARY_DIR)
@@ -295,7 +296,8 @@ $(EXE): $(EXE_OBJS)
 	$(CC) $(EXE_FLAGS) -o $@ $^
 
 # Compile all $(EXE_OBJS) object files
-$(EXE_DEPS)/%.o: $(PATHS)/%.c
+# This target depends on the source files and the headers
+$(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h
 	$(CC) -c $(EXE_FLAGS) -o $@ $<
 
 # Create $(BINARY_DIR)
