@@ -136,7 +136,7 @@ $(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
 # Other rules
 #
 
-# prep, prep-lirary: Creates the directories for the bin and lib targets
+# prep, prep-library: Creates the directories for the bin and lib targets
 
 # Creates build/$(BIN_PREFIX)/lib
 prep-library:
