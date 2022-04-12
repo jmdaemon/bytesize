@@ -281,7 +281,7 @@ subprojects: logc
 SP_DEPENDS =
 SP_INCLUDES =
 
-include log.c.mk
+include make/log.c.mk
 
 # Build both targets
 build: lib bin
