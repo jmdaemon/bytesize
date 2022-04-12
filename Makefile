@@ -26,11 +26,14 @@ endif
 #
 
 # These are used to generate the build structure:
+# - src
+# - test
+# - include
+# - subprojects
 # - build
 # - build/{debug, release}
 # - build/{debug, release}/lib/
 # - build/{debug, release}/bin/
-# - build/{debug, release}/subprojects/
 
 PATHS = src
 PATHT = test
@@ -40,10 +43,34 @@ PATHI = include
 PREFIX_BIN = bin
 PREFIX_LIB = lib
 
+SUBPROJECTS = subprojects
+
+#
+# Subprojects
+#
+
+# Log.c
+
+SUBPROJECT_LOG_C_NAME = log.c
+SUBPROJECT_LOG_C_SRCS = log.c
+SUBPROJECT_LOG_C_OBJS = $(SUBPROJECT_LOG_C_SRCS:.c=.o)
+
+SUBPROJECTS_LOG_C_SRC = $(SUBPROJECTS)/$(SUBPROJECT_LOG_C_NAME)/src
+
+# Subproject directory
+#SUBPROJECTS_LOG_C_DIR = $(SUBPROJECTS)/$(LOG_C)
+#SUBPROJECTS_LOG_C_SRC = $(LOG_C_DIR)/src
+#SUBPROJECTS_LOG_C_SRC = $(SUBPROJECTS_LOG_C_DIR)/src
+
+SUBPROJECTS_LOG_C_INCLUDES = -I$(LOG_C_SRC)
+#SUBPROJECTS_LOG_C_CFLAGS = $(GLOBAL_CFLAGS) -I $(LOG_C_INCLUDES)
+#SUBPROJECTS_LOG_C_LDFLAGS = $(GLOBAL_LDFLAGS)
+
+#LOG_C_INCLUDES 	= $(LOG_C_DIR)/src
+#LOG_C_SRC 			= $(LOG_C_DIR)/src/$(LOG_C)
 
 #
 # Compiler flags
-
 #
 # Common compiler flags to every target go here
 GLOBAL_CFLAGS = -Wall -Wextra
@@ -58,7 +85,7 @@ REL_CFLAGS = -O3 -DNDEBUG
 DBG_CFLAGS = -g -O0 -DDEBUG 
 
 # Include headers
-INCLUDE_DIRS = -I. -I$(PATHI)
+INCLUDE_DIRS = -I. -I$(PATHI) -I$(LOG_C_INCLUDES)
 INCLUDES = $(INCLUDE_DIRS)
 
 #
@@ -229,7 +256,8 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 # Rules
 #
 
-.PHONY: all debug release test lib bin clean clean-bin clean-test remake
+#.PHONY: all debug release test lib bin clean clean-bin clean-test remake
+.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
 
 # Dummy rules
 debug:
@@ -260,6 +288,100 @@ install-lib: $(LIB)
 uninstall-lib: release $(LIB)
 	$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
 
+#
+# Subprojects
+#
+# Every subproject that must be compiled alongside the main project will be
+# given the SUB prefix.
+
+
+# Subprojects that must be built
+subprojects: logc
+
+
+#
+# Log.c Dependency
+#
+
+# Output files to build/depends/log.c
+#SUB_LOGC_DIR = $(PATHD)/$(LOG_C)
+#SUB_LOGC_SRCS = $(addprefix $(LOG_C_SRC)/, $(BINARY_SRCS))
+#SUB_LOGC_SRCS = $(addprefix $(LOG_C_SRC)/, $(SUBPROJECT_LOG_C_SRCS))
+
+SUB_LOGC_DIR = $(PATHD)/$(SUBPROJECT_LOG_C_NAME)
+SUB_LOGC_SRCS = $(addprefix $(SUBPROJECTS_LOG_C_SRC)/, $(SUBPROJECT_LOG_C_SRCS))
+SUB_LOGC_OBJS = $(addprefix $(SUB_LOGC_DIR)/, $(SUBPROJECT_LOG_C_OBJS))
+
+# Create the logc output file
+#logc: $(SUB_LOGC_DIR) $(SUB_LOGC_DIR)/%.o
+
+#logc: $(SUB_LOGC_DIR) $(SUB_LOGC)
+logc: $(SUB_LOGC_DIR) $(SUB_LOGC_OBJS)
+
+#$(SUB_LOGC): $(SUB_LOGC_DIR)/%.o
+	#$(CC) -c $(LOG_C_CFLAGS) $(LOG_C_LDFLAGS) -o $@ $^
+
+# Compile build/depends/log.c/log.o
+#$(SUB_LOGC_DIR)/%.o: $(LOG_C_SRC)/%.c $(LOG_C_SRC)/%.h
+
+#$(SUB_LOGC_DIR)/%.o: $(LOG_C_SRC)/%.c
+#$(SUB_LOGC_OBJS): $(LOG_C_SRC)/%.c
+#$(SUB_LOGC_OBJS): $(SUBPROJECTS_LOG_C_SRC)/%.c
+$(SUB_LOGC_OBJS): $(SUB_LOGC_SRCS)
+	$(CC) -c $(LOG_C_CFLAGS) -o $@ $^
+
+# Make build/depends/log.c
+$(SUB_LOGC_DIR):
+	$(MKDIR) $(SUB_LOGC_DIR)
+
+#SUB_LOGC_DIR = $(PATHD)/$(LOG_C)
+#SUB_LOGC_SRCS = $(addprefix $(LOG_C_SRC)/, $(LOG_C_SRCS))
+#logc: $(SUB_LOGC) $(SUB_LOGC)/%.o
+
+#$(SUB_LOGC)/%.o: $(LOG_C_SRC)/log.c $(LOG_C_SRC)/log.h
+	#$(CC) -c $(LOG_C_CFLAGS) -o $@ $^
+
+# Compile build/depends/log.c/log.o
+#$(SUB_LOGC_DIR)/%.o: $(LOG_C_SRC)/%.c $(LOG_C_SRC)/log.h
+#$(SUB_LOGC_DIR)/%.o: $(LOG_C_SRC)/%.c $(LOG_C_SRC)/log.h
+
+#$(SUB_LOGC_DIR)/%.o: $(SUB_LOGC_SRCS)
+	#$(CC) -c $(LOG_C_CFLAGS) -I$(LOG_C_SRC) -o $@ $^
+
+	#$(CC) -c $(LOG_C_CFLAGS) -o -I$(LOG_C_SRC) $@ $^
+
+
+
+#$(LIB_DEPS)/$(LOG_C)/%.o:
+#build/depends/$(LOG_C)/%.o:
+
+# Log.c
+# Lib
+#$(LIB_DEPS)/$(LOG_C)/%.o: $(LOG_C_SRC)
+	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
+	
+
+
+#LOG_C_SRCS = $(addprefix $(LOG_C_SRC)/, $(BINARY_OBJS))
+#LOG_C_SRCS = $(addprefix $(LOG_C_SRC)/, $(_LOG_C_SRCS))
+
+
+#SUB_LOGC = $(PATHD)/$(LOG_C)
+
+
+
+# Build Log.c output files
+#$(SUB_LOGC)/%.o: $(LOG_C_SRC)/%.c $(LOG_C_SRC)/%.h
+#$(SUB_LOGC)/%.o: $(LOG_C_SRC)/log.c $(LOG_C_SRC)/log.h
+#log.c: $(SUB_LOGC) $(LOG_C_SRCS)
+#log.c: $(SUB_LOGC) $(SUB_LOGC_SRCS)
+
+#log.c: $(SUB_LOGC) $(SUB_LOGC)/%.o
+#logc: $(SUB_LOGC) $(SUB_LOGC)/%.o
+
+
+	#$(CC) $(LOG_C_CFLAGS) $(TARGET_FLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
+
 # Build both targets
 build: lib bin
 
@@ -267,9 +389,14 @@ build: lib bin
 # Library builds
 #
 
-lib: $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
+lib: subprojects $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 
 # Compile the shared library target
+# Depends upon log.c
+#$(LIB): $(LIB_DEPS)/%.o
+#$(LIB): $(LIB_DEPS)/%.o $(PATHD)/$(LOG_C)/%.o
+#$(LIB): $(LIB_DEPS)/%.o $(SUB_LOGC)/%.o
+#$(LIB): $(LIB_DEPS)/%.o $(log.c)
 $(LIB): $(LIB_DEPS)/%.o
 	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
 
@@ -289,9 +416,13 @@ $(LIB_DEPS):
 # Binary builds
 #
 
-bin: $(BINARY_DIR) $(EXE_DEPS) $(EXE)
+bin: subprojects $(BINARY_DIR) $(EXE_DEPS) $(EXE)
 
 # Compile the executable binary target
+#$(EXE): $(EXE_OBJS)
+#$(EXE): $(EXE_OBJS) $(PATHD)/$(LOG_C)/%.o
+#$(EXE): $(EXE_OBJS) $(SUB_LOGC)/%.o
+#$(EXE): $(EXE_OBJS) $(log.c)
 $(EXE): $(EXE_OBJS)
 	$(CC) $(EXE_FLAGS) -o $@ $^
 
