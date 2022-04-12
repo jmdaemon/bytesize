@@ -51,12 +51,12 @@ SUBPROJECTS = subprojects
 
 # Log.c
 
-SUBPROJECT_LOG_C_NAME = log.c
-SUBPROJECT_LOG_C_SRCS = log.c
-SUBPROJECT_LOG_C_OBJS = $(SUBPROJECT_LOG_C_SRCS:.c=.o)
-
-SUBPROJECT_LOG_C_SRC = $(SUBPROJECTS)/$(SUBPROJECT_LOG_C_NAME)/src
-SUBPROJECT_LOG_C_INCLUDES = -I$(LOG_C_SRC)
+SUB_LOG_C_NAME 			= log.c
+SUB_LOG_C_SRCS 			= log.c
+SUB_LOG_C_OBJS 			= $(SUB_LOG_C_SRCS:.c=.o)
+SUB_LOG_C_SRC 			= $(SUBPROJECTS)/$(SUB_LOG_C_NAME)/src
+#SUB_LOG_C_INCLUDES 	= -I$(LOG_C_SRC)
+SUB_LOG_C_INCLUDES 	= -I$(SUB_LOG_C_SRC)
 
 #
 # Compiler flags
@@ -74,7 +74,8 @@ REL_CFLAGS = -O3 -DNDEBUG
 DBG_CFLAGS = -g -O0 -DDEBUG 
 
 # Include headers
-INCLUDE_DIRS = -I. -I$(PATHI) -I$(LOG_C_INCLUDES)
+#INCLUDE_DIRS = -I. -I$(PATHI) -I$(LOG_C_INCLUDES)
+INCLUDE_DIRS = -I. -I$(PATHI)
 INCLUDES = $(INCLUDE_DIRS)
 
 #
@@ -231,7 +232,9 @@ LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
 LIB_DEPS 		= $(TARGET_DIR)/_$(PREFIX_LIB)_deps
 LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
+LIB_OBJS 		= $(addprefix $(EXE_DEPS)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
+
 
 # Executable settings
 BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
@@ -285,24 +288,41 @@ uninstall-lib: release $(LIB)
 # Every subproject that must be compiled alongside the main project will be
 # given the SUB prefix.
 
+# SP_DEPENDS : Object files to be included into lib, bin targets
+# SP_INCLUDES: Header files to be included into lib,bin
+
+SP_DEPENDS =
+SP_INCLUDES =
 
 # Subprojects that must be built
+#SP_DEPENDS: subprojects
 subprojects: logc
 
 # Log.c Dependency
-SUB_LOGC_DIR = $(PATHD)/$(SUBPROJECT_LOG_C_NAME)
-SUB_LOGC_SRCS = $(addprefix $(SUBPROJECT_LOG_C_SRC)/, $(SUBPROJECT_LOG_C_SRCS))
-SUB_LOGC_OBJS = $(addprefix $(SUB_LOGC_DIR)/, $(SUBPROJECT_LOG_C_OBJS))
+# SP_LOGC_DIR 	: build/depends/log.c
+# SP_LOGC_SRCS 	: subprojects/log.c/src/log.c
+# SP_LOGC_OBJS 	: build/depends/log.c/log.o
+SP_LOGC_DIR 	 = $(PATHD)/$(SUB_LOG_C_NAME)
+SP_LOGC_SRCS 	 = $(addprefix $(SUB_LOG_C_SRC)/, $(SUB_LOG_C_SRCS))
+SP_LOGC_OBJS 	 = $(addprefix $(SP_LOGC_DIR)/, $(SUB_LOG_C_OBJS))
+SP_LOGC_CFLAGS = $(SUB_LOG_C_INCLUDES)
+
+# Add to subprojects
+#SP_INCLUDES = $(SUB_LOG_C_INCLUDES)
+SP_DEPENDS 	+= $(SP_LOGC_OBJS)
+SP_INCLUDES += $(SUB_LOG_C_INCLUDES)
 
 # Create the logc output file
-logc: $(SUB_LOGC_DIR) $(SUB_LOGC_OBJS)
+logc: $(SP_LOGC_DIR) $(SP_LOGC_OBJS)
 
-$(SUB_LOGC_OBJS): $(SUB_LOGC_SRCS)
-	$(CC) -c $(LOG_C_CFLAGS) -o $@ $^
+# Build build/depends/log.c/log.o
+# Depend on the log.c source
+$(SP_LOGC_OBJS): $(SP_LOGC_SRCS)
+	$(CC) -c $(SP_LOGC_CFLAGS) -o $@ $^
 
 # Make build/depends/log.c
-$(SUB_LOGC_DIR):
-	$(MKDIR) $(SUB_LOGC_DIR)
+$(SP_LOGC_DIR):
+	$(MKDIR) $(SP_LOGC_DIR)
 
 # Build both targets
 build: lib bin
@@ -315,13 +335,16 @@ lib: subprojects $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 
 # Compile the shared library target
 # Depend upon logc and the library object files
-$(LIB): $(LIB_DEPS)/%.o
+#$(LIB): $(LIB_DEPS)/%.o
+#$(LIB): $(LIB_DEPS)/%.o
+$(LIB): $(LIB_OBJS)
 	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
+	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
 
 # Compile all library object files
 # Depends on the source files and the headers
 $(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h
-	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -o $@ $<
+	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -I$(SUB_LOG_C_INCLUDES) -o $@ $<
 
 # Create $(LIBRARY_DIR)
 $(LIBRARY_DIR):
@@ -338,13 +361,19 @@ bin: subprojects $(BINARY_DIR) $(EXE_DEPS) $(EXE)
 
 # Compile the executable binary target
 # Depend on our binary's object files and logc
-$(EXE): $(EXE_OBJS)
-	$(CC) $(EXE_FLAGS) -o $@ $^
+#$(EXE): $(EXE_OBJS) $(SP_DEPENDS)
+$(EXE): $(EXE_OBJS) $(SP_DEPENDS)
+	$(CC) $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $^
 
 # Compile all $(EXE_OBJS) object files
 # Depend on the binary's source files and the headers
-$(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h
-	$(CC) -c $(EXE_FLAGS) -o $@ $<
+$(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
+	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
+
+# Compile all $(EXE_OBJS) object files
+# Depend on the binary's source files
+$(EXE_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
+	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
 
 # Create $(BINARY_DIR)
 $(BINARY_DIR):
