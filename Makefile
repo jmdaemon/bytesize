@@ -285,23 +285,17 @@ uninstall-lib: release $(LIB)
 #
 # Subprojects
 #
-# Every subproject that must be compiled alongside the main project will be
-# given the SUB prefix.
+# Build subprojects alongside our project
+
+# Subprojects that must be built
+subprojects: logc
 
 # SP_DEPENDS : Object files to be included into lib, bin targets
 # SP_INCLUDES: Header files to be included into lib,bin
-
 SP_DEPENDS =
 SP_INCLUDES =
 
-# Subprojects that must be built
-#SP_DEPENDS: subprojects
-subprojects: logc
-
 # Log.c Dependency
-# SP_LOGC_DIR 	: build/depends/log.c
-# SP_LOGC_SRCS 	: subprojects/log.c/src/log.c
-# SP_LOGC_OBJS 	: build/depends/log.c/log.o
 SP_LOGC_DIR 	 = $(PATHD)/$(SUB_LOG_C_NAME)
 SP_LOGC_SRCS 	 = $(addprefix $(SUB_LOG_C_SRC)/, $(SUB_LOG_C_SRCS))
 SP_LOGC_OBJS 	 = $(addprefix $(SP_LOGC_DIR)/, $(SUB_LOG_C_OBJS))
@@ -335,56 +329,22 @@ build: lib bin
 lib: subprojects $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 
 # Compile the shared library target
-# Depend upon logc and the library object files
-#$(LIB): $(LIB_DEPS)/%.o
-#$(LIB): $(LIB_DEPS)/%.o
-#$(LIB): $(LIB_OBJS)
-# Link the shared library target
-# Depends on the library object files
-#$(LIB): $(LIB_OBJS) $(SP_DEPENDS)
-
-#$(LIB): $(LIB_DEPS)/%.o $(SP_DEPENDS)
-
+# Depend upon logc and the library object files and the subproject object files
 $(LIB): $(LIB_OBJS) $(SP_DEPENDS)
 	@echo "Linking library target"
 	$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
 
-
-	#$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
-
-	#$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
-	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
-	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
-
 # Compile all library object files
 # Depends on the source files, headers and subproject object files
-#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h $(SP_DEPENDS)
-#$(LIB_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
-#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h $(SP_DEPENDS)
-
 $(LIB_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
 	@echo "Compiling library target sources"
 	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
 
 # Depends on the source files, and subproject object files
-#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(SP_DEPENDS)
-#$(LIB_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
-#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(SP_DEPENDS)
-
 $(LIB_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
 	@echo "Compiling main library target source"
 	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
 
-#$(SP_LOGC_OBJS): $(SP_LOGC_SRCS)
-	#$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_LOGC_CFLAGS) -o $@ $^
-
-
-# Depends on the source files
-#$(LIB_DEPS)/%.o: $(LIB_SRCS)
-	#$(CC) -c $(LIB_CFLAGS) $(LIB_FLAGS) -o $@ $<
-
-
-# Create $(LIBRARY_DIR)
 $(LIBRARY_DIR):
 	$(MKDIR) $(LIBRARY_DIR)
 
@@ -414,7 +374,6 @@ $(EXE_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
 	@echo "Compiling main binary target source"
 	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
 
-# Create $(BINARY_DIR)
 $(BINARY_DIR):
 	$(MKDIR) $(BINARY_DIR)
 
