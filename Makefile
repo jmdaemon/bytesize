@@ -3,19 +3,11 @@ include make/os.mk
 include make/structure.mk
 
 #
-# Subprojects
-#
-
-#
 # Compiler flags
 #
 # Common compiler flags to every target go here
 GLOBAL_CFLAGS = -Wall -Wextra
 GLOBAL_LDFLAGS = -lpcre -lm
-
-# Library compiler flags
-LIB_CFLAGS = -fPIC
-LIB_LDFLAGS = -shared
 
 # Include headers
 INCLUDES = -I. -I$(PATHI)
