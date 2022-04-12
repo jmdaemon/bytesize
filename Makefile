@@ -1,25 +1,6 @@
 include make/os.mk
 
-#
-# Project Structure
-#
-
-# These are used to generate the build structure:
-# - src
-# - test
-# - include
-# - subprojects
-# - build
-# - build/{debug, release}
-# - build/{debug, release}/lib/
-# - build/{debug, release}/bin/
-
-PATHS = src
-PATHT = test
-PATHB = build
-PATHI = include
-
-SUBPROJECTS = subprojects
+include make/structure.mk
 
 #
 # Subprojects
@@ -66,8 +47,6 @@ include make/config.mk
 # Rules
 #
 
-#.PHONY: all debug release test lib bin clean clean-bin clean-test remake
-#.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
 .PHONY: all subprojects logc test lib bin clean clean-bin clean-test remake
 
 #
