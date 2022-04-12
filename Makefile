@@ -309,7 +309,6 @@ logc: $(SP_LOGC_DIR) $(SP_LOGC_OBJS)
 $(SP_LOGC_OBJS): $(SP_LOGC_SRCS)
 	$(CC) -c $(LIB_CFLAGS) $(SP_LOGC_CFLAGS) -o $@ $^
 
-# Make build/depends/log.c
 $(SP_LOGC_DIR):
 	$(MKDIR) $(SP_LOGC_DIR)
 
