@@ -19,7 +19,6 @@ PATHT = test
 PATHB = build
 PATHI = include
 
-PREFIX_BIN = bin
 PREFIX_LIB = lib
 
 SUBPROJECTS = subprojects
@@ -72,15 +71,6 @@ LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
 LIB_OBJS 		= $(addprefix $(LIB_DEPS)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
-
-
-# Executable settings
-BINARY_DIR 	= $(TARGET_DIR)/$(PREFIX_BIN)
-EXE_DEPS 		= $(TARGET_DIR)/_$(PREFIX_BIN)_deps
-EXE_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
-EXE_SRCS 		= $(addprefix $(PATHS)/, $(BINARY_SRCS))
-EXE_OBJS 		= $(addprefix $(EXE_DEPS)/, $(BINARY_OBJS))
-EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 
 #
 # Rules
@@ -151,34 +141,7 @@ $(LIBRARY_DIR):
 $(LIB_DEPS):
 	$(MKDIR) $(LIB_DEPS)
 
-#
-# Binary builds
-#
-
-bin: subprojects $(BINARY_DIR) $(EXE_DEPS) $(EXE)
-
-# Link the executable binary target
-# Depend on our binary's object files and logc
-$(EXE): $(EXE_OBJS) $(SP_DEPENDS)
-	@echo "Linking binary target"
-	$(CC) $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $^
-
-# Compile all $(EXE_OBJS) object files
-# Depend on the binary's source files and the headers
-$(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
-	@echo "Compiling binary target sources"
-	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
-
-# Depend on the binary's source files
-$(EXE_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
-	@echo "Compiling main binary target source"
-	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
-
-$(BINARY_DIR):
-	$(MKDIR) $(BINARY_DIR)
-
-$(EXE_DEPS):
-	$(MKDIR) $(EXE_DEPS)
+include make/binary.mk
 
 #
 # Other rules
@@ -201,9 +164,3 @@ clean-lib: clean-objs
 	@echo "Removing library build output"
 	$(CLEANUP) $(PATHB)/debug/lib/$(LIBRARY_NAME) $(PATHB)/release/lib/$(LIBRARY_NAME)
 	$(CLEANUP) $(PATHB)/debug/_$(PREFIX_LIB)_deps/*.o $(PATHB)/release/_$(PREFIX_LIB)_deps/*.o
-
-# Remove output files for executables
-clean-bin: clean-objs
-	@echo "Removing binary build output"
-	$(CLEANUP) $(PATHB)/debug/bin/$(BINARY_NAME) $(PATHB)/release/bin/$(BINARY_NAME)
-	$(CLEANUP) $(PATHB)/debug/_$(PREFIX_BIN)_deps/*.o $(PATHB)/release/_$(PREFIX_BIN)_deps/*.o
