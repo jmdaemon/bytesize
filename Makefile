@@ -232,7 +232,7 @@ LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
 LIB_DEPS 		= $(TARGET_DIR)/_$(PREFIX_LIB)_deps
 LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
 LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
-LIB_OBJS 		= $(addprefix $(EXE_DEPS)/, $(LIBRARY_OBJS))
+LIB_OBJS 		= $(addprefix $(LIB_DEPS)/, $(LIBRARY_OBJS))
 LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
 
 
@@ -317,8 +317,9 @@ logc: $(SP_LOGC_DIR) $(SP_LOGC_OBJS)
 
 # Build build/depends/log.c/log.o
 # Depend on the log.c source
+# Note that we build it with -fPIC since we include it in our library
 $(SP_LOGC_OBJS): $(SP_LOGC_SRCS)
-	$(CC) -c $(SP_LOGC_CFLAGS) -o $@ $^
+	$(CC) -c $(LIB_CFLAGS) $(SP_LOGC_CFLAGS) -o $@ $^
 
 # Make build/depends/log.c
 $(SP_LOGC_DIR):
@@ -337,14 +338,51 @@ lib: subprojects $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
 # Depend upon logc and the library object files
 #$(LIB): $(LIB_DEPS)/%.o
 #$(LIB): $(LIB_DEPS)/%.o
-$(LIB): $(LIB_OBJS)
-	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) -o $@ $^
+#$(LIB): $(LIB_OBJS)
+# Link the shared library target
+# Depends on the library object files
+#$(LIB): $(LIB_OBJS) $(SP_DEPENDS)
+
+#$(LIB): $(LIB_DEPS)/%.o $(SP_DEPENDS)
+
+$(LIB): $(LIB_OBJS) $(SP_DEPENDS)
+	@echo "Linking library target"
+	$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
+
+
+	#$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
+
+	#$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
+	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
 	#$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
 
 # Compile all library object files
-# Depends on the source files and the headers
-$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h
-	$(CC) $(LIB_CFLAGS) -c $(EXE_FLAGS) -I$(SUB_LOG_C_INCLUDES) -o $@ $<
+# Depends on the source files, headers and subproject object files
+#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h $(SP_DEPENDS)
+#$(LIB_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
+#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(PATHI)/%.h $(SP_DEPENDS)
+
+$(LIB_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
+	@echo "Compiling library target sources"
+	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
+
+# Depends on the source files, and subproject object files
+#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(SP_DEPENDS)
+#$(LIB_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
+#$(LIB_DEPS)/%.o: $(LIB_SRCS) $(SP_DEPENDS)
+
+$(LIB_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
+	@echo "Compiling main library target source"
+	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
+
+#$(SP_LOGC_OBJS): $(SP_LOGC_SRCS)
+	#$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_LOGC_CFLAGS) -o $@ $^
+
+
+# Depends on the source files
+#$(LIB_DEPS)/%.o: $(LIB_SRCS)
+	#$(CC) -c $(LIB_CFLAGS) $(LIB_FLAGS) -o $@ $<
+
 
 # Create $(LIBRARY_DIR)
 $(LIBRARY_DIR):
@@ -359,20 +397,21 @@ $(LIB_DEPS):
 
 bin: subprojects $(BINARY_DIR) $(EXE_DEPS) $(EXE)
 
-# Compile the executable binary target
+# Link the executable binary target
 # Depend on our binary's object files and logc
-#$(EXE): $(EXE_OBJS) $(SP_DEPENDS)
 $(EXE): $(EXE_OBJS) $(SP_DEPENDS)
+	@echo "Linking binary target"
 	$(CC) $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $^
 
 # Compile all $(EXE_OBJS) object files
 # Depend on the binary's source files and the headers
 $(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
+	@echo "Compiling binary target sources"
 	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
 
-# Compile all $(EXE_OBJS) object files
 # Depend on the binary's source files
 $(EXE_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
+	@echo "Compiling main binary target source"
 	$(CC) -c $(EXE_FLAGS) $(SP_INCLUDES) -o $@ $<
 
 # Create $(BINARY_DIR)
