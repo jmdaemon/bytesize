@@ -39,7 +39,7 @@ include make/config.mk
 # Rules
 #
 
-.PHONY: all subprojects logc test lib bin clean clean-bin clean-test remake
+.PHONY: all subprojects clean remake
 
 #
 # Subprojects
@@ -69,7 +69,7 @@ include make/binary.mk
 # Other rules
 #
 
-remake: clean all
+remake: clean build
 
 clean: clean-test clean-subprojects clean-objs clean-bin clean-lib
 
