@@ -77,13 +77,6 @@ install-bin: release $(EXE)
 uninstall-bin: release $(EXE)
 	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
 
-# Install the library
-#install-lib: $(LIB)
-	#install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
-
-#uninstall-lib: release $(LIB)
-	#$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
-
 #
 # Subprojects
 #
