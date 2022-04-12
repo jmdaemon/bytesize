@@ -55,7 +55,6 @@ SUB_LOG_C_NAME 			= log.c
 SUB_LOG_C_SRCS 			= log.c
 SUB_LOG_C_OBJS 			= $(SUB_LOG_C_SRCS:.c=.o)
 SUB_LOG_C_SRC 			= $(SUBPROJECTS)/$(SUB_LOG_C_NAME)/src
-#SUB_LOG_C_INCLUDES 	= -I$(LOG_C_SRC)
 SUB_LOG_C_INCLUDES 	= -I$(SUB_LOG_C_SRC)
 
 #
@@ -74,9 +73,7 @@ REL_CFLAGS = -O3 -DNDEBUG
 DBG_CFLAGS = -g -O0 -DDEBUG 
 
 # Include headers
-#INCLUDE_DIRS = -I. -I$(PATHI) -I$(LOG_C_INCLUDES)
-INCLUDE_DIRS = -I. -I$(PATHI)
-INCLUDES = $(INCLUDE_DIRS)
+INCLUDES = -I. -I$(PATHI)
 
 #
 # Unit Testing
@@ -152,24 +149,21 @@ $(PATHD)/%.d:: $(PATHT)/%.c
 # Unit test build paths
 #
 
-# Create build/
 $(PATHB):
 	$(MKDIR) $(PATHB)
 
-# Create build/depends
 $(PATHD):
 	$(MKDIR) $(PATHD)
 
-# Create build/objs
 $(PATHO):
 	$(MKDIR) $(PATHO)
 
-# Create build/results
 $(PATHR):
 	$(MKDIR) $(PATHR)
 
 # Remove output files for tests
 clean-test:
+	@echo "Removing project test output"
 	$(CLEANUP) $(PATHO)/*.o
 	$(CLEANUP) $(PATHB)/*.$(TARGET_EXTENSION)
 	$(CLEANUP) $(PATHR)/*.txt
@@ -386,16 +380,24 @@ $(EXE_DEPS):
 
 remake: clean all
 
-clean: clean-test clean-objs clean-bin clean-lib
+clean: clean-test clean-subprojects clean-objs clean-bin clean-lib
+
+clean-subprojects:
+	@echo "Removing subprojects output"
+	$(CLEANUP) $(SP_LOGC_OBJS)
 	
 clean-objs:
+	@echo "Removing build object output"
 	$(CLEANUP) $(PATHB)/debug/*.o $(PATHB)/release/*.o
 
 # Remove output files for executables
 clean-lib: clean-objs
+	@echo "Removing library build output"
 	$(CLEANUP) $(PATHB)/debug/lib/$(LIBRARY_NAME) $(PATHB)/release/lib/$(LIBRARY_NAME)
+	$(CLEANUP) $(PATHB)/debug/_$(PREFIX_LIB)_deps/*.o $(PATHB)/release/_$(PREFIX_LIB)_deps/*.o
 
 # Remove output files for executables
 clean-bin: clean-objs
+	@echo "Removing binary build output"
 	$(CLEANUP) $(PATHB)/debug/bin/$(BINARY_NAME) $(PATHB)/release/bin/$(BINARY_NAME)
 	$(CLEANUP) $(PATHB)/debug/_$(PREFIX_BIN)_deps/*.o $(PATHB)/release/_$(PREFIX_BIN)_deps/*.o
