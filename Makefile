@@ -70,13 +70,6 @@ include make/config.mk
 #.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
 .PHONY: all subprojects logc test lib bin clean clean-bin clean-test remake
 
-# Install the binary
-install-bin: release $(EXE)
-	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
-
-uninstall-bin: release $(EXE)
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
-
 #
 # Subprojects
 #
