@@ -248,10 +248,12 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 #.PHONY: all debug release test lib bin clean clean-bin clean-test remake
 .PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
 
-# Dummy rules
+# Toggle debug/release configurations with make debug TARGET
 debug:
+	@echo "Setting debug build options"
 
 release:
+	@echo "Setting release build options"
 
 #
 # Install / Uninstall
