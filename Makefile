@@ -39,10 +39,6 @@ GLOBAL_LDFLAGS = -lpcre -lm
 LIB_CFLAGS = -fPIC
 LIB_LDFLAGS = -shared
 
-# Release / Debug compiler flags
-REL_CFLAGS = -O3 -DNDEBUG
-DBG_CFLAGS = -g -O0 -DDEBUG 
-
 # Include headers
 INCLUDES = -I. -I$(PATHI)
 
@@ -71,29 +67,7 @@ ifeq ($(PREFIX),)
     PREFIX := /usr/local
 endif
 
-#
-# Build settings
-#
-# Toggle between release and debug configurations
-
-# Build in release mode by default
-TARGET := release
-TARGET_FLAGS := $(REL_CFLAGS)
-
-# Release settings
-ifeq ($(filter release,$(MAKECMDGOALS)),release)
-TARGET = release
-TARGET_FLAGS = $(REL_CFLAGS)
-endif
-
-# Debug build settings
-ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
-TARGET = debug
-TARGET_FLAGS = $(DBG_CFLAGS)
-endif
-
-# Debug or Release target directory
-TARGET_DIR = $(PATHB)/$(TARGET)
+include make/config.mk
 
 # Library settings
 LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
@@ -117,14 +91,8 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 #
 
 #.PHONY: all debug release test lib bin clean clean-bin clean-test remake
-.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
-
-# Toggle debug/release configurations with make debug TARGET
-debug:
-	@echo "Setting debug build options"
-
-release:
-	@echo "Setting release build options"
+#.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
+.PHONY: all subprojects logc test lib bin clean clean-bin clean-test remake
 
 #
 # Install / Uninstall
