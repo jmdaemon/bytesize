@@ -19,8 +19,6 @@ PATHT = test
 PATHB = build
 PATHI = include
 
-PREFIX_LIB = lib
-
 SUBPROJECTS = subprojects
 
 #
@@ -64,14 +62,6 @@ LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
 include make/install.mk
 include make/config.mk
 
-# Library settings
-LIBRARY_DIR = $(TARGET_DIR)/$(PREFIX_LIB)
-LIB_DEPS 		= $(TARGET_DIR)/_$(PREFIX_LIB)_deps
-LIB_FLAGS 	= $(GLOBAL_CFLAGS) $(GLOBAL_LDFLAGS) $(TARGET_FLAGS) $(INCLUDES)
-LIB_SRCS 		= $(addprefix $(PATHS)/, $(LIBRARY_SRCS))
-LIB_OBJS 		= $(addprefix $(LIB_DEPS)/, $(LIBRARY_OBJS))
-LIB 				= $(LIBRARY_DIR)/$(LIBRARY_NAME)
-
 #
 # Rules
 #
@@ -88,11 +78,11 @@ uninstall-bin: release $(EXE)
 	$(CLEANUP) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
 
 # Install the library
-install-lib: $(LIB)
-	install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
+#install-lib: $(LIB)
+	#install $(LIB) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
 
-uninstall-lib: release $(LIB)
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
+#uninstall-lib: release $(LIB)
+	#$(CLEANUP) $(DESTDIR)$(PREFIX)/lib/$(LIBRARY_NAME)
 
 #
 # Subprojects
@@ -112,35 +102,10 @@ include make/log.c.mk
 # Build both targets
 build: lib bin
 
-#
-# Library builds
-#
+# Build as a library
+include make/library.mk
 
-lib: subprojects $(LIBRARY_DIR) $(LIB_DEPS) $(LIB)
-
-# Compile the shared library target
-# Depend upon logc and the library object files and the subproject object files
-$(LIB): $(LIB_OBJS) $(SP_DEPENDS)
-	@echo "Linking library target"
-	$(CC) $(LIB_LDFLAGS) $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $^
-
-# Compile all library object files
-# Depends on the source files, headers and subproject object files
-$(LIB_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h $(SP_DEPENDS)
-	@echo "Compiling library target sources"
-	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
-
-# Depends on the source files, and subproject object files
-$(LIB_DEPS)/%.o: $(PATHS)/%.c $(SP_DEPENDS)
-	@echo "Compiling main library target source"
-	$(CC) $(LIB_CFLAGS) -c $(LIB_FLAGS) $(SP_INCLUDES) -o $@ $<
-
-$(LIBRARY_DIR):
-	$(MKDIR) $(LIBRARY_DIR)
-
-$(LIB_DEPS):
-	$(MKDIR) $(LIB_DEPS)
-
+# Build as a binary
 include make/binary.mk
 
 #
@@ -158,9 +123,3 @@ clean-subprojects:
 clean-objs:
 	@echo "Removing build object output"
 	$(CLEANUP) $(PATHB)/debug/*.o $(PATHB)/release/*.o
-
-# Remove output files for executables
-clean-lib: clean-objs
-	@echo "Removing library build output"
-	$(CLEANUP) $(PATHB)/debug/lib/$(LIBRARY_NAME) $(PATHB)/release/lib/$(LIBRARY_NAME)
-	$(CLEANUP) $(PATHB)/debug/_$(PREFIX_LIB)_deps/*.o $(PATHB)/release/_$(PREFIX_LIB)_deps/*.o
