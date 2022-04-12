@@ -73,9 +73,7 @@ remake: clean build
 
 clean: clean-test clean-subprojects clean-objs clean-bin clean-lib
 
-clean-subprojects:
-	@echo "Removing subprojects output"
-	$(CLEANUP) $(SP_LOGC_OBJS)
+clean-subprojects: clean-logc
 	
 clean-objs:
 	@echo "Removing build object output"
