@@ -90,16 +90,6 @@ EXE 				= $(BINARY_DIR)/$(BINARY_NAME)
 #.PHONY: all subprojects logc debug release test lib bin clean clean-bin clean-test remake
 .PHONY: all subprojects logc test lib bin clean clean-bin clean-test remake
 
-#
-# Install / Uninstall
-#
-
-# Install both targets
-install: install-bin install-lib
-
-# Uninstall both targets
-uninstall:  uninstall-bin uninstall-lib
-
 # Install the binary
 install-bin: release $(EXE)
 	install $(EXE) $(DESTDIR)$(PREFIX)/bin/$(BINARY_NAME)
