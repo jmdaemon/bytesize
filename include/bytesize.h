@@ -13,6 +13,7 @@ extern "C" {
 #include <stdbool.h>
 #include <pcre.h>
 #include <math.h>
+#include "log.h"
 
 #define SIZE 4
 
