@@ -160,6 +160,26 @@ void convert_units_binary_to_byte_should_return_correct_conversion() {
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
+// Big Byte Tests
+
+void convert_units_petabyte_to_byte_should_return_correct_conversion() {
+    const char* from = "5PB";
+    const char* units_from = "PB";
+    const char* units_to = "B";
+    const double result = convert_units(from, units_from, units_to);
+    const long double expected = 5000000000000000.00;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
+/*void convert_units_yetabyte_to_byte_should_return_correct_conversion() {*/
+    /*const char* from = "5YB";*/
+    /*const char* units_from = "YB";*/
+    /*const char* units_to = "B";*/
+    /*const double result = convert_units(from, units_from, units_to);*/
+    /*const long double expected = 5000000000000000.00;*/
+    /*TEST_ASSERT_EQUAL_FLOAT(expected, result);*/
+/*}*/
+
 /* Main runner */
 int main(void) {
     UNITY_BEGIN();
@@ -177,11 +197,14 @@ int main(void) {
     RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
     RUN_TEST(convert_units_binary_to_binary_should_return_correct_conversion);
     RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
-    // Byte Conversion convert_units tests
+    // Byte Conversion tests
     RUN_TEST(convert_units_byte_to_byte_should_return_correct_conversion);
     RUN_TEST(convert_units_byte_to_si_should_return_correct_conversion);
     RUN_TEST(convert_units_byte_to_binary_should_return_correct_conversion);
     RUN_TEST(convert_units_si_to_byte_should_return_correct_conversion);
     RUN_TEST(convert_units_binary_to_byte_should_return_correct_conversion);
+    // Big number conversion tests
+    RUN_TEST(convert_units_petabyte_to_byte_should_return_correct_conversion);
+    /*RUN_TEST(convert_units_yetabyte_to_byte_should_return_correct_conversion);*/
     return UNITY_END();
 }
