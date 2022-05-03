@@ -19,12 +19,6 @@ INCLUDES = -I. -I$(PATHI)
 # Subprojects
 #
 
-# Directories
-PATHU = subprojects/unity/src
-PATHD = $(PATHB)/depends
-PATHO = $(PATHB)/objs
-PATHR = $(PATHB)/results
-
 include make/log.c.mk
 include make/unity.mk
 
