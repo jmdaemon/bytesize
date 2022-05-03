@@ -6,9 +6,8 @@
  * Note that this also means that this does not convert between SI_BYTE to BYTE
  */
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
-  if (strcmp(unit, "B") == 0) {
+  if (strcmp(unit, "B") == 0)
     return scale;
-  }
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale, i + 1);
     if (strcmp(unit, BYTE_FORMAT[i]) == 0)
@@ -25,7 +24,7 @@ bool found_in(const char *elem, const char *array[], int array_size) {
 }
 
 long int get_factor(const char *unit) {
-  int scale = (found_in(unit, SI_BYTE, SIZE)) ? (int) pow(10, 3) : (int) pow(2, 10);
+  int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;
   return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
 }
 

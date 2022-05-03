@@ -17,9 +17,9 @@ extern "C" {
 
 #define SIZE 4
 
-//static const char *unit_regex = "([K|M|G|TiB])";
-//static const char *unit_regex = "([KMGTi][B])";
-//static const char *unit_regex = "([KMGT]i?B+)";
+static const int SI_SCALE = 1000;
+static const int BINARY_SCALE = 1024;
+
 static const char *unit_regex = "([KMGT]?i?B+)";
 static const char *num_regex = "([\\d]+)";
 
