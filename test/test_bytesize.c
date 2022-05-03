@@ -32,16 +32,15 @@ void calc_factor_binary_should_return_correct_bytescale() {
     const char* unit = "KiB";
     const long int expected = 1024;
     const long int result = calc_factor(unit, SIZE, BYTE, BINARY_SCALE);
-    // 1 KB == 1000 Bytes
+    // 1 KiB == 1024 Bytes
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
-
 
 void calc_factor_binary_byte_should_return_correct_bytescale() {
     const char* unit = "B";
     const long int expected = 1;
     const long int result = calc_factor(unit, SIZE, BYTE, BINARY_SCALE);
-    // 1 Byte == 1 Byte
+    // 1 B == 1 B
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
 
@@ -54,7 +53,7 @@ void convert_units_binary_to_si_should_return_correct_conversion() {
     const double expected = 5.242880;
     printf("Result  : %f\n", result);
     printf("Expected: %f\n", expected);
-    TEST_ASSERT_EQUAL_FLOAT(result, expected);
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
 void convert_units_si_to_binary_should_return_correct_conversion() {
@@ -66,7 +65,7 @@ void convert_units_si_to_binary_should_return_correct_conversion() {
     const double expected = 4.768372;
     printf("Result  : %f\n", result);
     printf("Expected: %f\n", expected);
-    TEST_ASSERT_EQUAL_FLOAT(result, expected);
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
 void convert_units_si_to_si_should_return_correct_conversion() {
@@ -75,7 +74,7 @@ void convert_units_si_to_si_should_return_correct_conversion() {
     const char* units_to = "MiB";
     const double result = convert_units(from, units_from, units_to);
     const double expected = 5120.00;
-    TEST_ASSERT_EQUAL_FLOAT(result, expected);
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
 void convert_units_binary_to_binary_should_return_correct_conversion() {
@@ -84,7 +83,7 @@ void convert_units_binary_to_binary_should_return_correct_conversion() {
     const char* units_to = "MB";
     const double result = convert_units(from, units_from, units_to);
     const double expected = 5000.00;
-    TEST_ASSERT_EQUAL_FLOAT(result, expected);
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
 /* Main runner */
