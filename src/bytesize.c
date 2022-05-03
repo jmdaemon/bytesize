@@ -100,7 +100,7 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
   log_debug("Conversion Factor From : %ld", from);
   log_debug("Conversion Factor To   : %ld", to);
 
-  const double factor = from / to;
+  const double factor = (double) from / to;
   const double conversion = amt * factor;
   return conversion;
 }
