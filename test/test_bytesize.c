@@ -18,15 +18,6 @@ void calc_factor_si_should_return_correct_bytescale() {
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
 
-
-void calc_factor_si_byte_should_return_correct_bytescale() {
-    const char* unit = "B";
-    const long int expected = 1;
-    const long int result = calc_factor(unit, SIZE, SI_BYTE, SI_SCALE);
-    // 1 Byte == 1 Byte
-    TEST_ASSERT_EQUAL_INT(expected, result);
-}
-
 void calc_factor_binary_should_return_correct_bytescale() {
     // The scale is with the respect of the unit to the scale of one byte measurement
     const char* unit = "KiB";
@@ -36,12 +27,14 @@ void calc_factor_binary_should_return_correct_bytescale() {
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
 
-void calc_factor_binary_byte_should_return_correct_bytescale() {
+void calc_factor_byte_should_return_correct_bytescale() {
+    // 1 B == 1 B
     const char* unit = "B";
     const long int expected = 1;
-    const long int result = calc_factor(unit, SIZE, BYTE, BINARY_SCALE);
-    // 1 B == 1 B
-    TEST_ASSERT_EQUAL_INT(expected, result);
+    const long int binary_byte = calc_factor(unit, SIZE, BYTE, BINARY_SCALE);
+    const long int si_byte = calc_factor(unit, SIZE, SI_BYTE, SI_SCALE);
+    TEST_ASSERT_EQUAL_INT(expected, binary_byte);
+    TEST_ASSERT_EQUAL_INT(expected, si_byte);
 }
 
 void convert_units_binary_to_si_should_return_correct_conversion() {
@@ -90,9 +83,8 @@ void convert_units_binary_to_binary_should_return_correct_conversion() {
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(calc_factor_si_should_return_correct_bytescale);
-    RUN_TEST(calc_factor_si_byte_should_return_correct_bytescale);
     RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
-    RUN_TEST(calc_factor_binary_byte_should_return_correct_bytescale);
+    RUN_TEST(calc_factor_byte_should_return_correct_bytescale);
     RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
     RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
     RUN_TEST(convert_units_si_to_si_should_return_correct_conversion);
