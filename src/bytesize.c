@@ -7,7 +7,7 @@
  */
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
   if (strcmp(unit, "B") == 0)
-    return scale;
+    return 1;
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale, i + 1);
     if (strcmp(unit, BYTE_FORMAT[i]) == 0)
