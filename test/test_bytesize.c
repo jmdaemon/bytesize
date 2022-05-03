@@ -37,6 +37,7 @@ void calc_factor_byte_should_return_correct_bytescale() {
     TEST_ASSERT_EQUAL_INT(expected, si_byte);
 }
 
+// Normal unit conversions
 void convert_units_binary_to_si_should_return_correct_conversion() {
     const char* from = "5MiB";
     const char* units_from = "MiB";
@@ -79,15 +80,75 @@ void convert_units_binary_to_binary_should_return_correct_conversion() {
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
 }
 
+// Byte conversions
+
+// Byte to Byte
+void convert_units_byte_to_byte_should_return_correct_conversion() {
+    const char* from = "5B";
+    const char* units_from = "B";
+    const char* units_to = "B";
+    const double result = convert_units(from, units_from, units_to);
+    const double expected = 5;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
+// Byte to SI
+void convert_units_byte_to_si_should_return_correct_conversion() {
+    const char* from = "5B";
+    const char* units_from = "B";
+    const char* units_to = "KB";
+    const double result = convert_units(from, units_from, units_to);
+    const double expected = 0.005;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
+// Byte to Binary
+void convert_units_byte_to_binary_should_return_correct_conversion() {
+    const char* from = "5B";
+    const char* units_from = "B";
+    const char* units_to = "KiB";
+    const double result = convert_units(from, units_from, units_to);
+    const double expected = 0.00488281;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
+// SI to Byte
+void convert_units_si_to_byte_should_return_correct_conversion() {
+    const char* from = "5MB";
+    const char* units_from = "MB";
+    const char* units_to = "B";
+    const double result = convert_units(from, units_from, units_to);
+    const double expected = 5000000;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
+// Binary to Byte
+void convert_units_binary_to_byte_should_return_correct_conversion() {
+    const char* from = "5MiB";
+    const char* units_from = "MiB";
+    const char* units_to = "B";
+    const double result = convert_units(from, units_from, units_to);
+    const double expected = 5242880;
+    TEST_ASSERT_EQUAL_FLOAT(expected, result);
+}
+
 /* Main runner */
 int main(void) {
     UNITY_BEGIN();
+    // calc_factor tests
     RUN_TEST(calc_factor_si_should_return_correct_bytescale);
     RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
     RUN_TEST(calc_factor_byte_should_return_correct_bytescale);
-    RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
-    RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
+    // Normal convert_units tests
     RUN_TEST(convert_units_si_to_si_should_return_correct_conversion);
+    RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
     RUN_TEST(convert_units_binary_to_binary_should_return_correct_conversion);
+    RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
+    // Byte Conversion convert_units tests
+    RUN_TEST(convert_units_byte_to_byte_should_return_correct_conversion);
+    RUN_TEST(convert_units_byte_to_si_should_return_correct_conversion);
+    RUN_TEST(convert_units_byte_to_binary_should_return_correct_conversion);
+    RUN_TEST(convert_units_si_to_byte_should_return_correct_conversion);
+    RUN_TEST(convert_units_binary_to_byte_should_return_correct_conversion);
     return UNITY_END();
 }
