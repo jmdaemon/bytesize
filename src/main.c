@@ -11,16 +11,16 @@ int main (int argc, char **argv) {
   int verbose = arguments.verbose;
 
   // Set log level
-  if (verbose == 1) 
+  if (verbose == 1)
     log_set_level(LOG_TRACE);
-  else 
+  else
     log_set_level(LOG_ERROR);
 
   log_info("Arguments: ");
   log_info("Args[0]: %s\n", arguments.args[0]);
   log_info("Args[1]: %s\n", arguments.args[1]);
-  log_info("Verbose: %s\n", (verbose) ? "On" : "Off");
-  log_info("Display with units: %s\n", arguments.display_units);
+  log_info("Verbose: %s\n", (verbose == 0) ? "Off" : "On");
+  log_info("Display with units: %s\n", (arguments.display_units) ? "True" : "False");
 
   const char *units_from = get_unit(arguments.args[0]);
   const char *units_to   = get_unit(arguments.args[1]);
