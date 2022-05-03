@@ -70,6 +70,12 @@ build: lib bin
 # Build as a library
 include make/library.mk
 
+install-lib-headers:
+	install $(PATHI)/bytesize.h $(DESTDIR)$(PREFIX)/include/bytesize.h
+
+uninstall-lib-headers:
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/bytesize.h
+
 # Build as a binary
 include make/binary.mk
 
