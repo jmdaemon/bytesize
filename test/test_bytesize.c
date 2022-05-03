@@ -15,9 +15,9 @@ void tearDown(void) {
 void calc_factor_si_should_return_correct_bytescale() {
     // The scale is with the respect of the unit to the scale of one byte measurement
     const char* unit = "KB";
-    const unsigned int scale = 1000;
+    const unsigned int si_scale = 1000;
     const long int expected = 1000;
-    const long int result = calc_factor(unit, SIZE, SI_BYTE, scale);
+    const long int result = calc_factor(unit, SIZE, SI_BYTE, si_scale);
     // 1 KB == 1000 Bytes
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
@@ -25,9 +25,9 @@ void calc_factor_si_should_return_correct_bytescale() {
 
 void calc_factor_si_byte_should_return_correct_bytescale() {
     const char* unit = "B";
-    const unsigned int scale = 1;
+    const unsigned int si_scale = 1000;
     const long int expected = 1;
-    const long int result = calc_factor(unit, SIZE, SI_BYTE, scale);
+    const long int result = calc_factor(unit, SIZE, SI_BYTE, si_scale);
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
 
