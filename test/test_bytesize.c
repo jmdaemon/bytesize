@@ -49,7 +49,7 @@ void calc_factor_binary_byte_should_return_correct_bytescale() {
     TEST_ASSERT_EQUAL_INT(expected, result);
 }
 
-void conversion_binary_to_si_should_return_correct_bytescale() {
+void convert_units_binary_to_si_should_return_correct_conversion() {
     const char* from = "5MiB";
     const char* units_from = "MiB";
     const char* units_to = "MB";
@@ -61,6 +61,9 @@ void conversion_binary_to_si_should_return_correct_bytescale() {
     TEST_ASSERT_EQUAL_FLOAT(result, expected);
 }
 
+void convert_units_si_to_binary_should_return_correct_conversion() {
+}
+
 /* Main runner */
 int main(void) {
     UNITY_BEGIN();
@@ -68,6 +71,6 @@ int main(void) {
     RUN_TEST(calc_factor_si_byte_should_return_correct_bytescale);
     RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
     RUN_TEST(calc_factor_binary_byte_should_return_correct_bytescale);
-    RUN_TEST(conversion_binary_to_si_should_return_correct_bytescale);
+    RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
     return UNITY_END();
 }
