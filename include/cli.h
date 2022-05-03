@@ -15,7 +15,7 @@ extern "C" {
 #include <pcre.h>
 #include <math.h>
 
-static const char *version = "v0.2.1";
+static const char *version = "v0.3.0";
 static const char *email   = "<josephm.diza@gmail.com>";
 
 /* Program documentation. */
