@@ -73,7 +73,7 @@ const char* get_unit(char *input) {
   return units;
 }
 
-double convert_units(char* input, const char* units_from, const char* units_to, int verbose) {
+double convert_units(char* input, const char* units_from, const char* units_to) {
   const bool is_from_bytes = strcmp(units_from, "B") == 0;
   const bool is_to_bytes = strcmp(units_to, "B") == 0;
 
@@ -85,8 +85,8 @@ double convert_units(char* input, const char* units_from, const char* units_to, 
     to = 1;
   } else if (is_from_bytes) {
     // Bytes to anything
-    to = get_factor(units_to);
     from = 1;
+    to = get_factor(units_to);
   } else if (is_to_bytes) {
     // Anything to Bytes
     from  = get_factor(units_from);
@@ -97,13 +97,9 @@ double convert_units(char* input, const char* units_from, const char* units_to, 
   }
 
   const int amt = atoi(match(input, num_regex));
-  if (verbose == 1) 
-    printf("Amount To Convert: %d\n", amt);
-
-  if (verbose == 1) {
-    printf("Conversion Factor From: %ld\n", from);
-    printf("Conversion Factor To: %ld\n", to);
-  }
+  log_debug("Amount To Convert      : %d", amt);
+  log_debug("Conversion Factor From : %ld", from);
+  log_debug("Conversion Factor To   : %ld", to);
 
   const float factor = (float) from / to;
   const double conversion = amt * factor;

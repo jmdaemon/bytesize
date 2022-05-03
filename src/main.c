@@ -27,7 +27,7 @@ int main (int argc, char **argv) {
   log_info("Units From: %s", units_from);
   log_info("Units To: %s", units_to);
 
-  const double conversion = convert_units(arguments.args[0], units_from, units_to, verbose);
+  const double conversion = convert_units(arguments.args[0], units_from, units_to);
 
   display_units(conversion, units_to, arguments.display_units);
 

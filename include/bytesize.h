@@ -43,7 +43,7 @@ long int get_factor(const char *unit);
 const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
-double convert_units(char* input, const char* units_from, const char* units_to, int verbose);
+double convert_units(char* input, const char* units_from, const char* units_to);
 
 #ifdef __cplusplus
 }
