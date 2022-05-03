@@ -15,6 +15,17 @@ LOGC_FLAGS = -DLOG_USE_COLOR
 # Include headers
 INCLUDES = -I. -I$(PATHI)
 
+#
+# Subprojects
+#
+
+# Directories
+PATHU = subprojects/unity/src
+PATHD = $(PATHB)/depends
+PATHO = $(PATHB)/objs
+PATHR = $(PATHB)/results
+
+include make/log.c.mk
 include make/unity.mk
 
 #
@@ -54,10 +65,10 @@ subprojects: logc
 
 # SP_DEPENDS : Object files to be included into lib, bin targets
 # SP_INCLUDES: Header files to be included into lib,bin
-SP_DEPENDS =
-SP_INCLUDES =
+#SP_SOURCES =
+#SP_DEPENDS =
+#SP_INCLUDES =
 
-include make/log.c.mk
 
 # Build both targets
 build: lib bin
