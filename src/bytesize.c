@@ -75,7 +75,7 @@ const char* get_unit(char *input) {
 
 double convert_units(char* input, const char* units_from, const char* units_to, int verbose) {
   const bool is_from_bytes = strcmp(units_from, "B") == 0;
-  const bool is_to_bytes = strcmp(units_from, "B") == 0;
+  const bool is_to_bytes = strcmp(units_to, "B") == 0;
 
   long int from = 1;
   long int to = 1;
