@@ -74,46 +74,23 @@ const char* get_unit(char *input) {
 }
 
 double convert_units(char* input, const char* units_from, const char* units_to, int verbose) {
-  const int bytes_from = strcmp(units_from, "B");
-  const int bytes_to = strcmp(units_to, "B");
+  const bool is_from_bytes = strcmp(units_from, "B") == 0;
+  const bool is_to_bytes = strcmp(units_from, "B") == 0;
 
   long int from = 1;
   long int to = 1;
-  // Bytes to Bytes
-  if (bytes_from == 0 && bytes_to == 0) {
-    // Return the same amount of bytes
+  if (is_from_bytes && is_to_bytes) {
+    // Bytes to Bytes
     from = 1;
     to = 1;
-  }
-  // Bytes to anything
-  else if (bytes_from == 0) {
-    // Convert the bytes to the format in units_to
+  } else if (is_from_bytes) {
+    // Bytes to anything
     to = get_factor(units_to);
-
     from = 1;
-    // If we're dealing with SI units
-    /*if (found_in(units_to, SI_BYTE, SIZE)) {*/
-      /*from = (int) pow(10, 3); // Use SI units for everything*/
-    /*}*/
-    /*// If we're dealing with Binary units*/
-    /*else if (found_in(units_to, BYTE, SIZE)) {*/
-      /*from = (int) pow(2, 10); // Use Binary units for everything*/
-    /*}*/
-  }
-  // Anything to Bytes
-  else if (bytes_to == 0) {
-    // Convert the bytes to the format in units_from
+  } else if (is_to_bytes) {
+    // Anything to Bytes
     from  = get_factor(units_from);
     to = 1;
-
-    // If we're dealing with SI units
-    /*if (found_in(units_from, SI_BYTE, SIZE)) {*/
-      /*to = (int) pow(10, 3); // Use SI units for everything*/
-    /*}*/
-    /*// If we're dealing with Binary units*/
-    /*else if (found_in(units_from, BYTE, SIZE)) {*/
-      /*to = (int) pow(2, 10); // Use Binary units for everything*/
-    /*}*/
   } else {
     from  = get_factor(units_from);
     to    = get_factor(units_to);
