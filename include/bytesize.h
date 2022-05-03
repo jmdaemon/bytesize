@@ -15,26 +15,34 @@ extern "C" {
 #include <math.h>
 #include "log.h"
 
-#define SIZE 4
+#define SIZE 8
 
 static const int SI_SCALE = 1000;
 static const int BINARY_SCALE = 1024;
 
-static const char *unit_regex = "([KMGT]?i?B+)";
+static const char *unit_regex = "([KMGTPEZY]?i?B+)";
 static const char *num_regex = "([\\d]+)";
 
 static const char *SI_BYTE[SIZE] = {
   "KB",
   "MB",
   "GB",
-  "TB"
+  "TB",
+  "PB",
+  "EB",
+  "ZB",
+  "YB"
 };
 
 static const char *BYTE[SIZE] = {
   "KiB",
   "MiB",
   "GiB",
-  "TiB"
+  "TiB",
+  "PiB",
+  "EiB",
+  "ZiB",
+  "YiB"
 };
 
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale);
