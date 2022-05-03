@@ -9,6 +9,13 @@ void tearDown(void) {
     /* clean stuff up here */
 }
 
+void num_regex_should_return_num() {
+    const char* input = "5MB";
+    const char* result = match(input, num_regex);
+    const char* expected = "5";
+    TEST_ASSERT_EQUAL_STRING(expected, result);
+}
+
 // get_unit tests
 void get_unit_si_should_return_si_unit() {
     const char* input = "5MB";
@@ -156,6 +163,7 @@ void convert_units_binary_to_byte_should_return_correct_conversion() {
 /* Main runner */
 int main(void) {
     UNITY_BEGIN();
+    RUN_TEST(num_regex_should_return_num);
     // get_unit tests
     RUN_TEST(get_unit_si_should_return_si_unit);
     RUN_TEST(get_unit_binary_should_return_binary_unit);
