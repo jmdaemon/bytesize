@@ -62,6 +62,15 @@ void convert_units_binary_to_si_should_return_correct_conversion() {
 }
 
 void convert_units_si_to_binary_should_return_correct_conversion() {
+    const char* from = "5MB";
+    const char* units_from = "MB";
+    const char* units_to = "MiB";
+
+    const double result = convert_units(from, units_from, units_to, false);
+    const double expected = 4.768372;
+    printf("Result  : %f\n", result);
+    printf("Expected: %f\n", expected);
+    TEST_ASSERT_EQUAL_FLOAT(result, expected);
 }
 
 /* Main runner */
@@ -72,5 +81,6 @@ int main(void) {
     RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
     RUN_TEST(calc_factor_binary_byte_should_return_correct_bytescale);
     RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
+    RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
     return UNITY_END();
 }
