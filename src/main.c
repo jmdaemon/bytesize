@@ -17,15 +17,15 @@ int main (int argc, char **argv) {
     log_set_level(LOG_ERROR);
 
   log_info("Arguments: ");
-  log_info("Args[0]: %s\n", arguments.args[0]);
-  log_info("Args[1]: %s\n", arguments.args[1]);
-  log_info("Verbose: %s\n", (verbose == 0) ? "Off" : "On");
-  log_info("Display with units: %s\n", (arguments.display_units) ? "True" : "False");
+  log_info("Args[0]: %s", arguments.args[0]);
+  log_info("Args[1]: %s", arguments.args[1]);
+  log_info("Verbose: %s", (verbose == 0) ? "Off" : "On");
+  log_info("Display with units: %s", (arguments.display_units) ? "True" : "False");
 
   const char *units_from = get_unit(arguments.args[0]);
   const char *units_to   = get_unit(arguments.args[1]);
-  log_info("Units From: %s\n", units_from);
-  log_info("Units To: %s\n", units_to);
+  log_info("Units From: %s", units_from);
+  log_info("Units To: %s", units_to);
 
   const double conversion = convert_units(arguments.args[0], units_from, units_to, verbose);
 
