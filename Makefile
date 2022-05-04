@@ -72,9 +72,11 @@ include make/library.mk
 
 install-lib-headers:
 	install $(PATHI)/bytesize.h $(DESTDIR)$(PREFIX)/include/bytesize.h
+	install $(SUB_LOG_C_SRC)/log.h $(DESTDIR)$(PREFIX)/include/log.h
 
 uninstall-lib-headers:
 	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/bytesize.h
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/log.h
 
 # Build as a binary
 include make/binary.mk
