@@ -16,6 +16,7 @@ long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int 
   return 0;
 }
 
+/* Determine if an element is found in the character array */
 bool found_in(const char *elem, const char *array[], int array_size) {
   for (int i = 0; i < array_size; i++)
     if (strcmp(elem, array[i]) == 0)
@@ -23,11 +24,13 @@ bool found_in(const char *elem, const char *array[], int array_size) {
   return false;
 }
 
+/* Determine the relative scaling of a unit with respect to a binary or si byte */
 long int get_factor(const char *unit) {
   int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;
   return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
 }
 
+/* Determine if there are any regex matches with the input text */
 const char *match(char *input, const char *regex) {
   /* for pcre_compile */
   pcre *re;
@@ -61,17 +64,21 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
+/* Formats and displays the converted size */
 void display_units(const double conversion, const char* units, bool show_with_units) {
   if (ceil(conversion) == (int) conversion) 
     (show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);
   else
     (show_with_units) ? printf("%.2f %s\n", conversion, units) : printf("%.2f\n", conversion);
 }
+
+/* Returns the byte size unit */
 const char* get_unit(char *input) {
   const char *units = match(input, unit_regex);
   return units;
 }
 
+/* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
   const bool is_from_bytes = strcmp(units_from, "B") == 0;
   const bool is_to_bytes = strcmp(units_to, "B") == 0;
