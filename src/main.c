@@ -35,6 +35,10 @@ int main (int argc, char **argv) {
   char *units_to;
   /*puts("Still running");*/
 
+  // Dynamically set the scale
+  if (!is_byte(units_from))
+    scale = (found_in(units_from, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;
+
   if (!smatch(output, "Auto"))
     units_to   = get_unit(output);
 
