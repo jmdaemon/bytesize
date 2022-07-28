@@ -111,3 +111,11 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
   const double conversion = amt * factor;
   return conversion;
 }
+
+/* Automatically determines the best size to use
+   and returns the converted unit */
+double auto_size(size_t bytes, size_t scale) {
+  const int i = floor(log(bytes) / log(scale)); 
+  double res = (bytes / pow(scale, i)); 
+  return res;
+}
