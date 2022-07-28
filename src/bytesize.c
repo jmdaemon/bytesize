@@ -84,9 +84,9 @@ const char *match(char *input, const char *regex) {
 
 /* Formats and displays the converted size */
 void display_units(const double conversion, const char* units, bool show_with_units) {
-  /*if (ceil(conversion) == (int) conversion) */
-    /*(show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);*/
-  /*else*/
+  if (ceil(conversion) == (int) conversion) 
+    (show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);
+  else
     (show_with_units) ? printf("%.2f %s\n", conversion, units) : printf("%.2f\n", conversion);
 }
 
@@ -104,29 +104,6 @@ int get_amt(char* input) {
 
 /* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
-
-  /*const bool is_from_bytes = is_byte(units_from);*/
-  /*const bool is_to_bytes = is_byte(units_to);*/
-  /*long int from = 1;*/
-  /*long int to = 1;*/
-  
-  /*if (is_from_bytes && is_to_bytes) {*/
-    /*// Bytes to Bytes*/
-    /*from = 1;*/
-    /*to = 1;*/
-  /*} else if (is_from_bytes) {*/
-    /*// Bytes to anything*/
-    /*from = 1;*/
-    /*to = get_factor(units_to);*/
-  /*} else if (is_to_bytes) {*/
-    /*// Anything to Bytes*/
-    /*from  = get_factor(units_from);*/
-    /*to = 1;*/
-  /*} else {*/
-    /*from  = get_factor(units_from);*/
-    /*to    = get_factor(units_to);*/
-  /*}*/
-
   const long int from = get_factor(units_from);
   const long int to = get_factor(units_to);
   const int amt = get_amt(input);
@@ -143,11 +120,6 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
    and returns the converted unit */
 Byte auto_size(size_t bytes, size_t scale, bool is_byte) {
   int i = floor(log(bytes) / log(scale)); 
-  /*int i = log(bytes) / log(scale); */
-  /*i = (is_byte) ? i - 1 : i;*/
-  /*double amt = ( (double) bytes / (double) pow(scale, i)); */
-  /*printf("%d \n", i);*/
-  /*printf("%f \n", pow(scale, i));*/
   double amt = (double) bytes / pow(scale, i); 
   i = (is_byte) ? i - 1 : i;
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
