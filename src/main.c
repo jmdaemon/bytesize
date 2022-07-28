@@ -33,14 +33,25 @@ int main (int argc, char **argv) {
   /*const char *units_to   = get_unit(output);*/
   char *units_from = get_unit(arguments.args[0]);
   char *units_to;
+  /*puts("Still running");*/
 
   if (!smatch(output, "Auto"))
     units_to   = get_unit(output);
 
   double conversion = 0;
   if (smatch(output, "Auto")) {
+    /*puts("In smatch branch");*/
     int amt = get_amt(arguments.args[0]);
-    Byte to = auto_size(amt, get_factor(units_from));
+    /*printf("amt: %d\n", amt);*/
+    /*Byte to = auto_size(amt, get_factor(units_from));*/
+    /*long int fct = get_factor(units_from);*/
+    /*printf("Long Int:  %ld\n", fct);*/
+    Byte to;
+    if (is_byte(units_from))
+      to = auto_size(amt, scale, true);
+    else 
+      to = auto_size(amt, get_factor(units_from), false);
+      /*to = auto_size(amt, fct);*/
     conversion = to.amt;
     units_to = to.unit;
   } else {

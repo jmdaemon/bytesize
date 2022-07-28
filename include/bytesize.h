@@ -69,7 +69,7 @@ void display_units(const double conversion, const char* units, bool show_with_un
 const char* get_unit(char *input);
 int get_amt(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to);
-Byte auto_size(size_t bytes, size_t scale);
+Byte auto_size(size_t bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
 }
