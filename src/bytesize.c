@@ -6,13 +6,18 @@ bool smatch(const char* input, const char* pattern) {
   return is_equal;
 }
 
+/* Determine if a specified unit is a byte */
+bool is_byte(const char* unit) {
+  return smatch(unit, "B");
+}
+
 /* 
  * Calculates the conversion factor between a unit to another unit
  * given that they are both in either SI_BYTE or the BYTE  arrays.
  * Note that this also means that this does not convert between SI_BYTE to BYTE
  */
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
-  if (smatch(unit, "B"))
+  if (is_byte(unit))
     return 1;
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale, i + 1);
@@ -86,8 +91,8 @@ const char* get_unit(char *input) {
 
 /* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
-  const bool is_from_bytes = smatch(units_from, "B");
-  const bool is_to_bytes = smatch(units_to, "B");
+  const bool is_from_bytes = is_byte(units_from);
+  const bool is_to_bytes = is_byte(units_to);
 
   long int from = 1;
   long int to = 1;
