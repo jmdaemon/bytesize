@@ -25,6 +25,9 @@ int main (int argc, char **argv) {
   log_info("Args[1]: %s", output);
   log_info("Verbose: %s", (verbose == 0) ? "Off" : "On");
   log_info("Display with units: %s", (arguments.display_units) ? "True" : "False");
+  log_info("Automatic Size Mode: %s", smatch(output, "Auto") ? "On" : "Off" );
+  if (smatch(output, "Auto")) 
+    log_info("Scale: %d", scale);
 
   /*const char *units_from = get_unit(arguments.args[0]);*/
   /*const char *units_to   = get_unit(output);*/
