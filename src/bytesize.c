@@ -122,7 +122,8 @@ Byte auto_size(size_t bytes, size_t scale, bool is_byte) {
   int i = floor(log(bytes) / log(scale)); 
   double amt = (bytes / pow(scale, i)); 
   i = (is_byte) ? i - 1 : i;
-  const char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
+  char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
+  unit = (i < 0) ? "B" : unit;
   Byte byte = {amt, unit};
   return byte;
 }
