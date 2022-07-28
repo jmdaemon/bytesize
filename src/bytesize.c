@@ -1,16 +1,22 @@
 #include "bytesize.h"
 
+/* Determines if a string is equal to some pattern */
+bool smatch(const char* input, const char* pattern) {
+  bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
+  return is_equal;
+}
+
 /* 
  * Calculates the conversion factor between a unit to another unit
  * given that they are both in either SI_BYTE or the BYTE  arrays.
  * Note that this also means that this does not convert between SI_BYTE to BYTE
  */
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
-  if (strcmp(unit, "B") == 0)
+  if (smatch(unit, "B"))
     return 1;
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale, i + 1);
-    if (strcmp(unit, BYTE_FORMAT[i]) == 0)
+    if (smatch(unit, BYTE_FORMAT[i]))
       return factor;
   }
   return 0;
@@ -19,7 +25,7 @@ long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int 
 /* Determine if an element is found in the character array */
 bool found_in(const char *elem, const char *array[], int array_size) {
   for (int i = 0; i < array_size; i++)
-    if (strcmp(elem, array[i]) == 0)
+    if (smatch(elem, array[i]))
       return true;
   return false;
 }
@@ -80,8 +86,8 @@ const char* get_unit(char *input) {
 
 /* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
-  const bool is_from_bytes = strcmp(units_from, "B") == 0;
-  const bool is_to_bytes = strcmp(units_to, "B") == 0;
+  const bool is_from_bytes = smatch(units_from, "B");
+  const bool is_to_bytes = smatch(units_to, "B");
 
   long int from = 1;
   long int to = 1;
