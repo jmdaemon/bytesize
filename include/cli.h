@@ -27,8 +27,10 @@ static char args_doc[] = "[from] [to]";
 /* http://www.gnu.org/software/libc/manual/html_node/Argp-Option-Vectors.html */
 /* The options we understand. */
 static struct argp_option options[] = {
-  {"verbose",  'v', 0,      0,  "Produce verbose output", 0},
-  {"units",  'u', 0,      0,  "Do not display byte units", 0},
+  {"si"     ,  500, 0,      0, "Uses SI byte scaling in autosize mode", 0},
+  {"bi"     ,  600, 0,      0, "Uses binary byte scaling in autosize mode", 0},
+  {"verbose",  'v', 0,      0, "Produce verbose output", 0},
+  {"units"  ,  'u', 0,      0, "Do not display byte units", 0},
   { 0 }
 };
 
@@ -37,6 +39,7 @@ struct arguments {
   char *args[2]; /* from & to */
   bool display_units;
   int verbose;
+  int scale;
 };
 
 /* Parse a single option. */
