@@ -13,6 +13,7 @@ extern "C" {
 #include <stdbool.h>
 #include <pcre.h>
 #include <math.h>
+#include <limits.h>
 #include "log.h"
 
 #define SIZE 5
@@ -40,7 +41,7 @@ static const char *BYTE[SIZE] = {
 };
 
 typedef struct Byte {
-  double amt;
+  long double amt;
   char* unit;
   long int scaling;
 } Byte;
@@ -67,9 +68,11 @@ long int get_factor(const char *unit);
 const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
-int get_amt(char *input);
+long int get_amt(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to);
-Byte auto_size(size_t bytes, size_t scale, bool is_byte);
+//Byte auto_size(size_t bytes, size_t scale, bool is_byte);
+//Byte auto_size(u_long bytes, size_t scale, bool is_byte);
+Byte auto_size(long long int bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
 }

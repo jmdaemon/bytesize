@@ -97,8 +97,8 @@ const char* get_unit(char *input) {
 }
 
 /* Parses the input and returns the numeral value */
-int get_amt(char* input) {
-  const int amt = atoi(match(input, num_regex));
+long int get_amt(char* input) {
+  const long amt = atoll(match(input, num_regex));
   return amt;
 }
 
@@ -118,9 +118,13 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
 
 /* Automatically determines the best size to use
    and returns the converted unit */
-Byte auto_size(size_t bytes, size_t scale, bool is_byte) {
+/*Byte auto_size(size_t bytes, size_t scale, bool is_byte) {*/
+/*Byte auto_size(u_long bytes, size_t scale, bool is_byte) {*/
+Byte auto_size(long long int bytes, size_t scale, bool is_byte) {
   int i = floor(log(bytes) / log(scale)); 
-  double amt = (double) bytes / pow(scale, i); 
+  printf("%Ld\n", bytes);
+  long double amt = (long double) bytes / (long double) pow(scale, i); 
+  printf("%Lf\n", amt);
   i = (is_byte) ? i - 1 : i;
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
   unit = (i < 0) ? "B" : unit;
