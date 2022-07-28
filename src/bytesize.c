@@ -114,8 +114,10 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
 
 /* Automatically determines the best size to use
    and returns the converted unit */
-double auto_size(size_t bytes, size_t scale) {
+Byte auto_size(size_t bytes, size_t scale) {
   const int i = floor(log(bytes) / log(scale)); 
-  double res = (bytes / pow(scale, i)); 
-  return res;
+  double amt = (bytes / pow(scale, i)); 
+  const char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
+  Byte byte = {amt, unit};
+  return byte;
 }
