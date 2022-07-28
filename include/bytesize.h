@@ -71,7 +71,7 @@ bool is_byte(const char* unit);
 Scale get_scale(const char *unit);
 long int calc_factor(const char *unit, int size, const Scale scale);
 long int get_factor(const char *unit);
-void display_units(const double conversion, const char* units, bool show_with_units);
+void display_units(const long double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
 unsigned long long int get_amt(char *input);
 long double convert_units(char* input, const char* units_from, const char* units_to);

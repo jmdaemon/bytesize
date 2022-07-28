@@ -49,14 +49,11 @@ int main (int argc, char **argv) {
       to = auto_size(amt, get_factor(units_from), false);
     conversion = to.amt;
     units_to = to.unit;
-    if (ceil(conversion) == (unsigned long long int) conversion) 
-      (arguments.display_units) ? printf("%llu %s\n", (unsigned long long int) conversion, units_to) : printf("%llu\n", (unsigned long long int) conversion);
-    else
-      (arguments.display_units) ? printf("%.2Lf %s\n", conversion, units_to) : printf("%.2Lf\n", conversion);
   } else {
     conversion = convert_units(arguments.args[0], units_from, units_to);
-    display_units(conversion, units_to, arguments.display_units);
   }
+
+  display_units(conversion, units_to, arguments.display_units);
 
   log_info("Units From: %s", units_from);
   log_info("Units To: %s", units_to);

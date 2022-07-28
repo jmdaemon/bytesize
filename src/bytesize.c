@@ -83,11 +83,11 @@ long int get_factor(const char *unit) {
 }
 
 /* Formats and displays the converted size */
-void display_units(const double conversion, const char* units, bool show_with_units) {
-  if (ceil(conversion) == (int) conversion) 
-    (show_with_units) ? printf("%d %s\n", (int) conversion, units) : printf("%d\n", (int) conversion);
+void display_units(const long double conversion, const char* units, bool show_with_units) {
+  if (ceil(conversion) == (unsigned long long int) conversion) 
+    (show_with_units) ? printf("%llu %s\n", (unsigned long long int) conversion, units) : printf("%llu\n", (unsigned long long int) conversion);
   else
-    (show_with_units) ? printf("%.2f %s\n", conversion, units) : printf("%.2f\n", conversion);
+    (show_with_units) ? printf("%.2Lf %s\n", conversion, units) : printf("%.2Lf\n", conversion);
 }
 
 /* Returns the byte size unit */
