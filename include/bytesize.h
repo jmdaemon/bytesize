@@ -74,7 +74,7 @@ long int get_factor(const char *unit);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
 unsigned long long int get_amt(char *input);
-double convert_units(char* input, const char* units_from, const char* units_to);
+long double convert_units(char* input, const char* units_from, const char* units_to);
 Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
