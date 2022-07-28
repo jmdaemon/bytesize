@@ -46,7 +46,7 @@ typedef struct Byte {
 
 typedef struct Scale {
   int scale;
-  char* sizes[];
+  char* sizes[SIZE];
 } Scale;
 
 static const struct Scale BINARY = { BINARY_SCALE, BYTE };
