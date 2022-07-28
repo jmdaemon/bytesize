@@ -9,6 +9,7 @@ int main (int argc, char **argv) {
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
 
   int verbose = arguments.verbose;
+  char* input = arguments.args[0];
   char* output = (strlen(arguments.args[1]) == 0) ? "Auto" : arguments.args[1];
   int scale = arguments.scale;
 
@@ -19,7 +20,7 @@ int main (int argc, char **argv) {
     log_set_level(LOG_ERROR);
 
   log_info("Arguments: ");
-  log_info("Args[0]: %s", arguments.args[0]);
+  log_info("Args[0]: %s", input);
   log_info("Args[1]: %s", output);
   log_info("Verbose: %s", (verbose == 0) ? "Off" : "On");
   log_info("Display with units: %s", (arguments.display_units) ? "True" : "False");
@@ -27,7 +28,7 @@ int main (int argc, char **argv) {
   if (smatch(output, "Auto")) 
     log_info("Scale: %d", scale);
 
-  char *units_from = get_unit(arguments.args[0]);
+  char *units_from = get_unit(input);
   char *units_to;
 
   /* Dynamically sets the scale depending on the input unit given.
@@ -40,7 +41,7 @@ int main (int argc, char **argv) {
 
   long double conversion = 0;
   if (smatch(output, "Auto")) {
-    unsigned long long int amt = get_amt(arguments.args[0]);
+    unsigned long long int amt = get_amt();
     /*printf("%llu\n", amt);*/
     Byte to;
     if (is_byte(units_from))
@@ -50,7 +51,7 @@ int main (int argc, char **argv) {
     conversion = to.amt;
     units_to = to.unit;
   } else {
-    conversion = convert_units(arguments.args[0], units_from, units_to);
+    conversion = convert_units(input, units_from, units_to);
   }
 
   display_units(conversion, units_to, arguments.display_units);
