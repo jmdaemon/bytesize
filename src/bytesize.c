@@ -2,6 +2,8 @@
 
 /* Determines if a string is equal to some pattern */
 bool smatch(const char* input, const char* pattern) {
+  /*if (input == NULL)*/
+    /*return false;*/
   bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
   return is_equal;
 }
@@ -16,12 +18,13 @@ bool is_byte(const char* unit) {
  * given that they are both in either SI_BYTE or the BYTE  arrays.
  * Note that this also means that this does not convert between SI_BYTE to BYTE
  */
-long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale) {
+long int calc_factor(const char *unit, int size, const Scale scale) {
   if (is_byte(unit))
     return 1;
   for (int i = 0; i < size; i++) {
-    const long int factor = pow(scale, i + 1);
-    if (smatch(unit, BYTE_FORMAT[i]))
+    const long int factor = pow(scale.scale, i + 1);
+    if (smatch(unit, scale.sizes[i]))
+    /*if (strcmp(unit, scale.sizes[i]) == 0)*/
       return factor;
   }
   return 0;
@@ -35,10 +38,22 @@ bool found_in(const char *elem, const char *array[], int array_size) {
   return false;
 }
 
+/* Determines which byte scaling (binary, or si) to use for the unit */
+Scale get_scale(const char *unit) {
+  Scale scale = (found_in(unit, SI_BYTE, SIZE)) ? SI : BINARY;
+  return scale;
+  /*int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;*/
+  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
+}
+
 /* Determine the relative scaling of a unit with respect to a binary or si byte */
 long int get_factor(const char *unit) {
-  int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;
-  return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);
+  /*int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;*/
+  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
+  Scale scale = get_scale(unit);
+  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
+  long int factor = calc_factor(unit, SIZE, scale);
+  return factor;
 }
 
 /* Determine if there are any regex matches with the input text */

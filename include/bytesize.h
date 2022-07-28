@@ -59,7 +59,8 @@ typedef struct Conversion {
 
 bool smatch(const char* input, const char* pattern);
 bool is_byte(const char* unit);
-long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale);
+Scale get_scale(const char *unit);
+long int calc_factor(const char *unit, int size, const Scale scale);
 bool found_in(const char *elem, const char *array[], int array_size);
 long int get_factor(const char *unit);
 const char *match(char *input, const char *regex);
