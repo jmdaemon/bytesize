@@ -39,6 +39,11 @@ static const char *BYTE[SIZE] = {
   "PiB",
 };
 
+typedef struct Byte {
+  int amt;
+  char* unit;
+} Byte;
+
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale);
 bool found_in(const char *elem, const char *array[], int array_size);
 long int get_factor(const char *unit);
@@ -46,6 +51,7 @@ const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to);
+Byte auto_size(size_t bytes, size_t scale);
 
 #ifdef __cplusplus
 }
