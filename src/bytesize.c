@@ -2,8 +2,6 @@
 
 /* Determines if a string is equal to some pattern */
 bool smatch(const char* input, const char* pattern) {
-  /*if (input == NULL)*/
-    /*return false;*/
   bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
   return is_equal;
 }
@@ -24,7 +22,6 @@ long int calc_factor(const char *unit, int size, const Scale scale) {
   for (int i = 0; i < size; i++) {
     const long int factor = pow(scale.scale, i + 1);
     if (smatch(unit, scale.sizes[i]))
-    /*if (strcmp(unit, scale.sizes[i]) == 0)*/
       return factor;
   }
   return 0;
@@ -42,16 +39,11 @@ bool found_in(const char *elem, const char *array[], int array_size) {
 Scale get_scale(const char *unit) {
   Scale scale = (found_in(unit, SI_BYTE, SIZE)) ? SI : BINARY;
   return scale;
-  /*int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;*/
-  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
 }
 
 /* Determine the relative scaling of a unit with respect to a binary or si byte */
 long int get_factor(const char *unit) {
-  /*int scale = (found_in(unit, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;*/
-  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
   Scale scale = get_scale(unit);
-  /*return (strlen(unit) == 2) ? calc_factor(unit, SIZE, SI_BYTE, scale) : calc_factor(unit, SIZE, BYTE, scale);*/
   long int factor = calc_factor(unit, SIZE, scale);
   return factor;
 }
@@ -108,9 +100,9 @@ const char* get_unit(char *input) {
 double convert_units(char* input, const char* units_from, const char* units_to) {
   const bool is_from_bytes = is_byte(units_from);
   const bool is_to_bytes = is_byte(units_to);
-
   long int from = 1;
   long int to = 1;
+
   if (is_from_bytes && is_to_bytes) {
     // Bytes to Bytes
     from = 1;
