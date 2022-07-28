@@ -97,8 +97,8 @@ const char* get_unit(char *input) {
 }
 
 /* Parses the input and returns the numeral value */
-long int get_amt(char* input) {
-  const long amt = atoll(match(input, num_regex));
+unsigned long long int get_amt(char* input) {
+  const unsigned long long int amt = strtoull(match(input, num_regex), NULL, 0);
   return amt;
 }
 
@@ -120,7 +120,8 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
    and returns the converted unit */
 /*Byte auto_size(size_t bytes, size_t scale, bool is_byte) {*/
 /*Byte auto_size(u_long bytes, size_t scale, bool is_byte) {*/
-Byte auto_size(long long int bytes, size_t scale, bool is_byte) {
+/*Byte auto_size(long long int bytes, size_t scale, bool is_byte) {*/
+Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte) {
   int i = floor(log(bytes) / log(scale)); 
   printf("%Ld\n", bytes);
   long double amt = (long double) bytes / (long double) pow(scale, i); 

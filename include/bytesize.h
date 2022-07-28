@@ -16,7 +16,7 @@ extern "C" {
 #include <limits.h>
 #include "log.h"
 
-#define SIZE 5
+#define SIZE 6
 
 static const int SI_SCALE = 1000;
 static const int BINARY_SCALE = 1024;
@@ -30,6 +30,7 @@ static const char *SI_BYTE[SIZE] = {
   "GB",
   "TB",
   "PB",
+  "EB"
 };
 
 static const char *BYTE[SIZE] = {
@@ -38,6 +39,7 @@ static const char *BYTE[SIZE] = {
   "GiB",
   "TiB",
   "PiB",
+  "EiB"
 };
 
 typedef struct Byte {
@@ -68,11 +70,13 @@ long int get_factor(const char *unit);
 const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
-long int get_amt(char *input);
+//long int get_amt(char *input);
+unsigned long long int get_amt(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to);
 //Byte auto_size(size_t bytes, size_t scale, bool is_byte);
 //Byte auto_size(u_long bytes, size_t scale, bool is_byte);
-Byte auto_size(long long int bytes, size_t scale, bool is_byte);
+//Byte auto_size(long long int bytes, size_t scale, bool is_byte);
+Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
 }

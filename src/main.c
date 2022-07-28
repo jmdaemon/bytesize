@@ -42,9 +42,11 @@ int main (int argc, char **argv) {
   if (smatch(output, "Auto")) {
     /*u_long amt = get_amt(arguments.args[0]);*/
     /*long long int amt = get_amt(arguments.args[0]);*/
-    long int amt = get_amt(arguments.args[0]);
+    /*long int amt = get_amt(arguments.args[0]);*/
+    unsigned long long int amt = get_amt(arguments.args[0]);
     /*printf("%Ld\n", amt);*/
-    printf("%ld\n", amt);
+    /*printf("%ld\n", amt);*/
+    printf("%llu\n", amt);
     Byte to;
     if (is_byte(units_from))
       to = auto_size(amt, scale, true);
@@ -54,9 +56,13 @@ int main (int argc, char **argv) {
     units_to = to.unit;
 
     /*display_units(conversion, units_to, arguments.display_units);*/
-    if (ceil(conversion) == (long long int) conversion) 
+
+    /*if (ceil(conversion) == (long long int) conversion) */
       /*(arguments.display_units) ? printf("%ld %s\n", (long) conversion, units_to) : printf("%ld\n", (long) conversion);*/
-      (arguments.display_units) ? printf("%Ld %s\n", (long long int) conversion, units_to) : printf("%Ld\n", (long long int) conversion);
+      /*(arguments.display_units) ? printf("%Ld %s\n", (long long int) conversion, units_to) : printf("%Ld\n", (long long int) conversion);*/
+    if (ceil(conversion) == (unsigned long long int) conversion) 
+      /*(arguments.display_units) ? printf("%ld %s\n", (long) conversion, units_to) : printf("%ld\n", (long) conversion);*/
+      (arguments.display_units) ? printf("%llu %s\n", (unsigned long long int) conversion, units_to) : printf("%llu\n", (unsigned long long int) conversion);
     else
       (arguments.display_units) ? printf("%.2Lf %s\n", conversion, units_to) : printf("%.2Lf\n", conversion);
       /*(arguments.display_units) ? printf("%.2f %s\n", conversion, units_to) : printf("%.2f\n", conversion);*/
