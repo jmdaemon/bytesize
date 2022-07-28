@@ -1,53 +1,5 @@
 #include "bytesize.h"
 
-/* Determines if a string is equal to some pattern */
-bool smatch(const char* input, const char* pattern) {
-  bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
-  return is_equal;
-}
-
-/* Determine if a specified unit is a byte */
-bool is_byte(const char* unit) {
-  return smatch(unit, "B");
-}
-
-/* 
- * Calculates the conversion factor between a unit to another unit
- * given that they are both in either SI_BYTE or the BYTE  arrays.
- * Note that this also means that this does not convert between SI_BYTE to BYTE
- */
-long int calc_factor(const char *unit, int size, const Scale scale) {
-  if (is_byte(unit))
-    return 1;
-  for (int i = 0; i < size; i++) {
-    const long int factor = pow(scale.scale, i + 1);
-    if (smatch(unit, scale.sizes[i]))
-      return factor;
-  }
-  return 0;
-}
-
-/* Determine if an element is found in the character array */
-bool found_in(const char *elem, const char *array[], int array_size) {
-  for (int i = 0; i < array_size; i++)
-    if (smatch(elem, array[i]))
-      return true;
-  return false;
-}
-
-/* Determines which byte scaling (binary, or si) to use for the unit */
-Scale get_scale(const char *unit) {
-  Scale scale = (found_in(unit, SI_BYTE, SIZE)) ? SI : BINARY;
-  return scale;
-}
-
-/* Determine the relative scaling of a unit with respect to a binary or si byte */
-long int get_factor(const char *unit) {
-  Scale scale = get_scale(unit);
-  long int factor = calc_factor(unit, SIZE, scale);
-  return factor;
-}
-
 /* Determine if there are any regex matches with the input text */
 const char *match(char *input, const char *regex) {
   /* for pcre_compile */
@@ -80,6 +32,54 @@ const char *match(char *input, const char *regex) {
   pcre_free(re);
 
   return substring;
+}
+
+/* Determine if an element is found in the character array */
+bool found_in(const char *elem, const char *array[], int array_size) {
+  for (int i = 0; i < array_size; i++)
+    if (smatch(elem, array[i]))
+      return true;
+  return false;
+}
+
+/* Determines if a string is equal to some pattern */
+bool smatch(const char* input, const char* pattern) {
+  bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
+  return is_equal;
+}
+
+/* Determine if a specified unit is a byte */
+bool is_byte(const char* unit) {
+  return smatch(unit, "B");
+}
+
+/* 
+ * Calculates the conversion factor between a unit to another unit
+ * given that they are both in either SI_BYTE or the BYTE  arrays.
+ * Note that this also means that this does not convert between SI_BYTE to BYTE
+ */
+long int calc_factor(const char *unit, int size, const Scale scale) {
+  if (is_byte(unit))
+    return 1;
+  for (int i = 0; i < size; i++) {
+    const long int factor = pow(scale.scale, i + 1);
+    if (smatch(unit, scale.sizes[i]))
+      return factor;
+  }
+  return 0;
+}
+
+/* Determines which byte scaling (binary, or si) to use for the unit */
+Scale get_scale(const char *unit) {
+  Scale scale = (found_in(unit, SI_BYTE, SIZE)) ? SI : BINARY;
+  return scale;
+}
+
+/* Determine the relative scaling of a unit with respect to a binary or si byte */
+long int get_factor(const char *unit) {
+  Scale scale = get_scale(unit);
+  long int factor = calc_factor(unit, SIZE, scale);
+  return factor;
 }
 
 /* Formats and displays the converted size */
@@ -118,14 +118,9 @@ double convert_units(char* input, const char* units_from, const char* units_to) 
 
 /* Automatically determines the best size to use
    and returns the converted unit */
-/*Byte auto_size(size_t bytes, size_t scale, bool is_byte) {*/
-/*Byte auto_size(u_long bytes, size_t scale, bool is_byte) {*/
-/*Byte auto_size(long long int bytes, size_t scale, bool is_byte) {*/
 Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte) {
   int i = floor(log(bytes) / log(scale)); 
-  printf("%Ld\n", bytes);
   long double amt = (long double) bytes / (long double) pow(scale, i); 
-  printf("%Lf\n", amt);
   i = (is_byte) ? i - 1 : i;
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
   unit = (i < 0) ? "B" : unit;

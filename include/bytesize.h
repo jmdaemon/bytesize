@@ -61,21 +61,20 @@ typedef struct Conversion {
   Byte to;
 } Conversion;
 
+/* Helper Functions */
+const char *match(char *input, const char *regex);
+bool found_in(const char *elem, const char *array[], int array_size);
 bool smatch(const char* input, const char* pattern);
+
+/* Bytesize Functions */
 bool is_byte(const char* unit);
 Scale get_scale(const char *unit);
 long int calc_factor(const char *unit, int size, const Scale scale);
-bool found_in(const char *elem, const char *array[], int array_size);
 long int get_factor(const char *unit);
-const char *match(char *input, const char *regex);
 void display_units(const double conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
-//long int get_amt(char *input);
 unsigned long long int get_amt(char *input);
 double convert_units(char* input, const char* units_from, const char* units_to);
-//Byte auto_size(size_t bytes, size_t scale, bool is_byte);
-//Byte auto_size(u_long bytes, size_t scale, bool is_byte);
-//Byte auto_size(long long int bytes, size_t scale, bool is_byte);
 Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
