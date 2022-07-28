@@ -44,6 +44,11 @@ typedef struct Byte {
   char* unit;
 } Byte;
 
+typedef struct Conversion {
+  Byte from;
+  Byte to;
+} Conversion;
+
 long int calc_factor(const char *unit, int size, const char *BYTE_FORMAT[], int scale);
 bool found_in(const char *elem, const char *array[], int array_size);
 long int get_factor(const char *unit);
