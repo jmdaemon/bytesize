@@ -44,6 +44,14 @@ typedef struct Byte {
   char* unit;
 } Byte;
 
+typedef struct Scale {
+  int scale;
+  char* sizes[];
+} Scale;
+
+static const struct Scale BINARY = { BINARY_SCALE, BYTE };
+static const struct Scale SI = { SI_SCALE, SI_BYTE };
+
 typedef struct Conversion {
   Byte from;
   Byte to;
