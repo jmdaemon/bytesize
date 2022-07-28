@@ -42,6 +42,7 @@ static const char *BYTE[SIZE] = {
 typedef struct Byte {
   int amt;
   char* unit;
+  long int scaling;
 } Byte;
 
 typedef struct Scale {
