@@ -40,7 +40,7 @@ static const char *BYTE[SIZE] = {
 };
 
 typedef struct Byte {
-  int amt;
+  double amt;
   char* unit;
   long int scaling;
 } Byte;
