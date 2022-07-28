@@ -98,28 +98,8 @@ const char* get_unit(char *input) {
 
 /* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
-  const bool is_from_bytes = is_byte(units_from);
-  const bool is_to_bytes = is_byte(units_to);
-  long int from = 1;
-  long int to = 1;
-
-  if (is_from_bytes && is_to_bytes) {
-    // Bytes to Bytes
-    from = 1;
-    to = 1;
-  } else if (is_from_bytes) {
-    // Bytes to anything
-    from = 1;
-    to = get_factor(units_to);
-  } else if (is_to_bytes) {
-    // Anything to Bytes
-    from  = get_factor(units_from);
-    to = 1;
-  } else {
-    from  = get_factor(units_from);
-    to    = get_factor(units_to);
-  }
-
+  const long int from = get_factor(units_from);
+  const long int to = get_factor(units_to);
   const int amt = atoi(match(input, num_regex));
   log_debug("Amount To Convert      : %d", amt);
   log_debug("Conversion Factor From : %ld", from);
