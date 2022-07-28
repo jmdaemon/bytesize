@@ -96,11 +96,17 @@ const char* get_unit(char *input) {
   return units;
 }
 
+/* Parses the input and returns the numeral value */
+int get_amt(char* input) {
+  const int amt = atoi(match(input, num_regex));
+  return amt;
+}
+
 /* Converts an integral number between byte sizes */
 double convert_units(char* input, const char* units_from, const char* units_to) {
   const long int from = get_factor(units_from);
   const long int to = get_factor(units_to);
-  const int amt = atoi(match(input, num_regex));
+  const int amt = get_amt(input);
   log_debug("Amount To Convert      : %d", amt);
   log_debug("Conversion Factor From : %ld", from);
   log_debug("Conversion Factor To   : %ld", to);
