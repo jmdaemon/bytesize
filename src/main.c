@@ -39,8 +39,6 @@ int main (int argc, char **argv) {
   if (!smatch(output, "Auto"))
     units_to   = get_unit(output);
 
-  /*long double conversion = 0;*/
-  /*mpz_t amt, result;*/
   mpfr_t amt, conversion;
   mpfr_init2 (amt, 200);
   mpfr_init2 (conversion, 200);
@@ -48,36 +46,17 @@ int main (int argc, char **argv) {
   Byte to;
   mpfr_init2 (to.amt, 200);
   if (smatch(output, "Auto")) {
-    /*unsigned long long int amt = get_amt();*/
-    /*mpz_init_set_str(amt, input, 10);*/
-    /*printf("%llu\n", amt);*/
-    /*mpfr_init_set_str(amt, input, 10, MPFR_RNDZ);*/
-
-    /*mpfr_init_set_str(amt, input, 10, MPFR_RNDF);*/
-    /*mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF);*/
     char* digits = match(input, num_regex);
-    printf("Digits: %s\n", digits);
     mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
 
-    if (is_byte(units_from)) {
-      puts("Executing is_byte() branch");
+    if (is_byte(units_from)) 
       to = auto_size(amt, scale, true);
-    }
     else 
       to = auto_size(amt, get_factor(units_from), false);
 
-    /*conversion = to.amt;*/
-    /*mpfr_set(conversion, *to.amt, MPFR_RNDZ);*/
-    /*mpfr_set(conversion, to.amt, MPFR_RNDZ);*/
     mpfr_set(conversion, to.amt, MPFR_RNDF);
     units_to = to.unit;
-    /*printf("%s\n", to.unit);*/
   }
-  printf("%s\n", units_to);
-
-  /*printf ("Sum is ");*/
-  /*mpfr_out_str (stdout, 10, 0, s, MPFR_RNDD);*/
-  /*putchar ('\n');*/
   mpfr_out_str (stdout, 10, 0, conversion, MPFR_RNDD);
   putchar ('\n');
 
@@ -121,7 +100,7 @@ int main (int argc, char **argv) {
     pcre_free_substring(units_to);
 
   /* Big numbers */
-  /*mpfr_clear (*to.amt);*/
+  mpfr_clear (to.amt);
   mpfr_clear (amt);
   mpfr_clear (conversion);
   mpfr_clear (res);

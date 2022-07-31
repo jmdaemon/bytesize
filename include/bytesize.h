@@ -51,9 +51,6 @@ static const char *BYTE[SIZE] = {
 };
 
 typedef struct Byte {
-  //long double amt;
-  //mpz_t amt;
-  //mpfr_t* amt;
   mpfr_t amt;
   char* unit;
   long int scaling;
@@ -86,7 +83,6 @@ void display_units(const long double conversion, const char* units, bool show_wi
 const char* get_unit(char *input);
 unsigned long long int get_amt(char *input);
 long double convert_units(char* input, const char* units_from, const char* units_to);
-//Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
 Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
