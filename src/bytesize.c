@@ -169,7 +169,7 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
   if (i >= SIZE) {
     puts("Conversion exceeds maximum unit available (YB, YiB). Exiting...");
     exit(-1);
-  } else if (i < 0) {
+  } else if (i < -1) {
     puts("Conversion exceeds minimum unit available (B). Exiting...");
     exit(-2);
   }
