@@ -73,16 +73,8 @@ int main (int argc, char **argv) {
 
   // display_units
   /* Display only whole numbers if the result is exact */
-  /*mpfr_set(res, conversion, MPFR_RNDF);*/
-  /*mpfr_ceil(res, conversion);*/
   mpfr_set(r1, conversion, MPFR_RNDF);
-
-  /*mpfr_modf(res, conversion, divisor, MPFR_RNDF);*/
-  /*mpfr_modf(res, r1, divisor, MPFR_RNDF);*/
   mpfr_modf(res, r1, divisor, MPFR_RNDZ);
-  /*mpfr_modf(res, res, divisor, MPFR_RNDF);*/
-  /*if (mpfr_cmp (res, conversion) == 0) {*/
-  /*if (mpfr_cmp_ui(res, 0) == 0) {*/
   if (mpfr_cmp_ui(r1, 0) == 0) {
     mpz_t int_conv;
     mpz_init2(int_conv, 200);
