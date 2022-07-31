@@ -116,14 +116,154 @@ long double convert_units(char* input, const char* units_from, const char* units
   return conversion;
 }
 
+double bigint_log(mpz_t x) {
+  signed long int ex;
+  const double di = mpz_get_d_2exp(&ex, x);
+  return log(di) + log(2) * (double) ex;
+}
+
 /* Automatically determines the best size to use
    and returns the converted unit */
-Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte) {
-  int i = floor(log(bytes) / log(scale)); 
-  long double amt = (long double) bytes / (long double) pow(scale, i); 
-  i = (is_byte) ? i - 1 : i;
+/*Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte) {*/
+/*Byte auto_size(mpz_t bytes, size_t scale, bool is_byte) {*/
+Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
+  /**
+    * mpz_t bytes, mpz_t scale, mpz_t i, mpz_t res
+    * Operations:
+    * 1. i = floor (log(bytes) / log(scale))
+    * - res = mpz_log (scale)
+    */
+  /*long int i = floor(bigint_log(bytes) / log(scale));*/
+
+  /* Initialize the bigscale */
+  mpfr_t bscale;
+  mpfr_init2 (bscale, 200);
+  mpfr_set_ui(bscale, (unsigned int) scale, MPFR_RNDF);
+
+  /* i = floor (log(bytes) / log(scale)) */
+  mpfr_t r1, r2, r3;
+  mpfr_init2 (r1, 200);
+  mpfr_init2 (r2, 200);
+  mpfr_init2 (r3, 200);
+
+  
+
+  /*mpfr_set_ui(r1, (unsigned int) 0, MPFR_RNDF);*/
+  /*mpfr_set_ui(r2, (unsigned int) 0, MPFR_RNDF);*/
+  /*mpfr_set_ui(r3, (unsigned int) 0, MPFR_RNDF);*/
+
+  /*mpfr_log(r1, bytes, MPFR_RNDZ);*/
+  /*mpfr_log(r2, bscale, MPFR_RNDZ);*/
+  /*mpfr_div(r3, r1, r2, MPFR_RNDZ); [> i = r3 <]*/
+
+  /*mpfr_log(r1, bytes, MPFR_RNDF);*/
+  /*mpfr_log(r2, bscale, MPFR_RNDF);*/
+  /*mpfr_div(r3, r1, r2, MPFR_RNDF); [> i = r3 <]*/
+
+  /* Working */
+  /*mpfr_log(r1, bytes, MPFR_RNDF);*/
+  /*mpfr_log(r2, bscale, MPFR_RNDF);*/
+  /*mpfr_div(r3, r1, r2, MPFR_RNDF); [> i = r3 <]*/
+
+  mpfr_log(r1, bytes, MPFR_RNDD);
+  mpfr_log(r2, bscale, MPFR_RNDD);
+  mpfr_div(r3, r1, r2, MPFR_RNDD); /* i = r3 */
+
+
+
+  mpfr_floor(r3, r3);
+  
+  /* long double amt = (long double) bytes / (long double) pow(scale, i) */
+  mpfr_t r4, r5;
+  mpfr_init2 (r4, 200);
+  mpfr_init2 (r5, 200);
+
+  /*mpfr_pow(r4, bscale, r3, MPFR_RNDZ); [> pow(scale, i) <]*/
+  mpfr_pow(r4, bscale, r3, MPFR_RNDF); /* pow(scale, i) */
+  /*mpfr_div(r5, bytes, r4, MPFR_RNDZ); [> amt = (long double) bytes / pow(scale, i)<]*/
+  mpfr_div(r5, bytes, r4, MPFR_RNDF); /* amt = (long double) bytes / pow(scale, i)*/
+
+  /*long int i = floor(mpfr_log(bytes, 10, MPFR_RNDZ) / log(scale));*/
+
+  /* Initialization */
+  /*mpfr_t bigscale;*/
+  /*mpfr_init2(t, mp);*/
+  /*mpfr_t res;*/
+  /*mpfr_log(res, bytes, MPFR_RNDZ)*/
+
+
+  /*mpz_t amt, bigscale, i;*/
+
+  /*int i = floor(log(bytes) / log(scale)); */
+  /*long double amt = (long double) bytes / (long double) pow(scale, i); */
+  /*mpz_t amt, bigscale, i;*/
+  /*mpf_t amt;*/
+  /*mpf_t i;*/
+  /*mpf_t i;*/
+  /*mpz_pow_ui(i, scale, */
+
+  /*i = (is_byte) ? i - 1 : i;*/
+  mpfr_t index;
+  mpfr_init2 (index, 200);
+  /*unsigned long i = 0;*/
+  /*int i = 0;*/
+  /*int i = 0;*/
+  /*int i = mpfr_get_ui (index, MPFR_RNDD);*/
+  int i = mpfr_get_ui (r3, MPFR_RNDD);
+  i = (is_byte) ? i - 1: i;
+  /*if (is_byte)*/
+    /*mpfr_sub_si(index, r3, (long) 1, MPFR_RNDZ);*/
+    /*mpfr_sub_si(index, r3, (long) 1, MPFR_RNDD);*/
+  /*{*/
+     /*i--;*/
+
+
+    /*puts("Doing substraction");*/
+    /*printf("Before: %ld\n", mpfr_get_ui (r3, MPFR_RNDD));*/
+    /*int res = mpfr_sub_ui(index, r3, 2, MPFR_RNDD);*/
+    /*long int subtrahend = 3000;*/
+    /*int res = mpfr_sub_ui(index, r3, subtrahend, MPFR_RNDD);*/
+    /*int res = mpfr_sub_si(index, r3, subtrahend, MPFR_RNDD);*/
+
+    /*mpfr_sub_si(index, index, (long) 1, MPFR_RNDZ);*/
+    /*printf("After: %ld\n", mpfr_get_ui (index, MPFR_RNDD));*/
+    /*printf("Result Code: %d\n", res);*/
+  /*}*/
+  /*else */
+    /*mpfr_set(index, r3, MPFR_RNDD);*/
+
+  /*printf("%ld \n", i);*/
+  /*printf("%d \n", i);*/
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
+  /*printf("Before: %s \n", unit);*/
+  /*unit = (i < 0) ? "B" : unit;*/
+
   unit = (i < 0) ? "B" : unit;
-  Byte byte = {amt, unit};
+
+  printf("After: %s \n", unit);
+
+  /*Byte byte = {amt, unit};*/
+  /*Byte byte = {&r5, unit, scale};*/
+  /*Byte byte = {*r5, unit, scale};*/
+  /*Byte byte = {r5, unit, scale};*/
+  /*Byte byte = {(mpfr_ptr) 0, unit, scale};*/
+
+  /*Byte byte = { {r5}, unit, 0};*/
+  Byte byte = { {(mpfr_ptr) 0}, unit, 0};
+
+  /*printf("%s \n", byte.unit);*/
+  mpfr_init2 (byte.amt, 200);
+  /*mpfr_set(byte.amt, r5, MPFR_RNDZ);*/
+  mpfr_set(byte.amt, r5, MPFR_RNDF);
+
+  // Deallocate
+  mpfr_clear (r1);
+  mpfr_clear (r2);
+  mpfr_clear (r3);
+  mpfr_clear (r4);
+  /*mpfr_clear (r5);*/
+  mpfr_clear (index);
+  mpfr_free_cache();
+
   return byte;
 }

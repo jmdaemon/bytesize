@@ -7,7 +7,7 @@ include make/structure.mk
 # Common compiler flags to every target go here
 
 GLOBAL_CFLAGS = -Wall -Wextra -DLOG_USE_COLOR
-GLOBAL_LDFLAGS = -lpcre -lm
+GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
 
 # Enable ANSI escape code colored logging statements
 LOGC_FLAGS = -DLOG_USE_COLOR

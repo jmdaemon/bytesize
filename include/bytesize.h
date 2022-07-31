@@ -14,9 +14,13 @@ extern "C" {
 #include <pcre.h>
 #include <math.h>
 #include <limits.h>
+
+/* Third Party Libraries */
+#include <gmp.h>
+#include <mpfr.h>
 #include "log.h"
 
-#define SIZE 6
+#define SIZE 8
 
 static const int SI_SCALE = 1000;
 static const int BINARY_SCALE = 1024;
@@ -30,7 +34,9 @@ static const char *SI_BYTE[SIZE] = {
   "GB",
   "TB",
   "PB",
-  "EB"
+  "EB",
+  "ZB",
+  "YB"
 };
 
 static const char *BYTE[SIZE] = {
@@ -39,11 +45,16 @@ static const char *BYTE[SIZE] = {
   "GiB",
   "TiB",
   "PiB",
-  "EiB"
+  "EiB",
+  "ZiB",
+  "YiB"
 };
 
 typedef struct Byte {
-  long double amt;
+  //long double amt;
+  //mpz_t amt;
+  //mpfr_t* amt;
+  mpfr_t amt;
   char* unit;
   long int scaling;
 } Byte;
@@ -75,7 +86,8 @@ void display_units(const long double conversion, const char* units, bool show_wi
 const char* get_unit(char *input);
 unsigned long long int get_amt(char *input);
 long double convert_units(char* input, const char* units_from, const char* units_to);
-Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
+//Byte auto_size(unsigned long long int bytes, size_t scale, bool is_byte);
+Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte);
 
 #ifdef __cplusplus
 }
