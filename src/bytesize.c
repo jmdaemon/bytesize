@@ -83,11 +83,39 @@ long int get_factor(const char *unit) {
 }
 
 /* Formats and displays the converted size */
-void display_units(const long double conversion, const char* units, bool show_with_units) {
-  if (ceil(conversion) == (unsigned long long int) conversion) 
-    (show_with_units) ? printf("%llu %s\n", (unsigned long long int) conversion, units) : printf("%llu\n", (unsigned long long int) conversion);
+/*void display_units(const long double conversion, const char* units, bool show_with_units) {*/
+void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
+  mpfr_t res;
+  mpfr_init2 (res, 200);
+  mpfr_t divisor;
+  mpfr_init2 (divisor, 200);
+  mpfr_set_ui(divisor, 2, MPFR_RNDF);
+  mpfr_t r1;
+  mpfr_init2 (r1, 200);
+
+  // display_units
+  /* Display only whole numbers if the result is exact */
+  mpfr_set(r1, conversion, MPFR_RNDF);
+  mpfr_modf(res, r1, divisor, MPFR_RNDZ);
+  if (mpfr_cmp_ui(r1, 0) == 0) {
+    mpz_t int_conv;
+    mpz_init2(int_conv, 200);
+    mpfr_get_z(int_conv, conversion, MPFR_RNDF);
+    (show_with_units) ? mpfr_printf("%Zd %s\n", int_conv, units) : mpfr_printf("%Zd\n", int_conv);
+    mpz_clear (int_conv);
+  }
   else
-    (show_with_units) ? printf("%.2Lf %s\n", conversion, units) : printf("%.2Lf\n", conversion);
+    (show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);
+
+  mpfr_clear (res);
+  mpfr_clear (divisor);
+  mpfr_clear (r1);
+  /*mpfr_clear (res);*/
+
+  /*if (ceil(conversion) == (unsigned long long int) conversion) */
+    /*(show_with_units) ? printf("%llu %s\n", (unsigned long long int) conversion, units) : printf("%llu\n", (unsigned long long int) conversion);*/
+  /*else*/
+    /*(show_with_units) ? printf("%.2Lf %s\n", conversion, units) : printf("%.2Lf\n", conversion);*/
 }
 
 /* Returns the byte size unit */

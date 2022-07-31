@@ -63,29 +63,7 @@ int main (int argc, char **argv) {
     units_to = to.unit;
   }
 
-  mpfr_t res;
-  mpfr_init2 (res, 200);
-  mpfr_t divisor;
-  mpfr_init2 (divisor, 200);
-  mpfr_set_ui(divisor, 2, MPFR_RNDF);
-  mpfr_t r1;
-  mpfr_init2 (r1, 200);
-
-  // display_units
-  /* Display only whole numbers if the result is exact */
-  mpfr_set(r1, conversion, MPFR_RNDF);
-  mpfr_modf(res, r1, divisor, MPFR_RNDZ);
-  if (mpfr_cmp_ui(r1, 0) == 0) {
-    mpz_t int_conv;
-    mpz_init2(int_conv, 200);
-    mpfr_get_z(int_conv, conversion, MPFR_RNDF);
-    (arguments.display_units) ? mpfr_printf("%Zd %s\n", int_conv, units_to) : mpfr_printf("%Zd\n", int_conv);
-    mpz_clear (int_conv);
-  }
-  else
-    (arguments.display_units) ? mpfr_printf("%.2Rf %s\n", conversion, units_to) : mpfr_printf("%.2Rf\n", conversion);
-
-  /*display_units(conversion, units_to, arguments.display_units);*/
+  display_units(conversion, units_to, arguments.display_units);
 
   log_info("Units From: %s", units_from);
   log_info("Units To: %s", units_to);
@@ -100,7 +78,6 @@ int main (int argc, char **argv) {
   mpfr_clear (to.amt);
   mpfr_clear (amt);
   mpfr_clear (conversion);
-  mpfr_clear (res);
   mpfr_free_cache();
   return 0;
 }
