@@ -46,7 +46,7 @@ int main (int argc, char **argv) {
   Byte to;
   mpfr_init2 (to.amt, 200);
   if (smatch(output, "Auto")) {
-    char* digits = match(input, num_regex);
+    char* digits = get_amt(input);
     mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
 
     if (is_byte(units_from)) 

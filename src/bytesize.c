@@ -96,9 +96,9 @@ const char* get_unit(char *input) {
   return units;
 }
 
-/* Parses the input and returns the numeral value */
-unsigned long long int get_amt(char* input) {
-  const unsigned long long int amt = strtoull(match(input, num_regex), NULL, 0);
+/* Parses the input and returns the numeral value as a string */
+const char* get_amt(char* input) {
+  const char* amt = match(input, num_regex);
   return amt;
 }
 
@@ -106,7 +106,7 @@ unsigned long long int get_amt(char* input) {
 /*long double convert_units(char* input, const char* units_from, const char* units_to) {*/
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t bfrom, bto, bamt, bfactor;
-  const char* digits = match(input, num_regex);
+  const char* digits = get_amt(input);
 
   mpfr_init2 (bfrom, 200);
   mpfr_init2 (bto, 200);
