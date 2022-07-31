@@ -232,7 +232,7 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
   /*else */
     /*mpfr_set(index, r3, MPFR_RNDD);*/
 
-  /*printf("%ld \n", i);*/
+  printf("%ld \n", i);
   /*printf("%d \n", i);*/
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
   /*printf("Before: %s \n", unit);*/
@@ -264,6 +264,14 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
   /*mpfr_clear (r5);*/
   mpfr_clear (index);
   mpfr_free_cache();
+  
+  if (i >= SIZE) {
+    puts("Conversion exceeds maximum unit available (YB, YiB). Exiting...");
+    exit(-1);
+  } else if (i < 0) {
+    puts("Conversion exceeds minimum unit available (B). Exiting...");
+    exit(-2);
+  }
 
   return byte;
 }
