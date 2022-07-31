@@ -34,7 +34,7 @@ const char *match(char *input, const char *regex) {
   return substring;
 }
 
-/* Determine if an element is found in the character array */
+/* Determine if an element is found in the array of strings */
 bool found_in(const char *elem, const char *array[], int array_size) {
   for (int i = 0; i < array_size; i++)
     if (smatch(elem, array[i]))
@@ -42,7 +42,7 @@ bool found_in(const char *elem, const char *array[], int array_size) {
   return false;
 }
 
-/* Determines if a string is equal to some pattern */
+/* Determine if a string is equal to some pattern */
 bool smatch(const char* input, const char* pattern) {
   bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
   return is_equal;
@@ -53,11 +53,10 @@ bool is_byte(const char* unit) {
   return smatch(unit, "B");
 }
 
-/* 
- * Calculates the conversion factor between a unit to another unit
- * given that they are both in either SI_BYTE or the BYTE  arrays.
- * Note that this also means that this does not convert between SI_BYTE to BYTE
- */
+/**
+  * Calculate the unit-unit conversion factor given that the unit is
+  * in either SI_BYTE or BYTE (but not both).
+  */
 long int calc_factor(const char *unit, int size, const Scale scale) {
   if (is_byte(unit))
     return 1;
@@ -83,7 +82,6 @@ long int get_factor(const char *unit) {
 }
 
 /* Formats and displays the converted size */
-/*void display_units(const long double conversion, const char* units, bool show_with_units) {*/
 void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   mpfr_t res, divisor, r1;
   mpfr_inits2(200, res, divisor, r1, NULL);
@@ -123,9 +121,9 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
   mpfr_inits2(200, from, to, amt, factor, NULL);
 
-  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF); /*const unsigned long long int amt = get_amt(input);*/
-  mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF); /*const long int from = get_factor(units_from);*/
-  mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF); /*const long int to = get_factor(units_to);*/
+  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
+  mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF);   /* const long int from = get_factor(units_from); */
+  mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
 
   log_debug("Amount To Convert      : %d", amt);
   log_debug("Conversion Factor From : %ld", from);
@@ -137,7 +135,7 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   /*const long double conversion = amt * factor;*/
   mpfr_mul(to, amt, factor, MPFR_RNDF);
 
-  Byte byte = { {(mpfr_ptr) 0}, units_to, 0};
+  Byte byte = {{(mpfr_prec_t) 0}, units_to, 0};
   mpfr_init2 (byte.amt, 200);
   mpfr_set(byte.amt, to, MPFR_RNDF);
 
@@ -149,7 +147,7 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
 
 /* Automatically determines the best size to use
    and returns the converted unit */
-Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
+Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
   mpfr_t bscale, r1, r2, r3;
   mpfr_inits2(200, bscale, r1, r2, r3, NULL);
 
@@ -165,13 +163,13 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
   mpfr_pow(r1, bscale, r3, MPFR_RNDF);  /* pow(scale, i) */
   mpfr_div(r2, bytes, r1, MPFR_RNDF);   /* amt = bytes / pow(scale, i) */
 
-  /** If the output size is < than 1KB or 1KiB (depends on scale), display in bytes */
+  /* If the output size is < than 1KB or 1KiB (depends on scale), display in bytes */
   int i = mpfr_get_ui (r3, MPFR_RNDD);
   i = (is_byte) ? i - 1: i;
   char* unit = (scale == SI_SCALE) ? SI_BYTE[i]: BYTE[i];
   unit = (i < 0) ? "B" : unit;
 
-  Byte byte = { {(mpfr_ptr) 0}, unit, 0};
+  Byte byte = { {(mpfr_prec_t) 0}, unit, 0};
   mpfr_init2 (byte.amt, 200);
   mpfr_set(byte.amt, r2, MPFR_RNDF);
 

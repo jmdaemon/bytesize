@@ -57,8 +57,8 @@ typedef struct Byte {
 } Byte;
 
 typedef struct Scale {
-  int scale;
-  char** sizes;
+  const int scale;
+  const char** sizes;
 } Scale;
 
 static const struct Scale BINARY = { BINARY_SCALE, BYTE };
@@ -83,7 +83,7 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units);
 const char* get_unit(char *input);
 const char* get_amt(char *input);
 Byte convert_units(char* input, const char* units_from, const char* units_to);
-Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte);
+Byte auto_size(mpfr_t bytes, int scale, bool is_byte);
 
 #ifdef __cplusplus
 }

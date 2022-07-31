@@ -42,14 +42,12 @@ int main (int argc, char **argv) {
   Byte to;
   mpfr_t amt, conversion;
   mpfr_inits2(200, to.amt, amt, conversion, NULL);
+  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF);
 
-  if (smatch(output, "Auto")) {
-    char* digits = get_amt(input);
-    mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
-
+  if (smatch(output, "Auto"))
     to = (is_byte(units_from)) ?
       auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
-  } else
+  else
     to = convert_units(input, units_from, units_to);
 
   mpfr_set(conversion, to.amt, MPFR_RNDF);
