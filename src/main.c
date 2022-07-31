@@ -57,36 +57,26 @@ int main (int argc, char **argv) {
     mpfr_set(conversion, to.amt, MPFR_RNDF);
     units_to = to.unit;
   }
+  /*else {*/
+    /*conversion = convert_units(input, units_from, units_to);*/
+  /*}*/
   mpfr_out_str (stdout, 10, 0, conversion, MPFR_RNDD);
   putchar ('\n');
 
   mpfr_t res;
   mpfr_init2 (res, 200);
   // display_units
-  // ceil(conversion)
+  /* Display only whole numbers if the result is exact */
   mpfr_ceil(res, conversion);
-  /*if (ceil(conversion) == (unsigned long long int) conversion) */
-  if (mpfr_cmp (res, conversion) == 0)
-    /*(arguments.display_units) ? mpfr_printf("%llu %s\n", (unsigned long long int) conversion, units_from) : printf("%llu\n", (unsigned long long int) conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%Q %s\n", conversion, units_from) : mpfr_printf("%Q\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%llu %s\n", conversion, units_to) : mpfr_printf("%llu\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%Rf %s\n", conversion, units_to) : mpfr_printf("%Rf\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%Ff %s\n", conversion, units_to) : mpfr_printf("%Ff\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%Zd %s\n", conversion, units_to) : mpfr_printf("%Zd\n", conversion);*/
-
-    /*(arguments.display_units) ? mpfr_printf("%Zu %s\n", conversion, units_to) : mpfr_printf("%Zu\n", conversion);*/
-    (arguments.display_units) ? mpfr_printf("%Rf %s\n", conversion, units_to) : mpfr_printf("%Rf\n", conversion);
-
-    /*(arguments.display_units) ? mpfr_printf("%Pd %s\n", conversion, units_from) : mpfr_printf("%Pd\n", conversion);*/
+  if (mpfr_cmp (res, conversion) == 0) {
+    mpz_t int_conv;
+    mpz_init2(int_conv, 200);
+    mpfr_get_z(int_conv, conversion, MPFR_RNDF);
+    (arguments.display_units) ? mpfr_printf("%Zd %s\n", int_conv, units_to) : mpfr_printf("%Zd\n", int_conv);
+    mpz_clear (int_conv);
+  }
   else
-    /*(arguments.display_units) ? printf("%.2Lf %s\n", conversion, units_from) : printf("%.2Lf\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%.2F %s\n", conversion, units_from) : mpfr_printf("%.2F\n", conversion);*/
-    /*(arguments.display_units) ? mpfr_printf("%.2Lf %s\n", conversion, units_to) : mpfr_printf("%.2Lf\n", conversion);*/
     (arguments.display_units) ? mpfr_printf("%.2Rf %s\n", conversion, units_to) : mpfr_printf("%.2Rf\n", conversion);
-
-  /*else {*/
-    /*conversion = convert_units(input, units_from, units_to);*/
-  /*}*/
 
   /*display_units(conversion, units_to, arguments.display_units);*/
 
