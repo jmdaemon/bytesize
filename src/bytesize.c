@@ -120,30 +120,28 @@ const char* get_amt(char* input) {
 
 /* Converts an integral number between byte sizes */
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
-  mpfr_t bfrom, bto, bamt, bfactor, r1, r2;
-  mpfr_inits2(200, bfrom, bto, bamt, bfactor, r1, r2, NULL);
+  mpfr_t from, to, amt, factor;
+  mpfr_inits2(200, from, to, amt, factor, NULL);
 
-  const char* digits = get_amt(input);
+  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF); /*const unsigned long long int amt = get_amt(input);*/
+  mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF); /*const long int from = get_factor(units_from);*/
+  mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF); /*const long int to = get_factor(units_to);*/
 
-  mpfr_init_set_str(bamt, digits, 10, MPFR_RNDF); /*const unsigned long long int amt = get_amt(input);*/
-  mpfr_set_ui(bfrom, get_factor(units_from), MPFR_RNDF); /*const long int from = get_factor(units_from);*/
-  mpfr_set_ui(bto, get_factor(units_to), MPFR_RNDF); /*const long int to = get_factor(units_to);*/
-
-  log_debug("Amount To Convert      : %d", bamt);
-  log_debug("Conversion Factor From : %ld", bfrom);
-  log_debug("Conversion Factor To   : %ld", bto);
+  log_debug("Amount To Convert      : %d", amt);
+  log_debug("Conversion Factor From : %ld", from);
+  log_debug("Conversion Factor To   : %ld", to);
 
   /*const long double factor = (double) from / to;*/
-  mpfr_div(r1, bfrom, bto, MPFR_RNDF);
+  mpfr_div(factor, from, to, MPFR_RNDF);
 
   /*const long double conversion = amt * factor;*/
-  mpfr_mul(r2, bamt, r1, MPFR_RNDF);
+  mpfr_mul(to, amt, factor, MPFR_RNDF);
 
   Byte byte = { {(mpfr_ptr) 0}, units_to, 0};
   mpfr_init2 (byte.amt, 200);
-  mpfr_set(byte.amt, r2, MPFR_RNDF);
+  mpfr_set(byte.amt, to, MPFR_RNDF);
 
-  mpfr_clears(bfrom, bto, bamt, bfactor, r1, r2, NULL);
+  mpfr_clears(from, to, amt, factor, NULL);
   mpfr_free_cache();
 
   return byte;
@@ -152,8 +150,8 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
 /* Automatically determines the best size to use
    and returns the converted unit */
 Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
-  mpfr_t bscale, r1, r2, r3, r4, r5;
-  mpfr_inits2(200, bscale, r1, r2, r3, r4, r5, NULL);
+  mpfr_t bscale, r1, r2, r3;
+  mpfr_inits2(200, bscale, r1, r2, r3, NULL);
 
   mpfr_set_ui(bscale, (unsigned int) scale, MPFR_RNDF);
 
@@ -164,8 +162,8 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
   mpfr_floor(r3, r3);
   
   /* long double amt = (long double) bytes / (long double) pow(scale, i) */
-  mpfr_pow(r4, bscale, r3, MPFR_RNDF);  /* pow(scale, i) */
-  mpfr_div(r5, bytes, r4, MPFR_RNDF);   /* amt = bytes / pow(scale, i) */
+  mpfr_pow(r1, bscale, r3, MPFR_RNDF);  /* pow(scale, i) */
+  mpfr_div(r2, bytes, r1, MPFR_RNDF);   /* amt = bytes / pow(scale, i) */
 
   /** If the output size is < than 1KB or 1KiB (depends on scale), display in bytes */
   int i = mpfr_get_ui (r3, MPFR_RNDD);
@@ -175,10 +173,10 @@ Byte auto_size(mpfr_t bytes, size_t scale, bool is_byte) {
 
   Byte byte = { {(mpfr_ptr) 0}, unit, 0};
   mpfr_init2 (byte.amt, 200);
-  mpfr_set(byte.amt, r5, MPFR_RNDF);
+  mpfr_set(byte.amt, r2, MPFR_RNDF);
 
   // Deallocate
-  mpfr_clears(bscale, r1, r2, r3, r4, r5, NULL);
+  mpfr_clears(bscale, r1, r2, r3, NULL);
   mpfr_free_cache();
   
   if (i >= SIZE) {
