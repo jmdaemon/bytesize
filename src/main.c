@@ -29,7 +29,7 @@ int main (int argc, char **argv) {
     log_info("Scale: %d", scale);
 
   char *units_from = get_unit(input);
-  char *units_to;
+  char *units_to = "";
 
   /* Dynamically sets the scale depending on the input unit given.
      Defaults to SI units if bytes are given. */
