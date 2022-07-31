@@ -103,17 +103,53 @@ unsigned long long int get_amt(char* input) {
 }
 
 /* Converts an integral number between byte sizes */
-long double convert_units(char* input, const char* units_from, const char* units_to) {
-  const long int from = get_factor(units_from);
-  const long int to = get_factor(units_to);
-  const unsigned long long int amt = get_amt(input);
-  log_debug("Amount To Convert      : %d", amt);
-  log_debug("Conversion Factor From : %ld", from);
-  log_debug("Conversion Factor To   : %ld", to);
+/*long double convert_units(char* input, const char* units_from, const char* units_to) {*/
+Byte convert_units(char* input, const char* units_from, const char* units_to) {
+  mpfr_t bfrom, bto, bamt, bfactor;
+  const char* digits = match(input, num_regex);
 
-  const long double factor = (double) from / to;
-  const long double conversion = amt * factor;
-  return conversion;
+  mpfr_init2 (bfrom, 200);
+  mpfr_init2 (bto, 200);
+  mpfr_init2 (bamt, 200);
+  mpfr_init2 (bfactor, 200);
+  
+  mpfr_init_set_str(bamt, digits, 10, MPFR_RNDF);
+  mpfr_set_ui(bfrom, get_factor(units_from), MPFR_RNDF);
+  mpfr_set_ui(bto, get_factor(units_to), MPFR_RNDF);
+  /*const long int from = get_factor(units_from);*/
+  /*const long int to = get_factor(units_to);*/
+
+  /*const unsigned long long int amt = get_amt(input);*/
+
+  /*log_debug("Amount To Convert      : %d", amt);*/
+  /*log_debug("Conversion Factor From : %ld", from);*/
+  /*log_debug("Conversion Factor To   : %ld", to);*/
+  log_debug("Amount To Convert      : %d", bamt);
+  log_debug("Conversion Factor From : %ld", bfrom);
+  log_debug("Conversion Factor To   : %ld", bto);
+
+  /*const long double factor = (double) from / to;*/
+  mpfr_t r1;
+  mpfr_init2 (r1, 200);
+  mpfr_div(r1, bfrom, bto, MPFR_RNDF);
+
+  /*const long double conversion = amt * factor;*/
+  mpfr_t r2;
+  mpfr_init2 (r2, 200);
+  mpfr_mul(r2, bamt, r1, MPFR_RNDF);
+
+  Byte byte = { {(mpfr_ptr) 0}, units_to, 0};
+  mpfr_init2 (byte.amt, 200);
+  mpfr_set(byte.amt, r2, MPFR_RNDF);
+
+  mpfr_clear (bfrom);
+  mpfr_clear (bto);
+  mpfr_clear (bamt);
+  mpfr_clear (bfactor);
+  mpfr_free_cache();
+
+  /*return conversion;*/
+  return byte;
 }
 
 double bigint_log(mpz_t x) {

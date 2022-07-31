@@ -57,11 +57,11 @@ int main (int argc, char **argv) {
     mpfr_set(conversion, to.amt, MPFR_RNDF);
     units_to = to.unit;
   }
-  /*else {*/
-    /*conversion = convert_units(input, units_from, units_to);*/
-  /*}*/
-  mpfr_out_str (stdout, 10, 0, conversion, MPFR_RNDD);
-  putchar ('\n');
+  else {
+    to = convert_units(input, units_from, units_to);
+    mpfr_set(conversion, to.amt, MPFR_RNDF);
+    units_to = to.unit;
+  }
 
   mpfr_t res;
   mpfr_init2 (res, 200);
