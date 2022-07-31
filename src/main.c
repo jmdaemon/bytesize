@@ -39,29 +39,21 @@ int main (int argc, char **argv) {
   if (!smatch(output, "Auto"))
     units_to   = get_unit(output);
 
-  mpfr_t amt, conversion;
-  mpfr_init2 (amt, 200);
-  mpfr_init2 (conversion, 200);
-
   Byte to;
-  mpfr_init2 (to.amt, 200);
+  mpfr_t amt, conversion;
+  mpfr_inits2(200, to.amt, amt, conversion, NULL);
+
   if (smatch(output, "Auto")) {
     char* digits = get_amt(input);
     mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
 
-    if (is_byte(units_from)) 
-      to = auto_size(amt, scale, true);
-    else 
-      to = auto_size(amt, get_factor(units_from), false);
-
-    mpfr_set(conversion, to.amt, MPFR_RNDF);
-    units_to = to.unit;
-  }
-  else {
+    to = (is_byte(units_from)) ?
+      auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
+  } else
     to = convert_units(input, units_from, units_to);
-    mpfr_set(conversion, to.amt, MPFR_RNDF);
-    units_to = to.unit;
-  }
+
+  mpfr_set(conversion, to.amt, MPFR_RNDF);
+  units_to = to.unit;
 
   display_units(conversion, units_to, arguments.display_units);
 
@@ -74,10 +66,7 @@ int main (int argc, char **argv) {
   if (!smatch(output, "Auto"))
     pcre_free_substring(units_to);
 
-  /* Big numbers */
-  mpfr_clear (to.amt);
-  mpfr_clear (amt);
-  mpfr_clear (conversion);
+  mpfr_clears(to.amt, amt, conversion, NULL);
   mpfr_free_cache();
   return 0;
 }
