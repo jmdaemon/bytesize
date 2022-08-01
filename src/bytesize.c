@@ -102,6 +102,7 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
     (show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);
 
   mpfr_clears(res, divisor, r1, NULL);
+  mpfr_free_cache();
 }
 
 /* Returns the byte size unit */

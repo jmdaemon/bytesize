@@ -42,7 +42,9 @@ int main (int argc, char **argv) {
   Byte to;
   mpfr_t amt, conversion;
   mpfr_inits2(200, to.amt, amt, conversion, NULL);
-  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF);
+  /*mpfr_inits2(200, amt, conversion, NULL);*/
+  const char* digits = get_amt(input);
+  mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
 
   if (smatch(output, "Auto"))
     to = (is_byte(units_from)) ?
@@ -60,11 +62,13 @@ int main (int argc, char **argv) {
 
   /* Deallocate */
   pcre_free_substring(units_from);
+  pcre_free_substring(digits);
 
   if (!smatch(output, "Auto"))
     pcre_free_substring(units_to);
 
   mpfr_clears(to.amt, amt, conversion, NULL);
+  /*mpfr_clears(amt, conversion, NULL);*/
   mpfr_free_cache();
   return 0;
 }
