@@ -91,15 +91,26 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   /* Display only whole numbers if the result is exact */
   mpfr_set(r1, conversion, MPFR_RNDF);
   mpfr_modf(res, r1, divisor, MPFR_RNDZ);
-  if (mpfr_cmp_ui(r1, 0) == 0) {
+  /*if (mpfr_cmp_ui(r1, 0) == 0 && mpfr_get_ui(res, MPFR_RNDF) == 0) {*/
+  /* If the result is divisible by 2,
+     and the conversion amount is greater than zero, display as a whole number.
+     Else display as a scientific number */
+  if ((mpfr_cmp_ui(r1, 0) == 0) && (mpfr_cmp_ui(res, 0) > 1)) {
     mpz_t int_conv;
     mpz_init2(int_conv, 200);
     mpfr_get_z(int_conv, conversion, MPFR_RNDF);
     (show_with_units) ? mpfr_printf("%Zd %s\n", int_conv, units) : mpfr_printf("%Zd\n", int_conv);
+    /*(show_with_units) ? mpfr_printf("%Zu %s\n", int_conv, units) : mpfr_printf("%Zu\n", int_conv);*/
     mpz_clear (int_conv);
   }
   else
-    (show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);
+    (show_with_units) ? mpfr_printf("%Rg %s\n", conversion, units) : mpfr_printf("%Rg\n", conversion);
+    /*(show_with_units) ? mpfr_printf("%RG %s\n", conversion, units) : mpfr_printf("%RG\n", conversion);*/
+    /*(show_with_units) ? mpfr_printf("%Rg %s\n", conversion, units) : mpfr_printf("%Rg\n", conversion);*/
+    /*(show_with_units) ? mpfr_printf("%.24Rf %s\n", conversion, units) : mpfr_printf("%.24Rf\n", conversion);*/
+    /*(show_with_units) ? mpfr_printf("%.32Rf %s\n", conversion, units) : mpfr_printf("%.32Rf\n", conversion);*/
+    /*(show_with_units) ? mpfr_printf("%.200R*f %s\n", conversion, units) : mpfr_printf("%.200R*f\n", conversion);*/
+    /*(show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);*/
 
   mpfr_clears(res, divisor, r1, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
@@ -126,7 +137,7 @@ const char* get_amt(const char* input) {
 /* Converts an integral number between byte sizes */
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
-  mpfr_inits2(200, from, to, factor, NULL);
+  mpfr_inits2(200, from, to, factor, NULL); /* amt will be initialized later */
 
   const char* digits = get_amt(input);
   mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
