@@ -8,8 +8,15 @@ appropriate byte representations automatically.
 
 ## Building
 
+### Binary
+
 Run `make release bin` to build `bytesize` in release configuration.
-This will generate a binary the `bytesize` binary in `build/release/bin`.
+This will generate the binary `build/release/bin/bytesize`.
+
+### Library
+
+Run `make release lib` to build `bytesize` as a library in release configuration.
+This will generate the dynamic library `build/release/lib/libbytesize.so`.
 
 ## Installation
 
