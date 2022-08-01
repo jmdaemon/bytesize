@@ -25,7 +25,7 @@ extern "C" {
 static const int SI_SCALE = 1000;
 static const int BINARY_SCALE = 1024;
 
-static const char *unit_regex = "([KMGTP]?i?B+)";
+static const char *unit_regex = "([KMGTPEZY]?i?B+)";
 static const char *num_regex = "([\\d]+)";
 
 static const char *SI_BYTE[SIZE] = {
