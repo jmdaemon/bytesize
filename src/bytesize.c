@@ -127,15 +127,6 @@ const char* get_amt(const char* input) {
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
   mpfr_inits2(200, from, to, factor, NULL);
-  /*mpfr_inits2((mpfr_prec_t) 200, from, to, amt, factor, NULL);*/
-  /*mpfr_inits2(200, from, to, amt, factor, NULL);*/
-  /*mpfr_inits2(200, from, to, amt, factor, NULL);*/
-
-  /*mpfr_init2(from, 200);*/
-  /*mpfr_init2(to, 200);*/
-  /*mpfr_init2(amt, 200);*/
-  /*mpfr_init2(factor, 200);*/
-  /*mpfr_inits2(200, from, to, amt, factor);*/
 
   const char* digits = get_amt(input);
   mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
@@ -154,10 +145,6 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_asprintf(&b3, "Conversion Factor To   : %Rf", to);
   log_debug(b3);
 
-  /*log_debug("Amount To Convert      : %d", amt);*/
-  /*log_debug("Conversion Factor From : %ld", from);*/
-  /*log_debug("Conversion Factor To   : %ld", to);*/
-
   /*const long double factor = (double) from / to;*/
   mpfr_div(factor, from, to, MPFR_RNDF);
 
@@ -168,6 +155,7 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_init2 (byte.amt, 200);
   mpfr_set(byte.amt, to, MPFR_RNDF);
 
+  /* Deallocate */
   mpfr_free_str(b1);
   mpfr_free_str(b2);
   mpfr_free_str(b3);
@@ -209,8 +197,6 @@ Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
   // Deallocate
   mpfr_clears(bytes, bscale, r1, r2, r3, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
-  mpfr_mp_memory_cleanup();
-  mpfr_free_pool();
   
   if (i >= SIZE) {
     puts("Conversion exceeds maximum unit available (YB, YiB). Exiting...");

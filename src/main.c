@@ -41,14 +41,9 @@ int main (int argc, char **argv) {
 
   Byte to;
   mpfr_t amt, conversion;
-  /*mpfr_inits2(200, amt, conversion, to.amt, NULL);*/
-  /*mpfr_inits2(200, amt, conversion, NULL);*/
-  /*mpfr_inits2(200, amt, conversion, NULL); [> Note that to will be created later on, so we should not allocate here <]*/
-  mpfr_inits2(200, conversion, NULL); /* Note that to will be created later on, so we should not allocate here */
-  /*mpfr_inits2(200, amt, conversion, NULL);*/
-  /*mpfr_inits2(200, amt, NULL);*/
+  mpfr_inits2(200, conversion, NULL); /* Note that to.amt will be created later on, so we should not allocate it here */
   const char* digits = get_amt(input);
-  mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
+  mpfr_init_set_str(amt, digits, 10, MPFR_RNDF); /* Initializes and sets amt in one line */
 
   if (smatch(output, "Auto")) 
     to = (is_byte(units_from)) ?
@@ -71,10 +66,7 @@ int main (int argc, char **argv) {
   if (!smatch(output, "Auto"))
     pcre_free_substring(units_to);
 
-  mpfr_clears(to.amt, amt, conversion, NULL);
+  mpfr_clears(to.amt, amt, conversion, NULL); /* Deallocate the to.amt mpfr value here */
   mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-  mpfr_mp_memory_cleanup();
-  /*mpfr_clears(amt, conversion, NULL);*/
-  /*mpfr_clears(amt, NULL);*/
   return 0;
 }
