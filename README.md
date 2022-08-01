@@ -63,5 +63,4 @@ For more information see `bytesize.h`.
 ### Potential Features
 
 - Hiding the ppcre library from compilation by either:
-    1. Including parameters directly in `convert_units()` to specify the matched substrings to.
     2. Returning a string copy in match, simplifying the overhead of remembering to deallocate properly.

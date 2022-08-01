@@ -49,7 +49,7 @@ int main (int argc, char **argv) {
     to = (is_byte(units_from)) ?
       auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
   else 
-    to = convert_units(input, units_from, units_to);
+    to = convert_units(digits, units_from, units_to);
 
   mpfr_set(conversion, to.amt, MPFR_RNDF);
   units_to = to.unit;

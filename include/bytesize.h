@@ -82,7 +82,7 @@ long int get_factor(const char *unit);
 void display_units(mpfr_t conversion, const char* units, bool show_with_units);
 const char* get_unit(const char *input);
 const char* get_amt(const char *input);
-Byte convert_units(char* input, const char* units_from, const char* units_to);
+Byte convert_units(const char* digits, const char* units_from, const char* units_to);
 Byte auto_size(mpfr_t bytes, int scale, bool is_byte);
 
 #ifdef __cplusplus

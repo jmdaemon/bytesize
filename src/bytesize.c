@@ -125,11 +125,10 @@ const char* get_amt(const char* input) {
 }
 
 /* Converts an integral number between byte sizes */
-Byte convert_units(char* input, const char* units_from, const char* units_to) {
+Byte convert_units(const char* digits, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
   mpfr_inits2(200, from, to, factor, NULL); /* amt will be initialized later */
 
-  const char* digits = get_amt(input);
   mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
   mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF);   /* const long int from = get_factor(units_from); */
   mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
@@ -160,7 +159,6 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_free_str(b1);
   mpfr_free_str(b2);
   mpfr_free_str(b3);
-  pcre_free_substring(digits);
   mpfr_clears(from, to, amt, factor, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
