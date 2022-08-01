@@ -126,7 +126,8 @@ const char* get_amt(const char* input) {
 /* Converts an integral number between byte sizes */
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
-  mpfr_inits2((mpfr_prec_t) 200, from, to, amt, factor, NULL);
+  /*mpfr_inits2((mpfr_prec_t) 200, from, to, amt, factor, NULL);*/
+  mpfr_inits2(200, from, to, amt, factor, NULL);
   /*mpfr_inits2(200, from, to, amt, factor);*/
 
   const char* digits = get_amt(input);
@@ -134,9 +135,21 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF);   /* const long int from = get_factor(units_from); */
   mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
 
-  log_debug("Amount To Convert      : %d", amt);
-  log_debug("Conversion Factor From : %ld", from);
-  log_debug("Conversion Factor To   : %ld", to);
+  char* b1;
+  char* b2;
+  char* b3;
+  mpfr_asprintf(&b1, "Amount To Convert      : %Rf", amt);
+  log_debug(b1);
+
+  mpfr_asprintf(&b2, "Conversion Factor From : %Rf", from);
+  log_debug(b2);
+
+  mpfr_asprintf(&b3, "Conversion Factor To   : %Rf", to);
+  log_debug(b3);
+
+  /*log_debug("Amount To Convert      : %d", amt);*/
+  /*log_debug("Conversion Factor From : %ld", from);*/
+  /*log_debug("Conversion Factor To   : %ld", to);*/
 
   /*const long double factor = (double) from / to;*/
   mpfr_div(factor, from, to, MPFR_RNDF);
@@ -148,6 +161,9 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_init2 (byte.amt, 200);
   mpfr_set(byte.amt, to, MPFR_RNDF);
 
+  mpfr_free_str(b1);
+  mpfr_free_str(b2);
+  mpfr_free_str(b3);
   pcre_free_substring(digits);
   mpfr_clears(from, to, amt, factor, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
@@ -184,7 +200,7 @@ Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
   mpfr_set(byte.amt, r2, MPFR_RNDF);
 
   // Deallocate
-  mpfr_clears(bscale, r1, r2, r3, NULL);
+  mpfr_clears(bytes, bscale, r1, r2, r3, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
   mpfr_mp_memory_cleanup();
   
