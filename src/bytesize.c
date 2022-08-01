@@ -1,7 +1,7 @@
 #include "bytesize.h"
 
 /* Determine if there are any regex matches with the input text */
-const char *match(char *input, const char *regex) {
+const char *match(const char *input, const char *regex) {
   /* for pcre_compile */
   pcre *re;
   const char *error;
@@ -105,13 +105,13 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
 }
 
 /* Returns the byte size unit */
-const char* get_unit(char *input) {
+const char* get_unit(const char *input) {
   const char *units = match(input, unit_regex);
   return units;
 }
 
 /* Parses the input and returns the numeral value as a string */
-const char* get_amt(char* input) {
+const char* get_amt(const char* input) {
   const char* amt = match(input, num_regex);
   return amt;
 }

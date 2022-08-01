@@ -70,7 +70,7 @@ typedef struct Conversion {
 } Conversion;
 
 /* Helper Functions */
-const char *match(char *input, const char *regex);
+const char *match(const char *input, const char *regex);
 bool found_in(const char *elem, const char *array[], int array_size);
 bool smatch(const char* input, const char* pattern);
 
@@ -80,8 +80,8 @@ Scale get_scale(const char *unit);
 long int calc_factor(const char *unit, int size, const Scale scale);
 long int get_factor(const char *unit);
 void display_units(mpfr_t conversion, const char* units, bool show_with_units);
-const char* get_unit(char *input);
-const char* get_amt(char *input);
+const char* get_unit(const char *input);
+const char* get_amt(const char *input);
 Byte convert_units(char* input, const char* units_from, const char* units_to);
 Byte auto_size(mpfr_t bytes, int scale, bool is_byte);
 
