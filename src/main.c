@@ -48,8 +48,6 @@ int main (int argc, char **argv) {
   if (smatch(output, "Auto")) 
     to = (is_byte(units_from)) ?
       auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
-      /*auto_size(amt, get_factor(units_from), true) : auto_size(amt, get_factor(units_from), false);*/
-      /*auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);*/
   else 
     to = convert_units(input, units_from, units_to);
 
@@ -68,7 +66,6 @@ int main (int argc, char **argv) {
   if (!smatch(output, "Auto"))
     pcre_free_substring(units_to);
 
-  /*mpfr_clears(to.amt, amt, conversion, NULL); [> Deallocate the to.amt mpfr value here <]*/
   if (!smatch(output, "Auto"))
     mpfr_clear(amt);
   mpfr_clear(to.amt);

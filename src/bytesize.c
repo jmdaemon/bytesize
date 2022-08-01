@@ -91,7 +91,6 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   /* Display only whole numbers if the result is exact */
   mpfr_set(r1, conversion, MPFR_RNDF);
   mpfr_modf(res, r1, divisor, MPFR_RNDZ);
-  /*if (mpfr_cmp_ui(r1, 0) == 0 && mpfr_get_ui(res, MPFR_RNDF) == 0) {*/
   /* If the result is divisible by 2,
      and the conversion amount is greater than zero, display as a whole number.
      Else display as a scientific number */
@@ -100,17 +99,10 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
     mpz_init2(int_conv, 200);
     mpfr_get_z(int_conv, conversion, MPFR_RNDF);
     (show_with_units) ? mpfr_printf("%Zd %s\n", int_conv, units) : mpfr_printf("%Zd\n", int_conv);
-    /*(show_with_units) ? mpfr_printf("%Zu %s\n", int_conv, units) : mpfr_printf("%Zu\n", int_conv);*/
     mpz_clear (int_conv);
   }
   else
     (show_with_units) ? mpfr_printf("%Rg %s\n", conversion, units) : mpfr_printf("%Rg\n", conversion);
-    /*(show_with_units) ? mpfr_printf("%RG %s\n", conversion, units) : mpfr_printf("%RG\n", conversion);*/
-    /*(show_with_units) ? mpfr_printf("%Rg %s\n", conversion, units) : mpfr_printf("%Rg\n", conversion);*/
-    /*(show_with_units) ? mpfr_printf("%.24Rf %s\n", conversion, units) : mpfr_printf("%.24Rf\n", conversion);*/
-    /*(show_with_units) ? mpfr_printf("%.32Rf %s\n", conversion, units) : mpfr_printf("%.32Rf\n", conversion);*/
-    /*(show_with_units) ? mpfr_printf("%.200R*f %s\n", conversion, units) : mpfr_printf("%.200R*f\n", conversion);*/
-    /*(show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);*/
 
   mpfr_clears(res, divisor, r1, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
@@ -118,8 +110,7 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
 
 /** Returns the byte size unit
   * Note that this value must be explcitly deallocated later with
-  * `pcre_free_substring()`
-  */
+  * `pcre_free_substring()` */
 const char* get_unit(const char *input) {
   const char *units = match(input, unit_regex);
   return units;
@@ -127,8 +118,7 @@ const char* get_unit(const char *input) {
 
 /** Parses the input and returns the numeral value as a strings.
   * Note that this value must be explcitly deallocated later with
-  * `pcre_free_substring()`
-  */
+  * `pcre_free_substring()` */
 const char* get_amt(const char* input) {
   const char* amt = match(input, num_regex);
   return amt;

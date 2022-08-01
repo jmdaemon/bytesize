@@ -8,7 +8,6 @@ struct arguments set_default_args() {
   arguments.display_units = true;
   arguments.scale = 1000;
 
-  /*arguments.args[0] = "";*/
   arguments.args[1] = "";
   return arguments;
 }
