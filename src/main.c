@@ -41,15 +41,19 @@ int main (int argc, char **argv) {
 
   Byte to;
   mpfr_t amt, conversion;
-  mpfr_inits2(200, to.amt, amt, conversion, NULL);
+  /*mpfr_inits2(200, amt, conversion, to.amt, NULL);*/
   /*mpfr_inits2(200, amt, conversion, NULL);*/
+  /*mpfr_inits2(200, amt, conversion, NULL); [> Note that to will be created later on, so we should not allocate here <]*/
+  mpfr_inits2(200, conversion, NULL); /* Note that to will be created later on, so we should not allocate here */
+  /*mpfr_inits2(200, amt, conversion, NULL);*/
+  /*mpfr_inits2(200, amt, NULL);*/
   const char* digits = get_amt(input);
   mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
 
-  if (smatch(output, "Auto"))
+  if (smatch(output, "Auto")) 
     to = (is_byte(units_from)) ?
       auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
-  else
+  else 
     to = convert_units(input, units_from, units_to);
 
   mpfr_set(conversion, to.amt, MPFR_RNDF);
@@ -61,14 +65,16 @@ int main (int argc, char **argv) {
   log_info("Units To: %s", units_to);
 
   /* Deallocate */
-  pcre_free_substring(units_from);
   pcre_free_substring(digits);
+  pcre_free_substring(units_from);
 
   if (!smatch(output, "Auto"))
     pcre_free_substring(units_to);
 
   mpfr_clears(to.amt, amt, conversion, NULL);
+  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+  mpfr_mp_memory_cleanup();
   /*mpfr_clears(amt, conversion, NULL);*/
-  mpfr_free_cache();
+  /*mpfr_clears(amt, NULL);*/
   return 0;
 }

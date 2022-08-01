@@ -126,8 +126,15 @@ const char* get_amt(const char* input) {
 /* Converts an integral number between byte sizes */
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
+  mpfr_inits2(200, from, to, factor, NULL);
   /*mpfr_inits2((mpfr_prec_t) 200, from, to, amt, factor, NULL);*/
-  mpfr_inits2(200, from, to, amt, factor, NULL);
+  /*mpfr_inits2(200, from, to, amt, factor, NULL);*/
+  /*mpfr_inits2(200, from, to, amt, factor, NULL);*/
+
+  /*mpfr_init2(from, 200);*/
+  /*mpfr_init2(to, 200);*/
+  /*mpfr_init2(amt, 200);*/
+  /*mpfr_init2(factor, 200);*/
   /*mpfr_inits2(200, from, to, amt, factor);*/
 
   const char* digits = get_amt(input);
@@ -203,6 +210,7 @@ Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
   mpfr_clears(bytes, bscale, r1, r2, r3, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
   mpfr_mp_memory_cleanup();
+  mpfr_free_pool();
   
   if (i >= SIZE) {
     puts("Conversion exceeds maximum unit available (YB, YiB). Exiting...");
