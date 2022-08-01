@@ -102,16 +102,22 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
     (show_with_units) ? mpfr_printf("%.2Rf %s\n", conversion, units) : mpfr_printf("%.2Rf\n", conversion);
 
   mpfr_clears(res, divisor, r1, NULL);
-  mpfr_free_cache();
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 }
 
-/* Returns the byte size unit */
+/** Returns the byte size unit
+  * Note that this value must be explcitly deallocated later with
+  * `pcre_free_substring()`
+  */
 const char* get_unit(const char *input) {
   const char *units = match(input, unit_regex);
   return units;
 }
 
-/* Parses the input and returns the numeral value as a string */
+/** Parses the input and returns the numeral value as a strings.
+  * Note that this value must be explcitly deallocated later with
+  * `pcre_free_substring()`
+  */
 const char* get_amt(const char* input) {
   const char* amt = match(input, num_regex);
   return amt;
@@ -120,9 +126,11 @@ const char* get_amt(const char* input) {
 /* Converts an integral number between byte sizes */
 Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
-  mpfr_inits2(200, from, to, amt, factor, NULL);
+  mpfr_inits2((mpfr_prec_t) 200, from, to, amt, factor, NULL);
+  /*mpfr_inits2(200, from, to, amt, factor);*/
 
-  mpfr_init_set_str(amt, get_amt(input), 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
+  const char* digits = get_amt(input);
+  mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);  /* const unsigned long long int amt = get_amt(input); */
   mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF);   /* const long int from = get_factor(units_from); */
   mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
 
@@ -140,8 +148,9 @@ Byte convert_units(char* input, const char* units_from, const char* units_to) {
   mpfr_init2 (byte.amt, 200);
   mpfr_set(byte.amt, to, MPFR_RNDF);
 
+  pcre_free_substring(digits);
   mpfr_clears(from, to, amt, factor, NULL);
-  mpfr_free_cache();
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
   return byte;
 }
@@ -176,7 +185,8 @@ Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
 
   // Deallocate
   mpfr_clears(bscale, r1, r2, r3, NULL);
-  mpfr_free_cache();
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  mpfr_mp_memory_cleanup();
   
   if (i >= SIZE) {
     puts("Conversion exceeds maximum unit available (YB, YiB). Exiting...");
