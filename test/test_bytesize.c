@@ -1,12 +1,14 @@
 #include "bytesize.h"
 #include "unity.h"
 
+/* Helpers */
+typedef struct TestByte {
+  const char* amt;
+  const char* from;
+  const char* to;
+  const double expected;
+} TestByte;
 
-void setUp(void) {}
-
-void tearDown(void) {}
-
-/* Test Helper Functions */
 void compare_bytes(Byte to, const double expected) {
   const double result = mpfr_get_d(to.amt, MPFR_RNDF);
   printf("Result  : %f\n", result);
@@ -17,6 +19,11 @@ void compare_bytes(Byte to, const double expected) {
   mpfr_clears(to.amt, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 }
+
+/* Test Fixture Setup/Teardown */
+void setUp(void) {}
+
+void tearDown(void) {}
 
 void match_returns_correct_substrings() {
   const char* si = "5MB";
@@ -43,45 +50,28 @@ void calc_factor_returns_correct_scale() {
 }
 
 void convert_units_returns_correct_conversions() {
+  const char* amt = "5";
+  const unsigned int CONVERSIONS_TEST_SIZE = 9;
+  TestByte conversions[] = {
+    {amt, "MB"  , "MiB" , 4.768372},  /* MB->MiB (SI->Binary) */
+    {amt, "MiB" , "MB"  , 5.242880},  /* MiB->MB (Binary->SI) */
+    {amt, "GiB" , "MiB" , 5120.00},   /* GiB->MiB (Binary->Binary) */
+    {amt, "GB"  , "MB"  , 5000.00},   /* GB->MB (SI->SI) */
+    /* Byte Conversions */
+    {amt, "B"   , "B"   , 5.0},       /* B->B */
+    {amt, "B"   , "KB"  , 0.005},     /* B->KB (B->SI) */
+    {amt, "B"   , "KiB" , 0.00488281},/* B->KiB (B->Binary) */
+    {amt, "MB"  , "B"   , 5000000.0}, /* MB->B (SI->B) */
+    {amt, "MiB" , "B"   , 5242880.0}, /* MiB->B (Binary->B) */
+  };
   Byte to;
 
-  /* MB->MiB (SI->Binary) */
-  to = convert_units("5", "MB", "MiB");
-  compare_bytes(to, 4.768372);
-
-  /* MiB->MB (Binary->SI) */
-  to = convert_units("5", "MiB", "MB");
-  compare_bytes(to, 5.242880);
-
-  /* GiB->MiB (Binary->Binary) */
-  to = convert_units("5", "GiB", "MiB");
-  compare_bytes(to, 5120.00);
-
-  /* GB->MB (SI->SI) */
-  to = convert_units("5", "GB", "MB");
-  compare_bytes(to, 5000.00);
-
-  /* Byte Conversion */
-
-  /* B->B */
-  to = convert_units("5", "B", "B");
-  compare_bytes(to, 5.0);
-
-  /* B->KB (B->SI) */
-  to = convert_units("5", "B", "KB");
-  compare_bytes(to, 0.005);
-
-  /* B->KiB (B->Binary) */
-  to = convert_units("5", "B", "KiB");
-  compare_bytes(to, 0.00488281);
-
-  /* KB->B (SI->B) */
-  to = convert_units("5", "MB", "B");
-  compare_bytes(to, 5000000.0);
-
-  /* KiB->B (Binary->B) */
-  to = convert_units("5", "MiB", "B");
-  compare_bytes(to, 5242880.0);
+  /* Easily test all of our conversions */
+  for (int i = 0; i < CONVERSIONS_TEST_SIZE; i++) {
+    TestByte test = conversions[i];
+    to = convert_units(test.amt, test.from, test.to);
+    compare_bytes(to, test.expected);
+  }
 }
 
 // Big Byte Tests
