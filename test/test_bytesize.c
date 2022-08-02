@@ -74,22 +74,11 @@ void convert_units_returns_correct_conversions() {
   }
 }
 
-// Big Byte Tests
-void convert_units_petabyte_to_byte_should_return_correct_conversion() {
-  const char *from = "5PB";
-  const char *units_from = "PB";
-  const char *units_to = "B";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const long double expected = 5000000000000000.00;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+void convert_units_bignums_returns_correct_conversions() {
+  Byte to = convert_units("5", "PB", "B");
+  compare_bytes(to, 5000000000000000.00);
+  /* Note that bigger conversions are also supported but systems may run out of
+     memory in doing so. This will be good enough for most cases */
 }
 
 /* Main runner */
@@ -98,7 +87,6 @@ int main(void) {
   RUN_TEST(match_returns_correct_substrings);
   RUN_TEST(calc_factor_returns_correct_scale);
   RUN_TEST(convert_units_returns_correct_conversions);
-  // Big number conversion tests
-  RUN_TEST(convert_units_petabyte_to_byte_should_return_correct_conversion);
+  RUN_TEST(convert_units_bignums_returns_correct_conversions);
   return UNITY_END();
 }
