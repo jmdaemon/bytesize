@@ -19,26 +19,6 @@ void match_returns_correct_substrings() {
   TEST_ASSERT_EQUAL_STRING("MiB", match(bi, unit_regex));
 }
 
-// get_unit tests
-void get_unit_si_should_return_si_unit() {
-  const char *input = "5MB";
-  const char *result = get_unit(input);
-  const char *expected = "MB";
-  TEST_ASSERT_EQUAL_STRING(expected, result);
-}
-void get_unit_binary_should_return_binary_unit() {
-  const char *input = "5MiB";
-  const char *result = get_unit(input);
-  const char *expected = "MiB";
-  TEST_ASSERT_EQUAL_STRING(expected, result);
-}
-void get_unit_byte_should_return_byte_unit() {
-  const char *input = "5B";
-  const char *result = get_unit(input);
-  const char *expected = "B";
-  TEST_ASSERT_EQUAL_STRING(expected, result);
-}
-
 // calc_factor tests
 void calc_factor_si_should_return_correct_bytescale() {
   // The scale is with the respect of the unit to the scale of one byte
@@ -256,10 +236,6 @@ void convert_units_petabyte_to_byte_should_return_correct_conversion() {
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(match_returns_correct_substrings);
-  // get_unit tests
-  RUN_TEST(get_unit_si_should_return_si_unit);
-  RUN_TEST(get_unit_binary_should_return_binary_unit);
-  RUN_TEST(get_unit_byte_should_return_byte_unit);
   // calc_factor tests
   RUN_TEST(calc_factor_si_should_return_correct_bytescale);
   RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
