@@ -1,8 +1,4 @@
-# Include header files
-set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
-set(HEADERS_LOG_C "${PROJECT_SOURCE_DIR}/subprojects/log.c/src")
-set(HEADERS_UNITY "${PROJECT_SOURCE_DIR}/subprojects/unity/src")
-set(HEADERS ${INCLUDES_DIR} ${HEADERS_LOG_C} ${HEADERS_UNITY})
+set(HEADERS ${INCLUDES_DIR} ${HEADERS_LOG_C})
 
 set(TARGET bytesize)
 

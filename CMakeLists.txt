@@ -25,6 +25,14 @@ endif()
 # Include CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/" "${PROJECT_SOURCE_DIR}/cmake")
 
+# Include header files
+set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
+set(HEADERS_LOG_C "${PROJECT_SOURCE_DIR}/subprojects/log.c/src")
+if(BUILD_TESTING)
+    message(STATUS "Setting \$\{HEADERS_UNITY\}")
+    set(HEADERS_UNITY "${PROJECT_SOURCE_DIR}/subprojects/unity/src")
+endif()
+
 # Single source project versions
 #configure_file (
   #"${PROJECT_SOURCE_DIR}/include/Version.h.in"
