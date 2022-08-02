@@ -61,99 +61,27 @@ void convert_units_returns_correct_conversions() {
   to = convert_units("5", "GB", "MB");
   compare_bytes(to, 5000.00);
 
-  /* Bytes */
-}
+  /* Byte Conversion */
 
-// Byte conversions
+  /* B->B */
+  to = convert_units("5", "B", "B");
+  compare_bytes(to, 5.0);
 
-// Byte to Byte
-void convert_units_byte_to_byte_should_return_correct_conversion() {
-  const char *from = "5B";
-  const char *units_from = "B";
-  const char *units_to = "B";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
+  /* B->KB (B->SI) */
+  to = convert_units("5", "B", "KB");
+  compare_bytes(to, 0.005);
 
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
+  /* B->KiB (B->Binary) */
+  to = convert_units("5", "B", "KiB");
+  compare_bytes(to, 0.00488281);
 
-  const double expected = 5;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
+  /* KB->B (SI->B) */
+  to = convert_units("5", "MB", "B");
+  compare_bytes(to, 5000000.0);
 
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
-
-// Byte to SI
-void convert_units_byte_to_si_should_return_correct_conversion() {
-  const char *from = "5B";
-  const char *units_from = "B";
-  const char *units_to = "KB";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 0.005;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
-
-// Byte to Binary
-void convert_units_byte_to_binary_should_return_correct_conversion() {
-  const char *from = "5B";
-  const char *units_from = "B";
-  const char *units_to = "KiB";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 0.00488281;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
-
-// SI to Byte
-void convert_units_si_to_byte_should_return_correct_conversion() {
-  const char *from = "5MB";
-  const char *units_from = "MB";
-  const char *units_to = "B";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 5000000;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
-
-// Binary to Byte
-void convert_units_binary_to_byte_should_return_correct_conversion() {
-  const char *from = "5MiB";
-  const char *units_from = "MiB";
-  const char *units_to = "B";
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 5242880;
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+  /* KiB->B (Binary->B) */
+  to = convert_units("5", "MiB", "B");
+  compare_bytes(to, 5242880.0);
 }
 
 // Big Byte Tests
@@ -179,15 +107,7 @@ int main(void) {
   UNITY_BEGIN();
   RUN_TEST(match_returns_correct_substrings);
   RUN_TEST(calc_factor_returns_correct_scale);
-  // Normal convert_units tests
   RUN_TEST(convert_units_returns_correct_conversions);
-
-  // Byte Conversion tests
-  RUN_TEST(convert_units_byte_to_byte_should_return_correct_conversion);
-  RUN_TEST(convert_units_byte_to_si_should_return_correct_conversion);
-  RUN_TEST(convert_units_byte_to_binary_should_return_correct_conversion);
-  RUN_TEST(convert_units_si_to_byte_should_return_correct_conversion);
-  RUN_TEST(convert_units_binary_to_byte_should_return_correct_conversion);
   // Big number conversion tests
   RUN_TEST(convert_units_petabyte_to_byte_should_return_correct_conversion);
   return UNITY_END();
