@@ -41,6 +41,7 @@ endif()
 
 # Include dependencies
 include(FetchContent)
+include(Unity)
 
 # Add subdirectories
 add_subdirectory(src)
