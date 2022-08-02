@@ -1,3 +1,6 @@
 [submodule "make"]
 	path = make
 	url = https://github.com/jmdaemon/make-modules
+[submodule "subprojects/log.c"]
+	path = subprojects/log.c
+	url = https://github.com/rxi/log.c
