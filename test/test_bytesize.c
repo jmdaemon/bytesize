@@ -6,6 +6,18 @@ void setUp(void) {}
 
 void tearDown(void) {}
 
+/* Test Helper Functions */
+void compare_bytes(Byte to, const double expected) {
+  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
+  printf("Result  : %f\n", result);
+  printf("Expected: %f\n", expected);
+  TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+  /* Deallocate */
+  mpfr_clears(to.amt, NULL);
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+}
+
 void match_returns_correct_substrings() {
   const char* si = "5MB";
   const char* bi = "5MiB";
@@ -35,49 +47,28 @@ void convert_units_returns_correct_conversions() {
   const char* bi = "5MiB";
   char* units_from_si = get_unit(si);
   char* units_from_bi = get_unit(bi);
-  double result;
   double expected;
   Byte to;
 
   /* MB->MiB (SI->Binary) */
   to = convert_units("5", units_from_si, "MiB");
-  result = mpfr_get_d(to.amt, MPFR_RNDF);
   expected = 4.768372;
-  printf("Result  : %f\n", result);
-  printf("Expected: %f\n", expected);
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  compare_bytes(to, expected);
 
   /* MiB->MB (Binary->SI) */
   to = convert_units("5", units_from_bi, "MB");
-  result = mpfr_get_d(to.amt, MPFR_RNDF);
   expected = 5.242880;
-  printf("Result  : %f\n", result);
-  printf("Expected: %f\n", expected);
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  compare_bytes(to, expected);
 
   /* GiB->MiB (Binary->Binary) */
   to = convert_units("5", "GiB", "MiB");
-  result = mpfr_get_d(to.amt, MPFR_RNDF);
   expected = 5120.00;
-  printf("Result  : %f\n", result);
-  printf("Expected: %f\n", expected);
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  compare_bytes(to, expected);
 
   /* GB->MB (SI->SI) */
   to = convert_units("5", "GB", "MB");
-  result = mpfr_get_d(to.amt, MPFR_RNDF);
   expected = 5000.00;
-  printf("Result  : %f\n", result);
-  printf("Expected: %f\n", expected);
-  TEST_ASSERT_EQUAL_FLOAT(expected, result);
-  mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  compare_bytes(to, expected);
 
   /* Bytes */
 }
