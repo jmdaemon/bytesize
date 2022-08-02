@@ -1,20 +1,22 @@
 #include "bytesize.h"
 #include "unity.h"
 
-/*Byte to;*/
 
 void setUp(void) {}
 
-void tearDown(void) {
-  /*mpfr_clears(to.amt, NULL);*/
-  /*mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);*/
-}
+void tearDown(void) {}
 
-void num_regex_should_return_num() {
-  const char *input = "5MB";
-  const char *result = match(input, num_regex);
-  const char *expected = "5";
-  TEST_ASSERT_EQUAL_STRING(expected, result);
+void match_returns_correct_substrings() {
+  const char* si = "5MB";
+  const char* bi = "5MiB";
+  const char* bytes = "5B";
+
+  /* num_regex returns digits */
+  TEST_ASSERT_EQUAL_STRING("5", match(si, num_regex));
+  TEST_ASSERT_EQUAL_STRING("5", match(bytes, num_regex));
+  /* unit returns units for si or binary units */
+  TEST_ASSERT_EQUAL_STRING("MB", match(si, unit_regex));
+  TEST_ASSERT_EQUAL_STRING("MiB", match(bi, unit_regex));
 }
 
 // get_unit tests
@@ -253,7 +255,7 @@ void convert_units_petabyte_to_byte_should_return_correct_conversion() {
 /* Main runner */
 int main(void) {
   UNITY_BEGIN();
-  RUN_TEST(num_regex_should_return_num);
+  RUN_TEST(match_returns_correct_substrings);
   // get_unit tests
   RUN_TEST(get_unit_si_should_return_si_unit);
   RUN_TEST(get_unit_binary_should_return_binary_unit);
