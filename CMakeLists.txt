@@ -47,7 +47,8 @@ include(Unity)
 add_subdirectory(src)
 
 if(BUILD_TESTING)
-  add_subdirectory(test)
+    include(CTest)
+    add_subdirectory(test)
 endif()
 
 # Package for debian

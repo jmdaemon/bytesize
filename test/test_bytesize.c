@@ -1,13 +1,13 @@
 #include "bytesize.h"
 #include "unity.h"
 
-Byte to;
+/*Byte to;*/
 
 void setUp(void) { }
 
 void tearDown(void) {
-    mpfr_clears(to.amt, NULL);
-    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+    /*mpfr_clears(to.amt, NULL);*/
+    /*mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);*/
 }
 
 void num_regex_should_return_num() {
@@ -80,6 +80,9 @@ void convert_units_binary_to_si_should_return_correct_conversion() {
     printf("Result  : %f\n", result);
     printf("Expected: %f\n", expected);
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 void convert_units_si_to_binary_should_return_correct_conversion() {
@@ -97,6 +100,9 @@ void convert_units_si_to_binary_should_return_correct_conversion() {
     printf("Result  : %f\n", result);
     printf("Expected: %f\n", expected);
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 void convert_units_si_to_si_should_return_correct_conversion() {
@@ -111,6 +117,9 @@ void convert_units_si_to_si_should_return_correct_conversion() {
     const double result = mpfr_get_d(to.amt, MPFR_RNDF);
     const double expected = 5120.00;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 void convert_units_binary_to_binary_should_return_correct_conversion() {
@@ -124,6 +133,9 @@ void convert_units_binary_to_binary_should_return_correct_conversion() {
 
     const double expected = 5000.00;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // Byte conversions
@@ -141,6 +153,9 @@ void convert_units_byte_to_byte_should_return_correct_conversion() {
 
     const double expected = 5;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // Byte to SI
@@ -156,6 +171,9 @@ void convert_units_byte_to_si_should_return_correct_conversion() {
 
     const double expected = 0.005;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // Byte to Binary
@@ -171,6 +189,9 @@ void convert_units_byte_to_binary_should_return_correct_conversion() {
 
     const double expected = 0.00488281;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // SI to Byte
@@ -186,6 +207,9 @@ void convert_units_si_to_byte_should_return_correct_conversion() {
 
     const double expected = 5000000;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // Binary to Byte
@@ -201,6 +225,9 @@ void convert_units_binary_to_byte_should_return_correct_conversion() {
 
     const double expected = 5242880;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 // Big Byte Tests
@@ -216,6 +243,9 @@ void convert_units_petabyte_to_byte_should_return_correct_conversion() {
 
     const long double expected = 5000000000000000.00;
     TEST_ASSERT_EQUAL_FLOAT(expected, result);
+
+    mpfr_clears(to.amt, NULL);
+    mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
 }
 
 /* Main runner */
