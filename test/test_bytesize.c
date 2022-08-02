@@ -19,34 +19,15 @@ void match_returns_correct_substrings() {
   TEST_ASSERT_EQUAL_STRING("MiB", match(bi, unit_regex));
 }
 
-// calc_factor tests
-void calc_factor_si_should_return_correct_bytescale() {
-  // The scale is with the respect of the unit to the scale of one byte
-  // measurement
-  const char *unit = "KB";
-  const long int expected = 1000;
-  const long int result = calc_factor(unit, SIZE, SI);
-  // 1 KB == 1000 Bytes
-  TEST_ASSERT_EQUAL_INT(expected, result);
-}
+void calc_factor_returns_correct_scale() {
+  const char* si = "KB";
+  const char* bi = "KiB";
+  const char* bytes = "B";
 
-void calc_factor_binary_should_return_correct_bytescale() {
-  // The scale is with the respect of the unit to the scale of one byte
-  // measurement
-  const char *unit = "KiB";
-  const long int expected = 1024;
-  const long int result = calc_factor(unit, SIZE, BINARY);
-  TEST_ASSERT_EQUAL_INT(expected, result);
-}
-
-void calc_factor_byte_should_return_correct_bytescale() {
-  // 1 B == 1 B
-  const char *unit = "B";
-  const long int expected = 1;
-  const long int binary_byte = calc_factor(unit, SIZE, BINARY);
-  const long int si_byte = calc_factor(unit, SIZE, SI);
-  TEST_ASSERT_EQUAL_INT(expected, binary_byte);
-  TEST_ASSERT_EQUAL_INT(expected, si_byte);
+  TEST_ASSERT_EQUAL_INT(1000, calc_factor(si, SIZE, SI));         /* 1 KB   == 1000 B */
+  TEST_ASSERT_EQUAL_INT(1024, calc_factor(bi, SIZE, BINARY));     /* 1 KiB  == 1024 B */
+  TEST_ASSERT_EQUAL_INT(1   , calc_factor(bytes, SIZE, SI));      /* 1 B    == 1 B    */
+  TEST_ASSERT_EQUAL_INT(1   , calc_factor(bytes, SIZE, BINARY));  /* 1B is the same for SI, Binary units */
 }
 
 // Normal unit conversions
@@ -236,10 +217,7 @@ void convert_units_petabyte_to_byte_should_return_correct_conversion() {
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(match_returns_correct_substrings);
-  // calc_factor tests
-  RUN_TEST(calc_factor_si_should_return_correct_bytescale);
-  RUN_TEST(calc_factor_binary_should_return_correct_bytescale);
-  RUN_TEST(calc_factor_byte_should_return_correct_bytescale);
+  RUN_TEST(calc_factor_returns_correct_scale);
   // Normal convert_units tests
   RUN_TEST(convert_units_si_to_si_should_return_correct_conversion);
   RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
