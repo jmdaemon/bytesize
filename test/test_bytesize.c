@@ -43,32 +43,23 @@ void calc_factor_returns_correct_scale() {
 }
 
 void convert_units_returns_correct_conversions() {
-  const char* si = "5MB";
-  const char* bi = "5MiB";
-  char* units_from_si = get_unit(si);
-  char* units_from_bi = get_unit(bi);
-  double expected;
   Byte to;
 
   /* MB->MiB (SI->Binary) */
-  to = convert_units("5", units_from_si, "MiB");
-  expected = 4.768372;
-  compare_bytes(to, expected);
+  to = convert_units("5", "MB", "MiB");
+  compare_bytes(to, 4.768372);
 
   /* MiB->MB (Binary->SI) */
-  to = convert_units("5", units_from_bi, "MB");
-  expected = 5.242880;
-  compare_bytes(to, expected);
+  to = convert_units("5", "MiB", "MB");
+  compare_bytes(to, 5.242880);
 
   /* GiB->MiB (Binary->Binary) */
   to = convert_units("5", "GiB", "MiB");
-  expected = 5120.00;
-  compare_bytes(to, expected);
+  compare_bytes(to, 5120.00);
 
   /* GB->MB (SI->SI) */
   to = convert_units("5", "GB", "MB");
-  expected = 5000.00;
-  compare_bytes(to, expected);
+  compare_bytes(to, 5000.00);
 
   /* Bytes */
 }
