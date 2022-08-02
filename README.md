@@ -10,12 +10,21 @@ appropriate byte representations automatically.
 
 ### Bin
 
-Run `make release bin` to build `bytesize` in release configuration.
+To build the executable:
+
+``` bash
+make release bin
+```
+
 This will generate the binary `build/release/bin/bytesize`.
 
 ### Lib
 
-Run `make release lib` to build `bytesize` as a library in release configuration.
+To build the library:
+``` bash
+make release lib
+```
+
 This will generate the dynamic library `build/release/lib/libbytesize.so`.
 
 ## Install
