@@ -4,3 +4,6 @@
 [submodule "subprojects/log.c"]
 	path = subprojects/log.c
 	url = https://github.com/rxi/log.c
+[submodule "subprojects/unity"]
+	path = subprojects/unity
+	url = https://github.com/ThrowTheSwitch/Unity
