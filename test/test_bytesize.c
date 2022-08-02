@@ -30,77 +30,56 @@ void calc_factor_returns_correct_scale() {
   TEST_ASSERT_EQUAL_INT(1   , calc_factor(bytes, SIZE, BINARY));  /* 1B is the same for SI, Binary units */
 }
 
-// Normal unit conversions
-void convert_units_binary_to_si_should_return_correct_conversion() {
-  const char *from = "5MiB";
-  const char *units_from = "MiB";
-  const char *units_to = "MB";
-  const char *digits = "5";
+void convert_units_returns_correct_conversions() {
+  const char* si = "5MB";
+  const char* bi = "5MiB";
+  char* units_from_si = get_unit(si);
+  char* units_from_bi = get_unit(bi);
+  double result;
+  double expected;
+  Byte to;
 
-  Byte to = convert_units(digits, units_from, units_to);
-
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-  const double expected = 5.242880;
+  /* MB->MiB (SI->Binary) */
+  to = convert_units("5", units_from_si, "MiB");
+  result = mpfr_get_d(to.amt, MPFR_RNDF);
+  expected = 4.768372;
   printf("Result  : %f\n", result);
   printf("Expected: %f\n", expected);
   TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
   mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
-void convert_units_si_to_binary_should_return_correct_conversion() {
-  const char *from = "5MB";
-  const char *units_from = "MB";
-  const char *units_to = "MiB";
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 4.768372;
+  /* MiB->MB (Binary->SI) */
+  to = convert_units("5", units_from_bi, "MB");
+  result = mpfr_get_d(to.amt, MPFR_RNDF);
+  expected = 5.242880;
   printf("Result  : %f\n", result);
   printf("Expected: %f\n", expected);
   TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
   mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
-void convert_units_si_to_si_should_return_correct_conversion() {
-  const char *from = "5GiB";
-  const char *units_from = "GiB";
-  const char *units_to = "MiB";
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-
-  /*const double result = convert_units(from, units_from, units_to);*/
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-  const double expected = 5120.00;
+  /* GiB->MiB (Binary->Binary) */
+  to = convert_units("5", "GiB", "MiB");
+  result = mpfr_get_d(to.amt, MPFR_RNDF);
+  expected = 5120.00;
+  printf("Result  : %f\n", result);
+  printf("Expected: %f\n", expected);
   TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
   mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
-}
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
-void convert_units_binary_to_binary_should_return_correct_conversion() {
-  const char *from = "5GB";
-  const char *units_from = "GB";
-  const char *units_to = "MB";
-  const char *digits = "5";
-
-  Byte to = convert_units(digits, units_from, units_to);
-  const double result = mpfr_get_d(to.amt, MPFR_RNDF);
-
-  const double expected = 5000.00;
+  /* GB->MB (SI->SI) */
+  to = convert_units("5", "GB", "MB");
+  result = mpfr_get_d(to.amt, MPFR_RNDF);
+  expected = 5000.00;
+  printf("Result  : %f\n", result);
+  printf("Expected: %f\n", expected);
   TEST_ASSERT_EQUAL_FLOAT(expected, result);
-
   mpfr_clears(to.amt, NULL);
-  mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+
+  /* Bytes */
 }
 
 // Byte conversions
@@ -219,10 +198,8 @@ int main(void) {
   RUN_TEST(match_returns_correct_substrings);
   RUN_TEST(calc_factor_returns_correct_scale);
   // Normal convert_units tests
-  RUN_TEST(convert_units_si_to_si_should_return_correct_conversion);
-  RUN_TEST(convert_units_si_to_binary_should_return_correct_conversion);
-  RUN_TEST(convert_units_binary_to_binary_should_return_correct_conversion);
-  RUN_TEST(convert_units_binary_to_si_should_return_correct_conversion);
+  RUN_TEST(convert_units_returns_correct_conversions);
+
   // Byte Conversion tests
   RUN_TEST(convert_units_byte_to_byte_should_return_correct_conversion);
   RUN_TEST(convert_units_byte_to_si_should_return_correct_conversion);
