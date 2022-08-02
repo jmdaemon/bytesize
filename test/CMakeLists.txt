@@ -1,4 +1,4 @@
-set(HEADERS ${INCLUDES_DIR} ${HEADERS_LOG_C} ${HEADERS_UNITY})
+set(HEADERS ${INCLUDES_DIR} ${HEADERS_VERSION} ${HEADERS_LOG_C} ${HEADERS_UNITY})
 set(TARGET bytesize)
 
 # Set up our first and only test suite

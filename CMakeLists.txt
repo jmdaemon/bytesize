@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
     bytesize
-    VERSION 0.2.0
+    VERSION 1.0.0
     DESCRIPTION "Convert between Binary & SI Bytes"
     LANGUAGES C)
 
@@ -28,16 +28,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/" 
 # Include header files
 set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADERS_LOG_C "${PROJECT_SOURCE_DIR}/subprojects/log.c/src")
+set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 if(BUILD_TESTING)
     message(STATUS "Setting \$\{HEADERS_UNITY\}")
     set(HEADERS_UNITY "${PROJECT_SOURCE_DIR}/subprojects/unity/src")
 endif()
 
 # Single source project versions
-#configure_file (
-  #"${PROJECT_SOURCE_DIR}/include/Version.h.in"
-  #"${PROJECT_BINARY_DIR}/include/Version.h"
-#)
+configure_file(
+  "${PROJECT_SOURCE_DIR}/include/version.h.in"
+  "${PROJECT_BINARY_DIR}/include/version.h"
+)
 
 # Include dependencies
 include(FetchContent)

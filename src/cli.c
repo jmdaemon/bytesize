@@ -25,6 +25,10 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
       arguments->display_units = false;
       break;
 
+    case 400:
+      printf("bytesize %s %d.%d.%d", email, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+      break;
+
     case 500:
       arguments->scale = 1000;
       break;
