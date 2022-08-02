@@ -8,17 +8,17 @@ appropriate byte representations automatically.
 
 ## Building
 
-### Binary
+### Bin
 
 Run `make release bin` to build `bytesize` in release configuration.
 This will generate the binary `build/release/bin/bytesize`.
 
-### Library
+### Lib
 
 Run `make release lib` to build `bytesize` as a library in release configuration.
 This will generate the dynamic library `build/release/lib/libbytesize.so`.
 
-## Installation
+## Install
 
 Run `sudo make install` to install the program to `/usr/local/bin/`.
 If you want to change installation directory, run `PREFIX=/usr/bin/ make install`.
@@ -57,17 +57,16 @@ Bytesize provides various useful functions and facilities for working with bytes
 
 Some things to keep in mind when using `bytesize` as a library.
 
-- Bytesize uses the `pcre`, `gmp`, and `mpfr` libraries, and must link with flags, `-lpcre`, `-lgmp`, `-lmpfr` when compiling.
+- Bytesize uses the `pcre`, `gmp`, and `mpfr` libraries, and must link with flags, `-lgmp`, `-lmpfr`, (and also `-lpcre` if you use the `match()` function), when linking.
 - If you call `auto_size()` or `convert_units()` it is your responsibility to ensure that:
-    - All matched input substrings are freed with `ppcre_free_substring(...)` (`convert_units()` only)
-    - All `mpfr` variables are freed with `mpfr_clear(...)`, and that the cache is
+    - All matched input substrings are freed with `ppcre_free_substring(...)` (only when using `match()`)
+    - All MPFR variables are freed with `mpfr_clear(...)`, and that memory is
         freed with `mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE)` or `mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE)`
 - If you are using the parsed output of `bytesize` keep in mind that
-    - `display_units()` will return scientific numbers such as `1.0842e+09 YB`.
+    - `display_units()` will return scientific numbers (e.g `1.0842e+09 YB`).
 
 For more information see `bytesize.h`.
 
 ### Potential Features
 
-- Hiding the ppcre library from compilation by either:
-    2. Returning a string copy in match, simplifying the overhead of remembering to deallocate properly.
+- Simplify the `match()` function by returning a non-malloc'd copy of the string.
