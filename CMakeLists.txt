@@ -78,4 +78,5 @@ if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
 endif()
 
 # Packages
-#include(Debian)
+set(PKG_DEPENDS m pcre gmp mpfr)
+include(Debian)
