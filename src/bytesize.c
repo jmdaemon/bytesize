@@ -133,6 +133,14 @@ const char* get_amt(const char* input) {
   return amt;
 }
 
+/** Formats a big decimal mpfr_t value into a string
+  * Note that you must deallocate this string later with `mpfr_free_str()` */
+char* fmt_mpfr_str(const char* template, mpfr_t amt) {
+  char* buffer;
+  mpfr_asprintf(&buffer, template, amt);
+  return buffer;
+}
+
 /*! Converts an integral number between byte sizes */
 Byte convert_units(const char* digits, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
@@ -142,17 +150,21 @@ Byte convert_units(const char* digits, const char* units_from, const char* units
   mpfr_set_ui(from, get_factor(units_from), MPFR_RNDF);   /* const long int from = get_factor(units_from); */
   mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
 
-  char* b1;
-  char* b2;
-  char* b3;
-  mpfr_asprintf(&b1, "Amount To Convert      : %Rf", amt);
-  log_debug(b1);
+  Byte bstrs[] = {
+    {{(mpfr_prec_t) 0}, "Amount To Convert      : %Rf"},
+    {{(mpfr_prec_t) 0}, "Conversion Factor From : %Rf"},
+    {{(mpfr_prec_t) 0}, "Conversion Factor To   : %Rf"}
+  };
+  mpfr_inits2(200, bstrs[0].amt, bstrs[1].amt, bstrs[2].amt, NULL);
+  mpfr_set(bstrs[0].amt, amt, MPFR_RNDF);
+  mpfr_set(bstrs[1].amt, from, MPFR_RNDF);
+  mpfr_set(bstrs[2].amt, to, MPFR_RNDF);
 
-  mpfr_asprintf(&b2, "Conversion Factor From : %Rf", from);
-  log_debug(b2);
-
-  mpfr_asprintf(&b3, "Conversion Factor To   : %Rf", to);
-  log_debug(b3);
+  for (int i = 0; i < 3; i++) {
+    char* buffer = fmt_mpfr_str(bstrs[i].unit, bstrs[i].amt);
+    log_debug(buffer);
+    mpfr_free_str(buffer);
+  }
 
   /*const long double factor = (double) from / to;*/
   mpfr_div(factor, from, to, MPFR_RNDF);
@@ -165,9 +177,6 @@ Byte convert_units(const char* digits, const char* units_from, const char* units
   mpfr_set(byte.amt, to, MPFR_RNDF);
 
   /* Deallocate */
-  mpfr_free_str(b1);
-  mpfr_free_str(b2);
-  mpfr_free_str(b3);
   mpfr_clears(from, to, amt, factor, NULL);
   mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 
