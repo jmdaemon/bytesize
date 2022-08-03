@@ -52,10 +52,64 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
+# Set default manual installation directory to /usr/local
+set(CMAKE_INSTALL_PREFIX /usr/local)
+
+# Manual Uninstall Target
+#if(NOT TARGET uninstall AND (NOT EXISTS "${LOC_PATH}"))
+# Manual Uninstall Target
+# Generates a manual uninstall target
+# Usage:
+# cmake uninstall .
+# sudo make uninstall
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
+  #configure_file(
+    #"${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake.in"
+    #"${CMAKE_CURRENT_BINARY_DIR}/cmake/uninstall.cmake"
+    #IMMEDIATE @ONLY)
+
+  #add_custom_target(uninstall
+    #COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/uninstall.cmake)
+
+endif()
+
+if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
+    #message(SEND_ERROR
+    message(FATAL_ERROR
+        "You cannot uninstall in the source directory."
+        "You may only uninstall from the build subdirectory."
+        "Feel free to remove remove CMakeCache.txt and CMakeFiles.")
+    # Remove CMakeCache.txt file
+    #if (EXISTS "${PROJECT_SOURCE_DIR}/CMakeCache.txt")
+        #file(REMOVE "${PROJECT_SOURCE_DIR}/CMakeCache.txt")
+    #endif()
+
+    # Remove CMakeFiles directory
+    #if (EXISTS "${PROJECT_SOURCE_DIR}/CMakeFiles")
+        #file(REMOVE_RECURSE "${PROJECT_SOURCE_DIR}/CMakeFiles")
+    #file(REMOVE_RECURSE
+        #CMakeCache.txt)
+
+    #file(REMOVE_RECURSE
+        #CMakeCache.txt
+        #CMakeFiles/*)
+
+    #endif()
+
+    # Exit after cleaning up
+    #message(FATAL_ERROR "Exiting")
+    #return()
+endif()
+
+
 # Package for debian
 #include(Debian)
 
-#set(CMAKE_INSTALL_PREFIX /usr/local)
-#install(TARGETS ${OGGEX} DESTINATION bin)
-#install(TARGETS ${OGGEX} CONFIGURATIONS Debug   RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug)
-#install(TARGETS ${OGGEX} CONFIGURATIONS Release RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release)
+
