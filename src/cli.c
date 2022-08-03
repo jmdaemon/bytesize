@@ -19,11 +19,7 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
   switch (key) {
     case 'V':
       printf("bytesize %s v%d.%d.%d\n", email, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
-      /*printf("%d\n", key);*/
-      /*arguments->args[0] = NULL;*/
-      /*arguments->args[1] = NULL;*/
       exit(0);
-      /*return 2;*/
 
     case 'v':
       arguments->verbose = 1;
@@ -44,25 +40,19 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
     case ARGP_KEY_ARG:
       if (state->arg_num > 2)
         /* Too many arguments. */
-        printf("Too many arguments. ");
-        printf("%d\n", key);
         argp_usage (state);
       arguments->args[state->arg_num] = arg;
       break;
 
     case ARGP_KEY_END:
       if (state->arg_num < 0) {
-        printf("Not enough arguments. ");
-        printf("%d\n", key);
         /* Not enough arguments. */
         argp_usage (state);
       }
       break;
 
-    /*default:*/
-      /*printf("Unknown argument. ");*/
-      /*printf("%d\n", key);*/
-      /*return ARGP_ERR_UNKNOWN;*/
+    default:
+      return ARGP_ERR_UNKNOWN;
 
     }
   return 0;

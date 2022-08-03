@@ -32,8 +32,6 @@ static struct argp_option options[] = {
   {"si"     ,  500, 0,      0, "Uses SI byte scaling in autosize mode", 0},
   {"bi"     ,  600, 0,      0, "Uses binary byte scaling in autosize mode", 0},
   {"verbose",  'v', 0,      0, "Produce verbose output", 0},
-  //{"asdf",  'V', 0,      0, "Show program version", 0},
-  //{"asdf",  'B', 0,      0, "Show program version", 0},
   {"version",  'V', 0,      0, "Show program version", 0},
   {"units"  ,  'u', 0,      0, "Do not display byte units", 0},
   { 0 }
