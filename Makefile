@@ -7,8 +7,8 @@ include make/structure.mk
 include make/version.mk
 
 VERSION_MAJOR = 1
-VERSION_MINOR = 9
-VERSION_PATCH = 1
+VERSION_MINOR = 10
+VERSION_PATCH = 0
 
 #
 # Compiler flags
