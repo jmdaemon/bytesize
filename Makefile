@@ -7,7 +7,7 @@ include make/structure.mk
 include make/version.mk
 
 VERSION_MAJOR = 1
-VERSION_MINOR = 5
+VERSION_MINOR = 6
 VERSION_PATCH = 0
 
 #

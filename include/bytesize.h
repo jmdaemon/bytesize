@@ -27,7 +27,10 @@ static const int SI_SCALE = 1000;     /**< 1KB   == 1000 B */
 static const int BINARY_SCALE = 1024; /**< 1KiB  == 1024 B */
 
 static const char *unit_regex = "([KMGTPEZY]?i?B+)";  /**< Match with any SI or binary byte */
-static const char *num_regex = "([\\d]+)";            /**< Match any numeral digit */
+
+/* Alternative more resilient regex */
+// static const char *num_regex = "[\\d]{1,99}([.]\\d{1,99})?"; /**< Match any numeral digit */
+static const char *num_regex = "[\\d]+([.]\\d+)?"; /**< Match any numeral digit */
 
 static const char *SI_BYTE[SIZE] = {
   "KB",

@@ -83,6 +83,10 @@ $ bytesize 100000000000000000000000B PB
 # or automatically
 $ bytesize 100000000000000000000000B
 100 ZB
+
+# Handle decimal inputs
+$ bytesize 0.005GiB MiB
+5.12 MiB
 ```
 
 For more information see `bytesize --help`.
@@ -180,10 +184,7 @@ The resulting HTML documentation will be found under `build/docs/html/`
 
 - Simplify the `match()` function by returning a non-malloc'd copy of the string.
 - Passing all `lintian` checks on the `CPack` generated Debian packages.
-- Generate automatic documentation with `doxygen` for CMake and make builds.
 - Create windows installers that install the binary and package to its own specific directory.
 - Generate new releases
     - Automatic GitHub action that creates releases
     - Create release more manually with git hooks & bash aliases
-- Accept double inputs such as "0.005 KB"
-    - The `num_regex` has to be adjusted to accomodate this.
