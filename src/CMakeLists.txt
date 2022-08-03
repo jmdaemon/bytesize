@@ -28,6 +28,7 @@ add_library(${LIB_NAME}
     ## Log.c Sources
     "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
 target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
+set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "${INCLUDES_DIR}/bytesize.h")
 target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
 ## Static library
@@ -44,4 +45,5 @@ target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
 # Manual Installation
 install(TARGETS ${BIN_NAME} DESTINATION bin)    # /usr/local/bin/bytesize
-install(TARGETS ${TARGET} DESTINATION lib)      # /usr/local/lib/libbytesize.so
+install(TARGETS ${TARGET} DESTINATION lib
+    PUBLIC_HEADER DESTINATION include)          # /usr/local/lib/libbytesize.so
