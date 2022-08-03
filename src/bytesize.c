@@ -134,17 +134,17 @@ const char* get_amt(const char* input) {
 
 /** Formats a big decimal mpfr_t value into a string
   * Note that you must deallocate this string later with `mpfr_free_str()` */
-char* fmt_mpfr_str(const char* template, mpfr_t amt) {
+char* fmt_mpfr_str(const char* tformat, mpfr_t amt) {
   char* buffer;
-  mpfr_asprintf(&buffer, template, amt);
+  mpfr_asprintf(&buffer, tformat, amt);
   return buffer;
 }
 
 /** Formats a big integer mpz_t value into a string
   * Note that you must deallocate this string later with `mpfr_free_str()` */
-char* fmt_mpz_str(const char* template, mpz_t amt) {
+char* fmt_mpz_str(const char* tformat, mpz_t amt) {
   char* buffer;
-  mpfr_asprintf(&buffer, template, amt);
+  mpfr_asprintf(&buffer, tformat, amt);
   return buffer;
 }
 
