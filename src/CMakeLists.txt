@@ -34,10 +34,10 @@ target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 # Binary
 install(TARGETS ${BIN_NAME}
     DESTINATION bin
-    COMPONENT ${CPACK_BIN_NAME})        # /usr/local/bin/bytesize
+    COMPONENT bin)        # /usr/local/bin/bytesize
 
 # Library
 install(TARGETS
     ${TARGET} DESTINATION lib
     PUBLIC_HEADER DESTINATION include   # Install headers
-    COMPONENT ${CPACK_LIB_NAME})        # /usr/local/lib/libbytesize.so
+    COMPONENT lib)        # /usr/local/lib/libbytesize.so
