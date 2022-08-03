@@ -45,7 +45,3 @@ target_link_libraries(${LIB_NAME} PRIVATE m pcre gmp mpfr)
 # Manual Installation
 install(TARGETS ${BIN_NAME} DESTINATION bin)    # /usr/local/bin/bytesize
 install(TARGETS ${TARGET} DESTINATION lib)      # /usr/local/lib/libbytesize.so
-
-#install(TARGETS ${OGGEX} DESTINATION bin)
-#install(TARGETS ${OGGEX} CONFIGURATIONS Debug   RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug)
-#install(TARGETS ${OGGEX} CONFIGURATIONS Release RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release)

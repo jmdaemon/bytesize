@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
     bytesize
-    VERSION 1.2.0
+    VERSION 1.3.0
     DESCRIPTION "Convert between Binary & SI Bytes"
     LANGUAGES C)
 
@@ -52,64 +52,30 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
+# Manual Installs
 # Set default manual installation directory to /usr/local
 set(CMAKE_INSTALL_PREFIX /usr/local)
 
 # Manual Uninstall Target
-#if(NOT TARGET uninstall AND (NOT EXISTS "${LOC_PATH}"))
-# Manual Uninstall Target
-# Generates a manual uninstall target
 # Usage:
 # cmake uninstall .
-# sudo make uninstall
+# sudo make uninstall or sudo ninja uninstall
 if(NOT TARGET uninstall)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
+        IMMEDIATE @ONLY)
 
-  add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
-  #configure_file(
-    #"${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake.in"
-    #"${CMAKE_CURRENT_BINARY_DIR}/cmake/uninstall.cmake"
-    #IMMEDIATE @ONLY)
-
-  #add_custom_target(uninstall
-    #COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/uninstall.cmake)
-
+    add_custom_target(uninstall
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
 endif()
 
 if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
-    #message(SEND_ERROR
     message(FATAL_ERROR
         "You cannot uninstall in the source directory."
         "You may only uninstall from the build subdirectory."
         "Feel free to remove remove CMakeCache.txt and CMakeFiles.")
-    # Remove CMakeCache.txt file
-    #if (EXISTS "${PROJECT_SOURCE_DIR}/CMakeCache.txt")
-        #file(REMOVE "${PROJECT_SOURCE_DIR}/CMakeCache.txt")
-    #endif()
-
-    # Remove CMakeFiles directory
-    #if (EXISTS "${PROJECT_SOURCE_DIR}/CMakeFiles")
-        #file(REMOVE_RECURSE "${PROJECT_SOURCE_DIR}/CMakeFiles")
-    #file(REMOVE_RECURSE
-        #CMakeCache.txt)
-
-    #file(REMOVE_RECURSE
-        #CMakeCache.txt
-        #CMakeFiles/*)
-
-    #endif()
-
-    # Exit after cleaning up
-    #message(FATAL_ERROR "Exiting")
-    #return()
 endif()
 
-
-# Package for debian
+# Packages
 #include(Debian)
-
-
