@@ -22,6 +22,7 @@ extern "C" {
 
 #define SIZE 8 /**< Size of the SI_BYTE, BYTE format unit arrays */
 
+/* https://en.wikipedia.org/wiki/Binary_prefix */
 static const int SI_SCALE = 1000;     /**< 1KB   == 1000 B */
 static const int BINARY_SCALE = 1024; /**< 1KiB  == 1024 B */
 

@@ -18,15 +18,16 @@ extern "C" {
 #include <pcre.h>
 #include <math.h>
 
+/** Author and maintainer's email. Contact me directly here for questions or bug reports, or use the issues page. */
 static const char *email = "<josephm.diza@gmail.com>";
 
-/** Program documentation. */
+/** Program summary. */
 static const char doc[] = "Bytesize - Convert between byte representations";
 
 /** A description of the arguments we accept. */
 static const char args_doc[] = "[from] [to]";
 
-/** http://www.gnu.org/software/libc/manual/html_node/Argp-Option-Vectors.html */
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Option-Vectors.html <br> */
 /** The options we understand. */
 static const struct argp_option options[] = {
   {"si"     ,  500, 0,      0, "Uses SI byte scaling in autosize mode", 0},
@@ -39,7 +40,7 @@ static const struct argp_option options[] = {
 
 /** Used by main to communicate with parse_opt. */
 struct arguments {
-  char *args[2]; /** from & to */
+  char *args[2]; /** from, to */
   bool display_units;
   int verbose;
   int scale;
@@ -48,8 +49,8 @@ struct arguments {
 /** Parse a single option. */
 error_t parse_opt (int key, char *arg, struct argp_state *state);
 
-/** http://www.gnu.org/software/libc/manual/html_node/Argp-Parsers.html */
-/** http://www.gnu.org/software/libc/manual/html_node/Argp-Help-Filtering.html */
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Parsers.html <br> */
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Help-Filtering.html <br> */
 /** Our argp parser. */
 static const struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0};
 
