@@ -53,6 +53,28 @@ bool is_byte(const char* unit) {
   return smatch(unit, "B");
 }
 
+/** Determines if the big decimal value is a whole number */
+bool is_integral(mpfr_t conversion) {
+  mpfr_t res, divisor, r1;
+  mpfr_inits2(200, res, divisor, r1, NULL);
+
+  mpfr_set_ui(divisor, 2, MPFR_RNDF);
+
+  /* Display only whole numbers if the result is exact */
+  mpfr_set(r1, conversion, MPFR_RNDF);
+  mpfr_modf(res, r1, divisor, MPFR_RNDZ);
+  /* If the result is divisible by 2,
+     and the conversion amount is greater than zero, display as a whole number.
+     Else display as a scientific number */
+  bool is_integral = ((mpfr_cmp_ui(r1, 0) == 0) && (mpfr_cmp_ui(res, 0) > 1)) ? true : false;
+
+  /* Deallocate */
+  mpfr_clears(res, divisor, r1, NULL);
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+
+  return is_integral;
+}
+
 /**
   * Calculate the unit-unit conversion factor given that the unit is
   * in either SI_BYTE or BYTE (but not both).
@@ -83,18 +105,7 @@ long int get_factor(const char *unit) {
 
 /*! Formats and displays the converted size */
 void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
-  mpfr_t res, divisor, r1;
-  mpfr_inits2(200, res, divisor, r1, NULL);
-
-  mpfr_set_ui(divisor, 2, MPFR_RNDF);
-
-  /* Display only whole numbers if the result is exact */
-  mpfr_set(r1, conversion, MPFR_RNDF);
-  mpfr_modf(res, r1, divisor, MPFR_RNDZ);
-  /* If the result is divisible by 2,
-     and the conversion amount is greater than zero, display as a whole number.
-     Else display as a scientific number */
-  if ((mpfr_cmp_ui(r1, 0) == 0) && (mpfr_cmp_ui(res, 0) > 1)) {
+  if (is_integral(conversion)) {
     mpz_t int_conv;
     mpz_init2(int_conv, 200);
     mpfr_get_z(int_conv, conversion, MPFR_RNDF);
@@ -104,8 +115,6 @@ void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   else
     (show_with_units) ? mpfr_printf("%Rg %s\n", conversion, units) : mpfr_printf("%Rg\n", conversion);
 
-  mpfr_clears(res, divisor, r1, NULL);
-  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
 }
 
 /** Returns the byte size unit

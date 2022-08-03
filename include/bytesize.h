@@ -82,6 +82,7 @@ bool smatch(const char* input, const char* pattern);
 
 /* Bytesize Functions */
 bool is_byte(const char* unit);
+bool is_integral(mpfr_t conversion);
 Scale get_scale(const char *unit);
 long int calc_factor(const char *unit, int size, const Scale scale);
 long int get_factor(const char *unit);
