@@ -101,7 +101,80 @@ Some things to keep in mind when using `bytesize` as a library.
 - If you are using the parsed output of `bytesize` keep in mind that
     - `display_units()` will return scientific numbers (e.g `1.0842e+09 YB`).
 
-For more information see `bytesize.h`.
+#### Examples
+
+Here's an example that makes use of `convert_units()`:
+
+``` c
+#include <bytesize.h>
+
+const char* input   = "5MiB";
+const char* to      = "MB";
+const char* digits  = get_amt(input);
+const char* from    = get_unit(input);
+
+Byte to = convert_units(digits, from, to);
+
+/* Print unit conversion */
+display_units(to.amt, to, true);
+
+/* Deallocate */
+pcre_free_substring(digits);
+pcre_free_substring(from);
+
+mpfr_clear(to.amt);
+mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+```
+
+Here is an example that makes use of `auto_size()`:
+
+``` c
+#include <bytesize.h>
+
+const char* input   = "5MiB";
+const char* to      = "MB";
+const char* digits  = get_amt(input);
+const char* from    = get_unit(input);
+int scale           = 1;
+
+/* Dynamically sets the scale depending on the input unit given.
+   Defaults to SI units if bytes are given. */
+if (!is_byte(from))
+  scale = (found_in(from, SI_BYTE, SIZE)) ? SI_SCALE : BINARY_SCALE;
+
+/* Initialize and set the amount to convert */
+mpfr_t amt;
+mpfr_inits2(200, amt, NULL);
+mpfr_init_set_str(amt, digits, 10, MPFR_RNDF);
+
+/* If the input is in bytes, the scale will be be 1 (B-B).
+  If the input is not in bytes, then a relative scaling (xB->B) must be provided */
+Byte to = (is_byte(from)) ?
+  auto_size(amt, scale, true) : auto_size(amt, get_factor(units_from), false);
+
+/* Print unit conversion */
+display_units(to.amt, to, true);
+
+/* Deallocate */
+pcre_free_substring(digits);
+pcre_free_substring(from);
+
+mpfr_clear(to.amt);
+mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
+```
+
+For more information see `bytesize.h`, `main.c` and the unit tests in `test/test_bytesize.c`.
+
+
+### Docs
+
+To view the documentation for `bytesize`:
+
+``` bash
+doxygen Doxyfile
+```
+
+The resulting HTML documentation will be found under `build/docs/html/`
 
 ### Potential Features
 
