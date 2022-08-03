@@ -13,7 +13,7 @@ GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
 LOGC_FLAGS = -DLOG_USE_COLOR
 
 # Include headers
-INCLUDES = -I. -I$(PATHI)
+INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 
 #
 # Subprojects
@@ -48,6 +48,25 @@ include make/config.mk
 #
 
 .PHONY: all subprojects clean
+
+#
+# Project Version
+# 
+
+VERSION_MAJOR = 1
+VERSION_MINOR = 4
+VERSION_PATCH = 0
+
+VS_SRC = include/version.h.in
+VS_OBJ = $(PATHD)/version.h
+
+version: $(VS_OBJ)
+
+$(VS_OBJ): $(VS_SRC) Makefile
+	$(COPY) $(VS_SRC) $(VS_OBJ)
+	sed -i "s/@CMAKE_PROJECT_VERSION_MAJOR@/$(VERSION_MAJOR)/g" $(VS_OBJ)
+	sed -i "s/@CMAKE_PROJECT_VERSION_MINOR@/$(VERSION_MINOR)/g" $(VS_OBJ)
+	sed -i "s/@CMAKE_PROJECT_VERSION_PATCH@/$(VERSION_PATCH)/g" $(VS_OBJ)
 
 #
 # Subprojects
