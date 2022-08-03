@@ -107,8 +107,7 @@ long int get_factor(const char *unit) {
 void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   if (is_integral(conversion)) {
     mpz_t int_conv;
-    mpz_init2(int_conv, 200);
-    mpfr_get_z(int_conv, conversion, MPFR_RNDF);
+    mpfr_to_mpz(int_conv, conversion);
     (show_with_units) ? mpfr_printf("%Zd %s\n", int_conv, units) : mpfr_printf("%Zd\n", int_conv);
     mpz_clear (int_conv);
   }
@@ -136,6 +135,14 @@ const char* get_amt(const char* input) {
 /** Formats a big decimal mpfr_t value into a string
   * Note that you must deallocate this string later with `mpfr_free_str()` */
 char* fmt_mpfr_str(const char* template, mpfr_t amt) {
+  char* buffer;
+  mpfr_asprintf(&buffer, template, amt);
+  return buffer;
+}
+
+/** Formats a big integer mpz_t value into a string
+  * Note that you must deallocate this string later with `mpfr_free_str()` */
+char* fmt_mpz_str(const char* template, mpz_t amt) {
   char* buffer;
   mpfr_asprintf(&buffer, template, amt);
   return buffer;

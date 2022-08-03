@@ -20,7 +20,15 @@ extern "C" {
 #include <mpfr.h>
 #include "log.h"
 
+/** Macros */
+
 #define SIZE 8 /**< Size of the SI_BYTE, BYTE format unit arrays */
+
+/** Create an mpz_t (big integer) version of an mpfr (big decimal) number */
+#define mpfr_to_mpz(int_conv, conversion) { \
+  mpz_init2(int_conv, 200); \
+  mpfr_get_z(int_conv, conversion, MPFR_RNDF); \
+}
 
 /* https://en.wikipedia.org/wiki/Binary_prefix */
 static const int SI_SCALE = 1000;     /**< 1KB   == 1000 B */
