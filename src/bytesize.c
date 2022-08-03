@@ -228,3 +228,20 @@ Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
 
   return byte;
 }
+
+/* Automatically determines the best size for a byte string.
+   Note that the input is assumed to be a byte string and not
+   a string of any other byte size unit of measurement. */
+Byte auto_format_bstr(const char* bytes, unsigned int scale) {
+  Byte to;
+
+  mpfr_t amt;
+  mpfr_init2(amt, 200);
+  mpfr_init_set_str(amt, bytes, 10, MPFR_RNDF);
+  to = auto_size(amt, scale, true);
+  
+  /* Deallocate */
+  mpfr_clears(amt, NULL);
+  mpfr_free_cache2(MPFR_FREE_LOCAL_CACHE);
+  return to;
+}

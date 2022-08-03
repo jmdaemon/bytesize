@@ -101,6 +101,7 @@ char* fmt_mpfr_str(const char* tformat, mpfr_t amt);
 char* fmt_mpz_str(const char* tformat, mpz_t amt);
 Byte convert_units(const char* digits, const char* units_from, const char* units_to);
 Byte auto_size(mpfr_t bytes, int scale, bool is_byte);
+Byte auto_format_bstr(const char* bytes, unsigned int scale);
 
 #ifdef __cplusplus
 }
