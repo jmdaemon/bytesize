@@ -91,30 +91,12 @@ uninstall-lib-headers:
 # Build as a binary
 include make/binary.mk
 
-#
-# Documentation
-# 
-
-DOC_HTML = build/docs/html
-DOC_SRC = index.html
-DOC_OBJ = $(DOC_HTML)/$(DOC_SRC)
-
-docs: $(DOC_OBJ)
-
-#$(DOC_OBJ): $(EXE) $(EXE_DEPS)/%.o: $(PATHS)/%.c $(PATHI)/%.h
-#$(DOC_OBJ): $(EXE) $(EXE_DEPS) $(EXE_OBJS)
-#$(DOC_OBJ): $(EXE_DEPS) $(EXE_OBJS)
-#$(DOC_OBJ): $(EXE_DEPS)/%.o $(PATHS)/%.c $(PATHI)/%.h
-$(DOC_OBJ): $(EXE_DEPS)/*.o $(PATHS)/*.c $(PATHI)/*.h
-	@echo Building Docs
-	@doxygen
-
-clean-docs:
-	$(RMDIR) build/docs
+# Build documentation
+include make/docs.mk
 
 #
 # Other rules
 #
 
-clean: clean-test clean-subprojects clean-objs clean-bin clean-lib clean-ver
+clean: clean-test clean-subprojects clean-objs clean-bin clean-lib clean-ver clean-docs
 clean-subprojects: clean-logc
