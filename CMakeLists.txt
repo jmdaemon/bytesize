@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
     bytesize
-    VERSION 1.7.0
+    VERSION 1.9.0
     DESCRIPTION "Convert between Binary & SI Bytes"
     LANGUAGES C)
 
