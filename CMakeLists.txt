@@ -44,6 +44,12 @@ configure_file(
 include(FetchContent)
 include(Unity)
 
+# Specify project dependencies
+# PKG_DEPENDS: Library names to link the output files 
+# DEB_DEPENDS: Debian packages that provide the libraries the project depends upon
+set(PKG_DEPENDS m pcre gmp mpfr)
+set(DEB_DEPENDS libc libpcre2-posix2 libpcre2-dev libgmp-dev libmpfr-dev)
+
 # Add subdirectories
 add_subdirectory(src)
 
@@ -78,5 +84,4 @@ if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
 endif()
 
 # Packages
-set(PKG_DEPENDS m pcre gmp mpfr)
 include(Debian)

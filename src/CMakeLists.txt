@@ -11,7 +11,7 @@ add_executable(${BIN_NAME}
     ## Log.c Sources
     "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
 target_include_directories(${BIN_NAME} PUBLIC ${HEADERS})
-target_link_libraries(${BIN_NAME} PRIVATE m pcre gmp mpfr)
+target_link_libraries(${BIN_NAME} PRIVATE ${PKG_DEPENDS})
 
 # Rename binary target without -bin suffix
 set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${TARGET})
@@ -28,7 +28,7 @@ add_library(${LIB_NAME}
     ## Log.c Sources
     "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
 target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
-target_link_libraries(${LIB_NAME} PRIVATE m pcre gmp mpfr)
+target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
 ## Static library
 set(LIB_NAME ${TARGET}_static)
@@ -40,7 +40,7 @@ add_library(${LIB_NAME}
     ## Log.c Sources
     "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
 target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
-target_link_libraries(${LIB_NAME} PRIVATE m pcre gmp mpfr)
+target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
 # Manual Installation
 install(TARGETS ${BIN_NAME} DESTINATION bin)    # /usr/local/bin/bytesize
