@@ -27,7 +27,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/" 
 
 # Include header files
 set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
-set(HEADERS_LOG_C "${PROJECT_SOURCE_DIR}/subprojects/log.c/src")
 set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 if(BUILD_TESTING)
     message(STATUS "Setting \$\{HEADERS_UNITY\}")
@@ -43,6 +42,7 @@ configure_file(
 # Include dependencies
 include(FetchContent)
 include(Unity)
+include(logc)
 
 # Specify project dependencies
 # PKG_DEPENDS: Library names to link the output files 
