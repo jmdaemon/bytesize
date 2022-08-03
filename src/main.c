@@ -40,8 +40,7 @@ int main (int argc, char **argv) {
     units_to   = get_unit(output);
 
   Byte to;
-  mpfr_t amt, conversion;
-  mpfr_inits2(200, conversion, NULL); /* Note that to.amt will be created later on, so we should not allocate it here */
+  mpfr_t amt; /* Note that to.amt will be created later on, so we should not allocate it here */
   const char* digits = get_amt(input);
   mpfr_init_set_str(amt, digits, 10, MPFR_RNDF); /* Initializes and sets amt in one line */
 
@@ -51,10 +50,9 @@ int main (int argc, char **argv) {
   else 
     to = convert_units(digits, units_from, units_to);
 
-  mpfr_set(conversion, to.amt, MPFR_RNDF);
   units_to = to.unit;
 
-  display_units(conversion, units_to, arguments.display_units);
+  display_units(to.amt, units_to, arguments.display_units);
 
   log_info("Units From: %s", units_from);
   log_info("Units To: %s", units_to);
@@ -68,8 +66,7 @@ int main (int argc, char **argv) {
 
   if (!smatch(output, "Auto"))
     mpfr_clear(amt);
-  mpfr_clear(to.amt);
-  mpfr_clear(conversion); /* Deallocate the to.amt mpfr value here */
+  mpfr_clear(to.amt) ;/* Deallocate the to.amt mpfr value here */
   mpfr_free_cache2(MPFR_FREE_GLOBAL_CACHE);
   return 0;
 }
