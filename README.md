@@ -171,7 +171,7 @@ For more information see `bytesize.h`, `main.c` and the unit tests in `test/test
 To view the documentation for `bytesize`:
 
 ``` bash
-doxygen Doxyfile
+doxygen
 ```
 
 The resulting HTML documentation will be found under `build/docs/html/`
