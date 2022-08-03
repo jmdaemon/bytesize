@@ -151,14 +151,10 @@ Byte convert_units(const char* digits, const char* units_from, const char* units
   mpfr_set_ui(to, get_factor(units_to), MPFR_RNDF);       /* const long int to = get_factor(units_to); */
 
   Byte bstrs[] = {
-    {{(mpfr_prec_t) 0}, "Amount To Convert      : %Rf"},
-    {{(mpfr_prec_t) 0}, "Conversion Factor From : %Rf"},
-    {{(mpfr_prec_t) 0}, "Conversion Factor To   : %Rf"}
+    {{*amt}, "Amount To Convert      : %Rf", 0},
+    {{*from}, "Conversion Factor From : %Rf", 0},
+    {{*to}, "Conversion Factor To   : %Rf", 0}
   };
-  mpfr_inits2(200, bstrs[0].amt, bstrs[1].amt, bstrs[2].amt, NULL);
-  mpfr_set(bstrs[0].amt, amt, MPFR_RNDF);
-  mpfr_set(bstrs[1].amt, from, MPFR_RNDF);
-  mpfr_set(bstrs[2].amt, to, MPFR_RNDF);
 
   for (int i = 0; i < 3; i++) {
     char* buffer = fmt_mpfr_str(bstrs[i].unit, bstrs[i].amt);
