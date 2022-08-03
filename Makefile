@@ -8,7 +8,7 @@ include make/version.mk
 
 VERSION_MAJOR = 1
 VERSION_MINOR = 9
-VERSION_PATCH = 0
+VERSION_PATCH = 1
 
 #
 # Compiler flags
