@@ -95,5 +95,5 @@ include make/binary.mk
 # Other rules
 #
 
-clean: clean-test clean-subprojects clean-objs clean-bin clean-lib
+clean: clean-test clean-subprojects clean-objs clean-bin clean-lib clean-ver
 clean-subprojects: clean-logc
