@@ -13,3 +13,6 @@
 [submodule "presets"]
 	path = presets
 	url = https://github.com/jmdaemon/cmake-presets
+[submodule "themes/doxygen-awesome-css"]
+	path = themes/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
