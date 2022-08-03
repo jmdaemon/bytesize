@@ -84,4 +84,14 @@ if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
 endif()
 
 # Packages
+include(InstallRequiredSystemLibraries)
 include(Debian)
+
+# Packaging
+cpack_add_component(bin
+    DISPLAY_NAME "Application"
+    DESCRIPTION ${PROJECT_DESCRIPTION})
+
+cpack_add_component(lib
+    DISPLAY_NAME "Library"
+    DESCRIPTION "Shared library with header used for ${PROJECT_NAME}")

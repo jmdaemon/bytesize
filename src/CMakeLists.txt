@@ -44,6 +44,13 @@ target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
 target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
 # Manual Installation
-install(TARGETS ${BIN_NAME} DESTINATION bin)    # /usr/local/bin/bytesize
-install(TARGETS ${TARGET} DESTINATION lib
-    PUBLIC_HEADER DESTINATION include)          # /usr/local/lib/libbytesize.so
+# Binary
+install(TARGETS ${BIN_NAME}
+    DESTINATION bin
+    COMPONENT ${CPACK_BIN_NAME})        # /usr/local/bin/bytesize
+
+# Library
+install(TARGETS
+    ${TARGET} DESTINATION lib
+    PUBLIC_HEADER DESTINATION include   # Install headers
+    COMPONENT ${CPACK_LIB_NAME})        # /usr/local/lib/libbytesize.so
