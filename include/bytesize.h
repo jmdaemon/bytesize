@@ -20,13 +20,13 @@ extern "C" {
 #include <mpfr.h>
 #include "log.h"
 
-#define SIZE 8
+#define SIZE 8 /**< Size of the SI_BYTE, BYTE format unit arrays */
 
-static const int SI_SCALE = 1000;
-static const int BINARY_SCALE = 1024;
+static const int SI_SCALE = 1000;     /**< 1KB   == 1000 B */
+static const int BINARY_SCALE = 1024; /**< 1KiB  == 1024 B */
 
-static const char *unit_regex = "([KMGTPEZY]?i?B+)";
-static const char *num_regex = "([\\d]+)";
+static const char *unit_regex = "([KMGTPEZY]?i?B+)";  /**< Match with any SI or binary byte */
+static const char *num_regex = "([\\d]+)";            /**< Match any numeral digit */
 
 static const char *SI_BYTE[SIZE] = {
   "KB",
@@ -37,7 +37,7 @@ static const char *SI_BYTE[SIZE] = {
   "EB",
   "ZB",
   "YB"
-};
+}; /**< SI byte unit formats */
 
 static const char *BYTE[SIZE] = {
   "KiB",
@@ -48,17 +48,19 @@ static const char *BYTE[SIZE] = {
   "EiB",
   "ZiB",
   "YiB"
-};
+}; /**< Binary byte unit formats */
 
+/** Represents units of bytes in either binary or SI unit systems */
 typedef struct Byte {
-  mpfr_t amt;
-  char* unit;
-  long int scaling;
-} Byte;
+  mpfr_t amt;         /**< Stores some amount of bytes */
+  char* unit;         /**< Stores the byte size unit */
+  long int scaling;   /**< Stores the scaling used (SI_SCALE, BINARY_SCALE) */
+} Byte; 
 
+/** Represents either SI or binary byte unit scales */
 typedef struct Scale {
-  const int scale;
-  const char** sizes;
+  const int scale;    /**< The number of bytes in 1 KB or KiB */
+  const char** sizes; /**< The byte formats used specific to binary or SI unit systems */
 } Scale;
 
 static const struct Scale BINARY = { BINARY_SCALE, BYTE };

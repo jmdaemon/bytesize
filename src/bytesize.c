@@ -1,6 +1,6 @@
 #include "bytesize.h"
 
-/* Determine if there are any regex matches with the input text */
+/*! Determine if there are any regex matches with the input text */
 const char *match(const char *input, const char *regex) {
   /* for pcre_compile */
   pcre *re;
@@ -34,7 +34,7 @@ const char *match(const char *input, const char *regex) {
   return substring;
 }
 
-/* Determine if an element is found in the array of strings */
+/*! Determine if an element is found in the array of strings */
 bool found_in(const char *elem, const char *array[], int array_size) {
   for (int i = 0; i < array_size; i++)
     if (smatch(elem, array[i]))
@@ -42,13 +42,13 @@ bool found_in(const char *elem, const char *array[], int array_size) {
   return false;
 }
 
-/* Determine if a string is equal to some pattern */
+/*! Determine if a string is equal to some pattern */
 bool smatch(const char* input, const char* pattern) {
   bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
   return is_equal;
 }
 
-/* Determine if a specified unit is a byte */
+/*! Determine if a specified unit is a byte */
 bool is_byte(const char* unit) {
   return smatch(unit, "B");
 }
@@ -68,20 +68,20 @@ long int calc_factor(const char *unit, int size, const Scale scale) {
   return 0;
 }
 
-/* Determines which byte scaling (binary, or si) to use for the unit */
+/*! Determines which byte scaling (binary, or si) to use for the unit */
 Scale get_scale(const char *unit) {
   Scale scale = (found_in(unit, SI_BYTE, SIZE)) ? SI : BINARY;
   return scale;
 }
 
-/* Determine the relative scaling of a unit with respect to a binary or si byte */
+/*! Determine the relative scaling of a unit with respect to a binary or si byte */
 long int get_factor(const char *unit) {
   Scale scale = get_scale(unit);
   long int factor = calc_factor(unit, SIZE, scale);
   return factor;
 }
 
-/* Formats and displays the converted size */
+/*! Formats and displays the converted size */
 void display_units(mpfr_t conversion, const char* units, bool show_with_units) {
   mpfr_t res, divisor, r1;
   mpfr_inits2(200, res, divisor, r1, NULL);
@@ -124,7 +124,7 @@ const char* get_amt(const char* input) {
   return amt;
 }
 
-/* Converts an integral number between byte sizes */
+/*! Converts an integral number between byte sizes */
 Byte convert_units(const char* digits, const char* units_from, const char* units_to) {
   mpfr_t from, to, amt, factor;
   mpfr_inits2(200, from, to, factor, NULL); /* amt will be initialized later */
@@ -165,7 +165,7 @@ Byte convert_units(const char* digits, const char* units_from, const char* units
   return byte;
 }
 
-/* Automatically determines the best size to use
+/*! Automatically determines the best size to use
    and returns the converted unit */
 Byte auto_size(mpfr_t bytes, int scale, bool is_byte) {
   mpfr_t bscale, r1, r2, r3;

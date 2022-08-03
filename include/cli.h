@@ -18,17 +18,17 @@ extern "C" {
 #include <pcre.h>
 #include <math.h>
 
-static const char *email   = "<josephm.diza@gmail.com>";
+static const char *email = "<josephm.diza@gmail.com>";
 
-/* Program documentation. */
-static char doc[] = "Bytesize - Convert between byte representations";
+/** Program documentation. */
+static const char doc[] = "Bytesize - Convert between byte representations";
 
-/* A description of the arguments we accept. */
-static char args_doc[] = "[from] [to]";
+/** A description of the arguments we accept. */
+static const char args_doc[] = "[from] [to]";
 
-/* http://www.gnu.org/software/libc/manual/html_node/Argp-Option-Vectors.html */
-/* The options we understand. */
-static struct argp_option options[] = {
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Option-Vectors.html */
+/** The options we understand. */
+static const struct argp_option options[] = {
   {"si"     ,  500, 0,      0, "Uses SI byte scaling in autosize mode", 0},
   {"bi"     ,  600, 0,      0, "Uses binary byte scaling in autosize mode", 0},
   {"verbose",  'v', 0,      0, "Produce verbose output", 0},
@@ -37,23 +37,23 @@ static struct argp_option options[] = {
   { 0 }
 };
 
-/* Used by main to communicate with parse_opt. */
+/** Used by main to communicate with parse_opt. */
 struct arguments {
-  char *args[2]; /* from & to */
+  char *args[2]; /** from & to */
   bool display_units;
   int verbose;
   int scale;
 };
 
-/* Parse a single option. */
+/** Parse a single option. */
 error_t parse_opt (int key, char *arg, struct argp_state *state);
 
-/* http://www.gnu.org/software/libc/manual/html_node/Argp-Parsers.html */
-/* http://www.gnu.org/software/libc/manual/html_node/Argp-Help-Filtering.html */
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0};
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Parsers.html */
+/** http://www.gnu.org/software/libc/manual/html_node/Argp-Help-Filtering.html */
+/** Our argp parser. */
+static const struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0};
 
-/* Set default values for arguments */
+/** Set default values for arguments */
 struct arguments set_default_args();
 
 #ifdef __cplusplus
