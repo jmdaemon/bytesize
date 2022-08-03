@@ -4,12 +4,7 @@ set(TARGET bytesize)
 
 # Bytesize bin
 set(BIN_NAME ${TARGET}-bin)
-add_executable(${BIN_NAME}
-    # Main sources
-    bytesize.c main.c cli.c
-    # Subproject sources
-    ## Log.c Sources
-    "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
+add_executable(${BIN_NAME} bytesize.c main.c cli.c)
 target_include_directories(${BIN_NAME} PUBLIC ${HEADERS})
 target_link_libraries(${BIN_NAME} PRIVATE ${PKG_DEPENDS})
 
@@ -22,11 +17,7 @@ set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${TARGET})
 set(LIB_NAME ${TARGET})
 add_library(${LIB_NAME}
     SHARED # Build as a dynamic library
-    # Main sources
-    bytesize.c
-    # Subproject sources
-    ## Log.c Sources
-    "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
+    bytesize.c)
 target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
 set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "${INCLUDES_DIR}/bytesize.h")
 target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
@@ -35,11 +26,7 @@ target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 set(LIB_NAME ${TARGET}_static)
 add_library(${LIB_NAME}
     STATIC # Build as a static library
-    # Main sources
-    bytesize.c
-    # Subproject sources
-    ## Log.c Sources
-    "${PROJECT_SOURCE_DIR}/subprojects/log.c/src/log.c")
+    bytesize.c)
 target_include_directories(${LIB_NAME} PUBLIC ${HEADERS})
 target_link_libraries(${LIB_NAME} PRIVATE ${PKG_DEPENDS})
 
