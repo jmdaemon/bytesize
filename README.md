@@ -10,7 +10,7 @@ appropriate byte representations automatically.
 
 ### Bin
 
-To build the executable:
+To build the executable with make:
 
 ``` bash
 make release bin
@@ -18,21 +18,48 @@ make release bin
 
 This will generate the binary `build/release/bin/bytesize`.
 
+
 ### Lib
 
-To build the library:
+To build the library with make:
 ``` bash
 make release lib
 ```
 
 This will generate the dynamic library `build/release/lib/libbytesize.so`.
 
+### CMake
+
+To build with CMake instead:
+
+``` bash
+cmake --preset gcc-release-unix-makefiles
+cd build/gcc-release-unix-makefiles
+make
+```
+
+This will build the `bytesize` executable, and shared and static libraries.
+
 ## Install
 
+### Make
 Run `sudo make install` to install the program to `/usr/local/bin/`.
 If you want to change installation directory, run `PREFIX=/usr/bin/ make install`.
 
 To uninstall `bytesize` run `sudo make uninstall`.
+
+### CMake
+
+To uninstall with CMake:
+
+``` bash
+cd build/gcc-release-unix-makefiles
+cmake uninstall .
+sudo make uninstall
+```
+
+Note that you must have first installed Bytesize(`install_manifest.txt`
+has to be generated) in order for the uninstall to work.
 
 ## Usage
 
@@ -79,3 +106,9 @@ For more information see `bytesize.h`.
 ### Potential Features
 
 - Simplify the `match()` function by returning a non-malloc'd copy of the string.
+- Passing all `lintian` checks on the `CPack` generated Debian packages.
+- Generate automatic documentation with `doxygen` for CMake and make builds.
+- Create windows installers that install the binary and package to its own specific directory.
+- Generate new releases
+    - Automatic GitHub action that creates releases
+    - Create release more manually with git hooks & bash aliases
