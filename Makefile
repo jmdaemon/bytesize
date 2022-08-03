@@ -2,6 +2,15 @@ include make/os.mk
 include make/structure.mk
 
 #
+# Project Version
+# 
+include make/version.mk
+
+VERSION_MAJOR = 1
+VERSION_MINOR = 4
+VERSION_PATCH = 0
+
+#
 # Compiler flags
 #
 # Common compiler flags to every target go here
@@ -14,6 +23,7 @@ LOGC_FLAGS = -DLOG_USE_COLOR
 
 # Include headers
 INCLUDES = -I. -I$(PATHI) -I$(PATHD)
+
 
 #
 # Subprojects
@@ -48,16 +58,6 @@ include make/config.mk
 #
 
 .PHONY: all subprojects clean
-
-#
-# Project Version
-# 
-
-include make/version.mk
-
-VERSION_MAJOR = 1
-VERSION_MINOR = 4
-VERSION_PATCH = 0
 
 #
 # Subprojects
