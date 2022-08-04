@@ -8,7 +8,7 @@ add_executable(${BIN_NAME} bytesize.c main.c cli.c)
 target_include_directories(${BIN_NAME} PUBLIC ${HEADERS})
 target_link_libraries(${BIN_NAME} PRIVATE ${PKG_DEPENDS})
 
-# Rename binary target without -bin suffix
+# Rename binary executable without -bin suffix
 set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${TARGET})
 
 # Bytesize lib
