@@ -24,7 +24,6 @@ LOGC_FLAGS = -DLOG_USE_COLOR
 # Include headers
 INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 
-
 #
 # Subprojects
 #
