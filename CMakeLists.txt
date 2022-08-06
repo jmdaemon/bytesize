@@ -8,6 +8,7 @@ project(
 
 # Variable Toggles
 set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
+set(BUILD_DOC ON CACHE INTERNAL "Build documentation")
 set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
 set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
 
@@ -57,6 +58,9 @@ if(BUILD_TESTING)
     include(CTest)
     add_subdirectory(test)
 endif()
+
+# Generate automatic docs with Doxygen
+include(Docs)
 
 # Manual Installs
 # Set default manual installation directory to /usr/local
