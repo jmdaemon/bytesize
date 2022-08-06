@@ -6,13 +6,8 @@ project(
     DESCRIPTION "Convert between Binary & SI Bytes"
     LANGUAGES C)
 
-# Use colored output
-if (NOT COLOR)
-    # Don't use colored output
-else()
-    # Include colored output by default
-    include(Color)
-endif()
+# Variable Toggles
+set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
@@ -25,13 +20,17 @@ endif()
 # Include CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/" "${PROJECT_SOURCE_DIR}/cmake")
 
+# Use colored output
+if (NO_COLOR)
+    # Don't use colored output
+else()
+    # Include colored output by default
+    include(Color)
+endif()
+
 # Include header files
 set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
-if(BUILD_TESTING)
-    message(STATUS "Setting \$\{HEADERS_UNITY\}")
-    set(HEADERS_UNITY "${PROJECT_SOURCE_DIR}/subprojects/unity/src")
-endif()
 
 # Single source project versions
 configure_file(
@@ -41,7 +40,6 @@ configure_file(
 
 # Include dependencies
 include(FetchContent)
-include(Unity)
 include(logc)
 
 # Specify project dependencies
@@ -55,6 +53,7 @@ add_subdirectory(subprojects)
 add_subdirectory(src)
 
 if(BUILD_TESTING)
+    include(Unity)
     include(CTest)
     add_subdirectory(test)
 endif()
