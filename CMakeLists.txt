@@ -8,6 +8,8 @@ project(
 
 # Variable Toggles
 set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
+set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
+set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
@@ -20,7 +22,6 @@ endif()
 # Include CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/" "${PROJECT_SOURCE_DIR}/cmake")
 
-# Use colored output
 if (NO_COLOR)
     # Don't use colored output
 else()
@@ -35,8 +36,7 @@ set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 # Single source project versions
 configure_file(
   "${PROJECT_SOURCE_DIR}/include/version.h.in"
-  "${PROJECT_BINARY_DIR}/include/version.h"
-)
+  "${PROJECT_BINARY_DIR}/include/version.h")
 
 # Include dependencies
 include(FetchContent)
