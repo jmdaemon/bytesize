@@ -3,6 +3,7 @@
 include make/os.mk
 include make/structure.mk
 include make/config.mk
+include make/install.mk
 
 #
 # Project Version
@@ -30,8 +31,9 @@ INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 #
 # Subprojects
 #
-# SP_DEPENDS : Object files to be included into lib, bin targets
-# SP_INCLUDES: Header files to be included into lib,bin
+# SP_DEPENDS 	: Object files to be included into lib, bin targets
+# SP_INCLUDES	: Header files to be included into lib,bin
+# SP_NAMES 		: Subprojects to include
 
 SP_NAMES := logc utility
 
@@ -40,8 +42,12 @@ include make/log.c.mk
 include make/unity.mk
 include make/utility.mk
 
-#$(info $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
+# Add optional dbgsp target to show subproject eval expansion info
+ifeq ($(filter dbgsp,$(MAKECMDGOALS)),dbgsp)
+$(info $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
+else
 $(eval $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
+endif
 
 #
 # Binary Sources
@@ -60,8 +66,7 @@ BINARY_NAME = bytesize
 LIBRARY_SRCS = $(BINARY_SRCS)
 LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
 LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
-
-include make/install.mk
+LIBRARY_HDRS = bytesize.h
 
 #
 # Rules
@@ -78,19 +83,15 @@ build: lib bin
 # Build as a library
 include make/library.mk
 
-install-lib-headers:
-	install $(PATHI)/bytesize.h $(DESTDIR)$(PREFIX)/include/bytesize.h
-	install $(SUB_LOG_C_SRC)/log.h $(DESTDIR)$(PREFIX)/include/log.h
-
-uninstall-lib-headers:
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/bytesize.h
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/log.h
-
 # Build as a binary
 include make/binary.mk
 
 # Build documentation
 include make/docs.mk
+
+# Install/Uninstall rules
+install-subprojects: $(INSTALL_SP_TARGET)
+uninstall-subprojects: $(UNINSTALL_SP_TARGET)
 
 # Clean specific output files
 clean: $(CLEAN_TARGET)

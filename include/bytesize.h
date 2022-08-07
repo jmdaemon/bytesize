@@ -18,8 +18,8 @@ extern "C" {
 /* Third Party Libraries */
 #include <gmp.h>
 #include <mpfr.h>
-#include "log.h"
-#include "utility.h"
+#include <log.h>
+#include <utility.h>
 
 /** Macros */
 
