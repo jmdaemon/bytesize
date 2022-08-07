@@ -4,6 +4,7 @@ include make/os.mk
 include make/structure.mk
 include make/config.mk
 include make/install.mk
+include make/templates.mk
 
 #
 # Project Version
