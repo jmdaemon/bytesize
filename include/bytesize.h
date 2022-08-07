@@ -19,6 +19,7 @@ extern "C" {
 #include <gmp.h>
 #include <mpfr.h>
 #include "log.h"
+#include "utility.h"
 
 /** Macros */
 
@@ -83,12 +84,6 @@ typedef struct Conversion {
   Byte to;
 } Conversion;
 
-/* Helper Functions */
-const char *match(const char *input, const char *regex);
-bool found_in(const char *elem, const char *array[], int array_size);
-bool smatch(const char* input, const char* pattern);
-
-/* Bytesize Functions */
 bool is_byte(const char* unit);
 bool is_integral(mpfr_t conversion);
 Scale get_scale(const char *unit);
