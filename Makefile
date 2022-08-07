@@ -97,4 +97,4 @@ include make/docs.mk
 #
 
 clean: clean-test clean-subprojects clean-objs clean-bin clean-lib clean-ver clean-docs
-clean-subprojects: clean-logc
+clean-subprojects: $(CLEAN_SP_TARGET)
