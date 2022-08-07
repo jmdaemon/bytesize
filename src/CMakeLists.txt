@@ -37,7 +37,7 @@ install(TARGETS ${BIN_NAME}
     COMPONENT bin)        # /usr/local/bin/bytesize
 
 # Library
-install(TARGETS
-    ${TARGET} DESTINATION lib
+install(TARGETS ${TARGET}
+    DESTINATION lib
     PUBLIC_HEADER DESTINATION include   # Install headers
     COMPONENT lib)        # /usr/local/lib/libbytesize.so
