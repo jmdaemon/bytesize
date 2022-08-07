@@ -73,7 +73,7 @@ LIBRARY_HDRS = bytesize.h
 # Rules
 #
 
-.PHONY: all subprojects clean
+.PHONY: build subprojects clean
 
 # Subprojects that must be built
 subprojects: $(SP_NAMES)
