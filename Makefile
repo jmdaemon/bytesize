@@ -1,5 +1,8 @@
+.SECONDEXPANSION:
+
 include make/os.mk
 include make/structure.mk
+include make/config.mk
 
 #
 # Project Version
@@ -15,7 +18,7 @@ VERSION_PATCH = 0
 #
 # Common compiler flags to every target go here
 
-GLOBAL_CFLAGS = -Wall -Wextra -DLOG_USE_COLOR -Wno-missing-braces -Wno-discarded-qualifiers
+GLOBAL_CFLAGS = -Wall -Wextra -Wno-missing-braces -Wno-discarded-qualifiers
 GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
 
 # Enable ANSI escape code colored logging statements
@@ -28,8 +31,23 @@ INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 # Subprojects
 #
 
+include make/subproject.mk
+
+SP_NAMES := logc utility
+#SP_NAMES := utility logc
+#SP_NAMES := logc
+
+#SP_TARGET_NAME = utility
+
+#SP_TARGET_NAME = logc
+#include make/subproject.mk
 include make/log.c.mk
 include make/unity.mk
+include make/utility.mk
+
+#$(info $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
+$(eval $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
+#$(foreach subproject,$(SP_NAMES),$(eval $(call subproject_template,$(subproject))))
 
 #
 # Binary Sources
@@ -50,7 +68,6 @@ LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
 LIBRARY_NAME = libbytesize.$(SHARED_LIBRARY_EXT)
 
 include make/install.mk
-include make/config.mk
 
 #
 # Rules
@@ -64,7 +81,8 @@ include make/config.mk
 # Build subprojects alongside our project
 
 # Subprojects that must be built
-subprojects: logc
+#subprojects: logc utility
+subprojects: logc utility
 
 # SP_DEPENDS : Object files to be included into lib, bin targets
 # SP_INCLUDES: Header files to be included into lib,bin
