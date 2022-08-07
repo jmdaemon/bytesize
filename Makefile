@@ -30,24 +30,18 @@ INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 #
 # Subprojects
 #
-
-include make/subproject.mk
+# SP_DEPENDS : Object files to be included into lib, bin targets
+# SP_INCLUDES: Header files to be included into lib,bin
 
 SP_NAMES := logc utility
-#SP_NAMES := utility logc
-#SP_NAMES := logc
 
-#SP_TARGET_NAME = utility
-
-#SP_TARGET_NAME = logc
-#include make/subproject.mk
+include make/subproject.mk
 include make/log.c.mk
 include make/unity.mk
 include make/utility.mk
 
 #$(info $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
 $(eval $(foreach subproject,$(SP_NAMES),$(call subproject_template,$(subproject))))
-#$(foreach subproject,$(SP_NAMES),$(eval $(call subproject_template,$(subproject))))
 
 #
 # Binary Sources
@@ -75,21 +69,8 @@ include make/install.mk
 
 .PHONY: all subprojects clean
 
-#
-# Subprojects
-#
-# Build subprojects alongside our project
-
 # Subprojects that must be built
-#subprojects: logc utility
-subprojects: logc utility
-
-# SP_DEPENDS : Object files to be included into lib, bin targets
-# SP_INCLUDES: Header files to be included into lib,bin
-#SP_SOURCES =
-#SP_DEPENDS =
-#SP_INCLUDES =
-
+subprojects: $(SP_NAMES)
 
 # Build both targets
 build: lib bin
