@@ -22,7 +22,7 @@ GLOBAL_CFLAGS = -Wall -Wextra -Wno-missing-braces -Wno-discarded-qualifiers
 GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
 
 # Enable ANSI escape code colored logging statements
-LOGC_FLAGS = -DLOG_USE_COLOR
+SP_FLAGS_logc = -DLOG_USE_COLOR
 
 # Include headers
 INCLUDES = -I. -I$(PATHI) -I$(PATHD)
