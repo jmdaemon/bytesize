@@ -92,9 +92,6 @@ include make/binary.mk
 # Build documentation
 include make/docs.mk
 
-#
-# Other rules
-#
-
-clean: clean-test clean-subprojects clean-objs clean-bin clean-lib clean-ver clean-docs
+# Clean specific output files
+clean: $(CLEAN_TARGET)
 clean-subprojects: $(CLEAN_SP_TARGET)
