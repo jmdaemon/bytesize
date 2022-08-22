@@ -6,11 +6,13 @@ project(
     DESCRIPTION "Convert between Binary & SI Bytes"
     LANGUAGES C)
 
-# Variable Toggles
-set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
-set(BUILD_DOC ON CACHE INTERNAL "Build documentation")
-set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
-set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
+if (NOT USE_AS_SUBPROJECT)
+    # Variable Toggles
+    set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
+    set(BUILD_DOC ON CACHE INTERNAL "Build documentation")
+    set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
+    set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
+endif()
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
@@ -53,7 +55,7 @@ set(DEB_DEPENDS libc libpcre2-posix2 libpcre2-dev libgmp-dev libmpfr-dev)
 add_subdirectory(subprojects)
 add_subdirectory(src)
 
-if(BUILD_TESTING)
+if(BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
     include(Unity)
     include(CTest)
     add_subdirectory(test)
