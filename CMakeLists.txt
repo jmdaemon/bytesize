@@ -43,16 +43,25 @@ configure_file(
 
 # Include dependencies
 include(FetchContent)
+
+add_subdirectory(subprojects)
+
+set(USE_AS_SUBPROJECT TRUE)
+set(USE_AS_SUBMODULE TRUE)
+
+include(utility)
 include(logc)
+
+unset(USE_AS_SUBPROJECT)
+unset(USE_AS_SUBMODULE)
 
 # Specify project dependencies
 # PKG_DEPENDS: Library names to link the output files 
 # DEB_DEPENDS: Debian packages that provide the libraries the project depends upon
-set(PKG_DEPENDS m pcre gmp mpfr logc)
+set(PKG_DEPENDS m pcre gmp mpfr logc utility)
 set(DEB_DEPENDS libc libpcre2-posix2 libpcre2-dev libgmp-dev libmpfr-dev)
 
 # Add subdirectories
-add_subdirectory(subprojects)
 add_subdirectory(src)
 
 if(BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
