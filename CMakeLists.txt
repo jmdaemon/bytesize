@@ -45,7 +45,6 @@ configure_file(
 include(FetchContent)
 
 add_subdirectory(subprojects)
-
 set(USE_AS_SUBPROJECT TRUE)
 set(USE_AS_SUBMODULE TRUE)
 
