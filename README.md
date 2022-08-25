@@ -50,12 +50,25 @@ To uninstall `bytesize` run `sudo make uninstall`.
 
 ### CMake
 
-To uninstall with CMake:
+To install to `/usr/local/`:
 
 ``` bash
-cd build/gcc-release-unix-makefiles
+sudo cmake --install .
+```
+
+If you want to install to `/usr` instead:
+
+``` bash
+sudo cmake --install --prefix /usr
+```
+
+To uninstall:
+
+``` bash
 cmake uninstall .
 sudo make uninstall
+# or
+sudo ninja uninstall
 ```
 
 Note that you must have first installed Bytesize(`install_manifest.txt`
