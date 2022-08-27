@@ -1,5 +1,6 @@
 bytesize
 build
+archive
 _packages
 # Prerequisites
 *.d
