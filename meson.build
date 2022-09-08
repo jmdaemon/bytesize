@@ -1,6 +1,7 @@
 project('bytesize', 'c',
 version: '1.10.0',
 subproject_dir: 'meson-subprojects') # Don't cause conflict with subprojects directory
+
 # Dependencies
 #add_global_arguments('-lm', language : 'c')
 cc = meson.get_compiler('c')
