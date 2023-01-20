@@ -21,7 +21,8 @@ VERSION_PATCH = 0
 # Common compiler flags to every target go here
 
 GLOBAL_CFLAGS = -Wall -Wextra -Wno-missing-braces -Wno-discarded-qualifiers
-GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
+#GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr
+GLOBAL_LDFLAGS = -lpcre -lm -lgmp -lmpfr -llogc -lutility
 
 # Enable ANSI escape code colored logging statements
 SP_FLAGS_logc = -DLOG_USE_COLOR
@@ -36,12 +37,13 @@ INCLUDES = -I. -I$(PATHI) -I$(PATHD)
 # SP_INCLUDES	: Header files to be included into lib,bin
 # SP_NAMES 		: Subprojects to include
 
-SP_NAMES := logc utility
+#SP_NAMES := utility
+SP_NAMES :=
 
 include make/subproject.mk
-include make/log.c.mk
+#include make/log.c.mk
 include make/unity.mk
-include make/utility.mk
+#include make/utility.mk
 
 # Add optional dbgsp target to show subproject eval expansion info
 ifeq ($(filter dbgsp,$(MAKECMDGOALS)),dbgsp)
