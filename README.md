@@ -195,6 +195,8 @@ The resulting HTML documentation will be found under `build/docs/html/`
 
 ### Potential Features
 
+- Offer separate API for normal int/long/ulonglong byte size conversions
+    - Make big-int conversions an opt-in compile flag
 - Simplify the `match()` function by returning a non-malloc'd copy of the string.
 - Passing all `lintian` checks on the `CPack` generated Debian packages.
 - Create windows installers that install the binary and package to its own specific directory.
