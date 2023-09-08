@@ -18,7 +18,7 @@ bool is_integral(mpfr_t conversion) {
   /* If the result is divisible by 2,
      and the conversion amount is greater than zero, display as a whole number.
      Else display as a scientific number */
-  bool is_integral = ((mpfr_cmp_ui(r1, 0) == 0) && (mpfr_cmp_ui(res, 0) > 1)) ? true : false;
+  bool is_integral = ((mpfr_cmp_ui(r1, 0) == 0) && (mpfr_cmp_ui(res, 0) > 0)) ? true : false;
 
   /* Deallocate */
   mpfr_clears(res, divisor, r1, NULL);
